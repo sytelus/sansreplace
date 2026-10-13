@@ -18,7 +18,7 @@ Reservoir sampling | [Python](python/algorithms/reservoirsample.py) | [C++](cpp/
 Vitter's Algorithm D | [Python](python/algorithms/vitterd.py) | [C++](cpp/vitterd.cpp) | Sorted | none | _k_
 SELECT | [Python](python/algorithms/select.py) | [C++](cpp/select.cpp) | Random | n-sized list | _n_
 HSEL | [Python](python/algorithms/hsel.py) | [C++](cpp/hsel.cpp) | Random | Dictionary | _k_
-[Cardchoose](cardchoose.md) | [Python](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | none | _k_ log _k_
+[Cardchoose](cardchoose.md) | [Python reference](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | output + bounded stack workspace | _k_ (native), _k_ log _k_ (Python)
 
 ## Quadratic rejection sampling
 
@@ -201,8 +201,10 @@ my attention.
 
 Algorithm | Python | C++ | Order guarantee | Data structures | Time
 ----|----|----|----|----|----
-[Cardchoose](cardchoose.md) | [Python](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | none | _k_ log _k_
+[Cardchoose](cardchoose.md) | [Python reference](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | output + bounded stack workspace | _k_ (native), _k_ log _k_ (Python)
 
 This is my algorithm: a Pólya urn generates a uniform
-multiset, and stars and bars turns it into a uniform subset. [Detailed
+multiset, and stars and bars turns it into a uniform subset. The native implementation now uses
+bounded radix sorting and exact dense/complement paths to obtain O(_k_) work on 32-bit integers
+(expected time including bounded-draw rejection). [Detailed
 description](cardchoose.md), including how it relates to [prior art](priorart.md).

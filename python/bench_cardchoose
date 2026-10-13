@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+"""Compare the working tree with a Git revision on a portable cache/density grid.
+
+Builds both revisions with the same toolchains and flags. Benchmarks run serially;
+repetitions alternate the order of revisions. Output allocation is outside the
+clock, as in time_choose. The temporary baseline never changes the checkout.
+"""
+import argparse
+import csv
+import hashlib
+import json
+import os
+import pathlib
+import platform
+import statistics
+import subprocess
+import tarfile
+import tempfile
+import time
+
+import load_cpp
+import nkvalues
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+
+
+def command(cmd, **kwargs):
+    return subprocess.run([str(x) for x in cmd], check=True, **kwargs)
+
+
+def output(cmd):
+    return command(cmd, capture_output=True, text=True).stdout.strip()
+
+
+def cpp_library(root):
+    ffi, lib = load_cpp.setup_module(root / 'cpp', root / 'cpp/build/host',
+        ['sorted_cardchoose', 'random_cardchoose'])
+    return ffi, lib
+
+
+def cpp_time(lib, func, n, k, seconds):
+    iters = 1
+    while True:
+        lib.rand_init()
+        elapsed = lib.timefunc_s(func, n, k, iters)
+        if elapsed >= seconds:
+            return elapsed / iters
+        iters = max(iters + 1, min(iters * 10, int(iters * seconds / max(elapsed, 1e-9))))
+
+
+def rust_times(executable, order, cases, seconds, csv_path):
+    cmd = [executable, 'time', '--algorithm', 'cardchoose', '--sorttype', order,
+           '--time-for', str(seconds), '--time-limit', '1e9', '--csv', csv_path]
+    for n, k in cases:
+        cmd.extend(['--nk', str(n), str(k)])
+    command(cmd, stdout=subprocess.DEVNULL)
+    with csv_path.open() as f:
+        return {(int(r[2]), int(r[3])): float(r[4]) for r in csv.reader(f)
+                if r and r[0] == 'result'}
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('outdir', type=pathlib.Path)
+    p.add_argument('--baseline', default='6048513', help='Git revision to compare with')
+    p.add_argument('--language', action='append', choices=['cpp', 'rust'])
+    p.add_argument('--repeats', type=int, default=5)
+    p.add_argument('--time-for', type=float, default=0.03)
+    p.add_argument('--max-k', type=int, default=8388608)
+    p.add_argument('--cpu', type=int, help='Pin to this logical CPU (Linux only)')
+    args = p.parse_args()
+    if args.repeats < 1 or args.time_for <= 0 or args.max_k < 0:
+        p.error('repeats/time-for must be positive, max-k nonnegative')
+    if args.cpu is not None and not hasattr(os, 'sched_setaffinity'):
+        p.error('--cpu requires Linux CPU affinity support')
+    languages = args.language or ['cpp', 'rust']
+    cases = [(n, k) for _, n, k in nkvalues.cache_values() if k <= args.max_k]
+    args.outdir.mkdir(parents=True, exist_ok=True)
+    scratch = ROOT / 'scratch'
+    scratch.mkdir(exist_ok=True)
+    baseline = output(['git', '-C', ROOT, 'rev-parse', args.baseline])
+    diff = command(['git', '-C', ROOT, 'diff', 'HEAD', '--', 'cpp', 'rust', 'python'],
+                   capture_output=True).stdout
+    (args.outdir / 'working-tree.patch').write_bytes(diff)
+    metadata = {
+        'baseline': baseline,
+        'head': output(['git', '-C', ROOT, 'rev-parse', 'HEAD']),
+        'patch_sha256': hashlib.sha256(diff).hexdigest(),
+        'platform': platform.platform(),
+        'date_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+        'options': {**vars(args), 'outdir': str(args.outdir)},
+        'cpp_seed': 324,
+        'rust_rng': 'SmallRng, seeded by rand::make_rng as in each revision',
+        'allocation': 'Output allocation excluded; algorithm-internal work included',
+        'flags': 'Repository defaults; no -march=native or target-cpu=native',
+        'case_count': len(cases),
+    }
+    if 'cpp' in languages:
+        metadata['cxx'] = output([os.environ.get('CXX', 'c++'), '--version'])
+    if 'rust' in languages:
+        metadata['rustc'] = output(['rustc', '-Vv'])
+    if pathlib.Path('/proc/cpuinfo').exists():
+        metadata['cpu_model'] = next((line.split(':', 1)[1].strip()
+            for line in pathlib.Path('/proc/cpuinfo').read_text().splitlines()
+            if line.startswith('model name')), 'unknown')
+        cache_cpu = args.cpu if args.cpu is not None else min(os.sched_getaffinity(0))
+        metadata['cache_cpu'] = cache_cpu
+        cache = pathlib.Path(f'/sys/devices/system/cpu/cpu{cache_cpu}/cache')
+        metadata['caches'] = [{name: (d / name).read_text().strip()
+            for name in ['level', 'type', 'size', 'coherency_line_size']}
+            for d in sorted(cache.glob('index*'))]
+    (args.outdir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
+
+    with tempfile.TemporaryDirectory(prefix='cardchoose-bench-', dir=scratch) as temp:
+        temp = pathlib.Path(temp)
+        archive = temp / 'baseline.tar'
+        with archive.open('wb') as f:
+            command(['git', '-C', ROOT, 'archive', baseline, 'cpp', 'rust'], stdout=f)
+        old = temp / 'baseline'
+        old.mkdir()
+        with tarfile.open(archive) as tar:
+            tar.extractall(old, filter='data')
+        roots = {'baseline': old, 'current': ROOT}
+        cpp = {}
+        rust = {}
+        # Build everything before measuring, so compiler work cannot interfere.
+        for revision, root in roots.items():
+            if 'cpp' in languages:
+                cpp[revision] = cpp_library(root)
+            if 'rust' in languages:
+                command(['cargo', 'build', '--locked', '--release', '--manifest-path',
+                         root / 'rust/Cargo.toml'])
+                rust[revision] = root / 'rust/target/release/sansreplace'
+        if args.cpu is not None:
+            os.sched_setaffinity(0, {args.cpu})
+        samples = {}
+        with (args.outdir / 'raw.csv').open('w') as raw:
+            writer = csv.writer(raw)
+            writer.writerow(['language', 'order', 'n', 'k', 'revision', 'repeat', 'seconds'])
+            for language in languages:
+                for order in ['sorted', 'random']:
+                    for rep in range(args.repeats):
+                        revisions = ['baseline', 'current'] if rep % 2 == 0 else ['current', 'baseline']
+                        for revision in revisions:
+                            print(f'{language} {order}, repetition {rep + 1}: {revision}', flush=True)
+                            if language == 'cpp':
+                                lib = cpp[revision][1]
+                                func = getattr(lib, order + '_cardchoose')
+                                times = {(n, k): cpp_time(lib, func, n, k, args.time_for)
+                                         for n, k in cases}
+                            else:
+                                times = rust_times(rust[revision], order, cases,
+                                    args.time_for, temp / 'rust-times.csv')
+                            for (n, k), seconds in times.items():
+                                samples.setdefault((language, order, n, k, revision), []).append(seconds)
+                                writer.writerow([language, order, n, k, revision, rep + 1, seconds])
+                            raw.flush()
+        with (args.outdir / 'summary.csv').open('w') as summary:
+            writer = csv.writer(summary)
+            writer.writerow(['language', 'order', 'n', 'k', 'baseline_s', 'current_s',
+                             'speedup', 'baseline_mad_s', 'current_mad_s'])
+            for language in languages:
+                for order in ['sorted', 'random']:
+                    for n, k in cases:
+                        a, b = [samples[(language, order, n, k, rev)]
+                                for rev in ['baseline', 'current']]
+                        am, bm = statistics.median(a), statistics.median(b)
+                        mad = lambda xs, m: statistics.median(abs(x - m) for x in xs)
+                        writer.writerow([language, order, n, k, am, bm, am / bm,
+                                         mad(a, am), mad(b, bm)])
+    print(f'Results: {args.outdir / "summary.csv"}')
+
+
+if __name__ == '__main__':
+    main()

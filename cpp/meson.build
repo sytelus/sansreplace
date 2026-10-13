@@ -38,3 +38,7 @@ libsrc = [
 lib = shared_library('sansreplace',
                         libsrc,
                         install : false)
+
+cardchoose_test = executable('cardchoose_test', 'tests/cardchoose_test.cpp',
+    override_options : ['b_ndebug=false'])
+test('cardchoose', cardchoose_test, timeout : 120)

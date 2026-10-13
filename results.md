@@ -1,5 +1,11 @@
 # Results
 
+The current native Cardchoose implementation and its linear-time bounds are described in
+[cardchoose.md](cardchoose.md#linear-native-implementation). The focused before/after benchmark
+is `python/bench_cardchoose`; see [running.md](running.md#cardchoose-regression-benchmark).
+
+## Historical comparison-sort results
+
 These results were measured on an Apple M4 Mac mini with 16GB of memory, using clang 21.1 and
 rustc 1.98, for values of _n_ and _k_ that are Fibonacci numbers, with _k_ at most 102,334,155
 (the 40th Fibonacci number). [Full results](results/latest/)
@@ -11,7 +17,7 @@ we graph time/_k_ to show the cost in ns per number we output. Since
 we are plotting a linear/log graph of time/_k_, the _k_ log _k_
 performance of the algorithm is visible as a straight line.
 
-## C++
+### C++
 
 The C++ implementations use the standard library's `std::unordered_set` and `std::unordered_map`,
 so these results show the performance you get from a standard data structure.
@@ -24,7 +30,7 @@ perform well when _k_/_n_ is large.
 
 ![graph](results/latest/cpp-sorted.webp)
 
-## Rust
+### Rust
 
 The Rust port's hash-based algorithms use Rust's standard `HashMap` and `HashSet`. These are flat
 open-addressing hash tables, much faster than the node-based C++ ones; the hash-based algorithms
@@ -42,7 +48,7 @@ values of _n_ and _k_.
 
 ![graph](results/latest/rust-sorted.webp)
 
-## Comparison
+### Comparison
 
 The table compares `cardchoose` with `rejectionsample`, `floydf2`, and `hsel` at the points
 with _k_ ≥ 10, giving `cardchoose`'s time as a fraction of the fastest of the other three.
