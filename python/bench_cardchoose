@@ -92,7 +92,9 @@ def main():
         'cpp_seed': 324,
         'rust_rng': 'SmallRng, seeded by rand::make_rng as in each revision',
         'allocation': 'Output allocation excluded; algorithm-internal work included',
-        'flags': 'Repository defaults; no -march=native or target-cpu=native',
+        'flags': 'Repository defaults plus compiler_environment below',
+        'compiler_environment': {k: os.environ.get(k, '') for k in
+            ['CFLAGS', 'CXXFLAGS', 'CPPFLAGS', 'RUSTFLAGS', 'CARGO_ENCODED_RUSTFLAGS']},
         'case_count': len(cases),
     }
     if 'cpp' in languages:
@@ -131,6 +133,11 @@ def main():
                 command(['cargo', 'build', '--locked', '--release', '--manifest-path',
                          root / 'rust/Cargo.toml'])
                 rust[revision] = root / 'rust/target/release/sansreplace'
+        if 'cpp' in languages:
+            commands = json.loads((ROOT / 'cpp/build/host/compile_commands.json').read_text())
+            metadata['cxx_compile_command'] = next(c['command'] for c in commands
+                if pathlib.Path(c['file']).name == 'cardchoose.cpp')
+            (args.outdir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
         if args.cpu is not None:
             os.sched_setaffinity(0, {args.cpu})
         samples = {}

@@ -4,6 +4,101 @@ The current native Cardchoose implementation and its linear-time bounds are desc
 [cardchoose.md](cardchoose.md#linear-native-implementation). The focused before/after benchmark
 is `python/bench_cardchoose`; see [running.md](running.md#cardchoose-regression-benchmark).
 
+## Linear native implementation: 2026-10-13
+
+Compared the original `6048513` with the optimized sampler in `624d745`, using the same
+compiler settings for both revisions. The machine was an AMD EPYC 7763 Linux VM, pinned to
+logical CPU 2, with 32 KiB L1 data cache, 512 KiB L2 and 32 MiB L3 reported to the guest.
+C++ used GCC 14.2.0 and Rust used rustc 1.99.0. Builds used the repository defaults, with no
+`-march=native`, `target-cpu=native`, AVX2 requirement, or CPU-specific intrinsics.
+
+The run covered **261 (n, k) pairs**, including empty/tiny outputs, dispatch boundaries,
+near-full, half-density and sparse samples, populations through `UINT32_MAX`, and outputs
+through 16,777,216 elements (64 MiB, exceeding the reported last-level cache). Five repetitions
+in both languages and both output orders produced **10,440 recorded measurements**. Revisions
+alternated order and benchmarks ran serially. The timing budget/target was 0.02 seconds per case;
+large calls naturally exceeded it. Output allocation is outside each timer, as in the original
+harness. See the batch-size caveat below.
+
+[Raw samples](results/cardchoose-2026-10-13/raw.csv),
+[point-by-point medians and MADs](results/cardchoose-2026-10-13/summary.csv), and
+[hardware/compiler/provenance metadata](results/cardchoose-2026-10-13/metadata.json).
+
+The table gives the **median of pointwise speedups** (baseline time / current time). These are
+suite summaries, not workload-weighted application speedups. A larger ratio is better.
+
+| Cases | Points per order | C++ sorted | C++ random | Rust sorted | Rust random |
+|---|---:|---:|---:|---:|---:|
+| All nonempty cases | 254 | 3.84× | 2.80× | 2.29× | 2.29× |
+| Small: 1 ≤ k ≤ 128 | 104 | 1.01× | 1.03× | 1.01× | 1.22× |
+| Larger sparse: k ≥ 1024, n > 2k | 23 | 3.34× | 2.75× | 1.27× | 1.37× |
+| Other dense: k ≥ 1024, n ≤ 2k | 35 | 10.61× | 4.89× | 4.44× | 2.39× |
+| Full / small complement: k ≥ 1024 | 61 | 124.06× | 5.59× | 32.95× | 3.88× |
+
+The dense row excludes the full/small-complement path. That path applies when `n-k <= 1024`
+and `n-k <= k/4`, or when one element is omitted. The all-cases row also includes the intermediate
+sizes not shown separately. Every point with `k >= 1024` had a median at least as fast as the
+baseline; some Rust sorted sparse points were effectively ties within measurement variability.
+At `(n, k) = (2,097,152, 1,048,576)`, sorted output improved from 76.91 ms to 13.62 ms in C++, and
+from 21.97 ms to 11.19 ms in Rust. Random output improved from 80.96 ms to 16.55 ms in C++, and
+from 28.93 ms to 13.65 ms in Rust.
+
+### Small regressions and measurement limits
+
+This implementation is not faster at every point. The worst nonempty relative regression in
+each language/order was:
+
+| Implementation | (n, k) | Before, ns/call | After, ns/call | Slower by |
+|---|---|---:|---:|---:|
+| cpp sorted | (8, 4) | 39.73 | 42.66 | 7.4% |
+| cpp random | (80, 16) | 284.04 | 299.42 | 5.4% |
+| rust sorted | (16, 8) | 91.40 | 96.76 | 5.9% |
+| rust random | (4,294,967,295, 512) | 8572.41 | 8911.70 | 4.0% |
+
+C++ empty calls also measured about 2.2 ns before and 2.6 ns after. Rust random output improved
+at 253 of the 254 nonempty points; its one slower point had baseline/current MADs of about
+0.10/0.24 microseconds. The CSVs retain all regressions and dispersion rather than discarding them.
+Shared VM scheduling, clock behavior and allocator/cache state still affect timings despite
+CPU affinity and repetition. These are measurements on this host, not proof of universal optimality.
+
+The Rust timer's zeroed vector can be backed by lazily allocated pages, so a very fast large
+sample can spend a substantial fraction of its first iteration faulting in output pages. A
+separate [batch-budget check](results/cardchoose-2026-10-13/batch-budget-check.csv), pinned to the
+same CPU with three repetitions, measured the current sorted Rust `(16,777,217, 16,777,216)` case
+at 18.30 ms with a 0.02-second budget and 4.21 ms with a 0.2-second budget,
+without changing the sampler. Longer batches amortize first-touch/cache warmup. Those diagnostic
+samples are separate from the main table. Use the same budget when comparing revisions, and
+compare within-language speedups rather than treating the C++ and Rust timers as identical.
+
+### Changes and validation
+
+The retained design combines in-place radix partitioning, fixed cache buffers, significant-bit
+alignment, bounded small-array sorting, direct tiny samples, a fixed small-complement buffer,
+and Algorithm S restricted to `n <= 2k`. Branchless urn copies did not produce a broad gain in
+tuning. Pure in-place radix sorting regressed against Rust's fast standard sort in some regions;
+bounded buffers and separate leaf cutoffs addressed those cases. Larger fixed buffers trade
+constant stack space for fewer partitions, so the choices are explicit and bounded.
+
+The native sampler performs O(k) work under the bounded-draw model, and expected O(k) time
+including the existing C++ rejection-based RNG. It uses `4*k` output bytes plus O(1) workspace,
+with no heap allocation in the sampler. See the [proof and workspace bounds](cardchoose.md#linear-native-implementation).
+
+Validation passed: C++ exhaustive subset/permutation tests, forced dense-kernel enumeration,
+adversarial radix cases, complement/dispatch/32-bit boundaries, canaries, ASan and UBSan; six
+Rust tests in debug, release, and an explicit baseline x86-64 build with AVX/AVX2 disabled;
+`cargo clippy --all-targets -- -D warnings`; and equality of the Python/C++ and Rust cache grids
+through k = 1,048,576. The algorithms require no architecture intrinsics or unsafe Rust.
+
+Reproduce the main run:
+
+```
+python/bench_cardchoose results/cardchoose-local --baseline 6048513 --repeats 5 --time-for 0.02 --max-k 16777216 --cpu 2
+```
+
+Use an available CPU index, or omit `--cpu` where affinity is unavailable. The benchmark rebuilds
+both revisions with the same toolchains. See [running.md](running.md#cardchoose-regression-benchmark)
+for controls and correctness checks.
+
 ## Historical comparison-sort results
 
 These results were measured on an Apple M4 Mac mini with 16GB of memory, using clang 21.1 and

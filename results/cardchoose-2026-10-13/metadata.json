@@ -1,0 +1,70 @@
+{
+  "baseline": "60485135dd5cb6bac546ee2b23761472fef0926c",
+  "head": "624d7452040c80572b86d1504521ab1f07807880",
+  "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "date_utc": "2026-10-13T07:24:35Z",
+  "options": {
+    "outdir": "results/cardchoose-2026-10-13",
+    "baseline": "6048513",
+    "language": null,
+    "repeats": 5,
+    "time_for": 0.02,
+    "max_k": 16777216,
+    "cpu": 2
+  },
+  "cpp_seed": 324,
+  "rust_rng": "SmallRng, seeded by rand::make_rng as in each revision",
+  "allocation": "Output allocation excluded; algorithm-internal work included",
+  "flags": "Repository defaults; no -march=native or target-cpu=native",
+  "case_count": 261,
+  "cxx": "c++ (Debian 14.2.0-19) 14.2.0\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.0\nLLVM version: 23.1.1",
+  "cpu_model": "AMD EPYC 7763 64-Core Processor",
+  "cache_cpu": 2,
+  "caches": [
+    {
+      "level": "1",
+      "type": "Data",
+      "size": "32K",
+      "coherency_line_size": "64"
+    },
+    {
+      "level": "1",
+      "type": "Instruction",
+      "size": "32K",
+      "coherency_line_size": "64"
+    },
+    {
+      "level": "2",
+      "type": "Unified",
+      "size": "512K",
+      "coherency_line_size": "64"
+    },
+    {
+      "level": "3",
+      "type": "Unified",
+      "size": "32768K",
+      "coherency_line_size": "64"
+    }
+  ],
+  "compiler_environment": {
+    "CFLAGS": "",
+    "CXXFLAGS": "",
+    "CPPFLAGS": "",
+    "RUSTFLAGS": "",
+    "CARGO_ENCODED_RUSTFLAGS": ""
+  },
+  "cxx_compile_command": "c++ -Ilibsansreplace.so.p -I. -I../.. -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/cardchoose.cpp.o -MF libsansreplace.so.p/cardchoose.cpp.o.d -o libsansreplace.so.p/cardchoose.cpp.o -c ../../cardchoose.cpp",
+  "batch_budget_check": {
+    "file": "batch-budget-check.csv",
+    "cpu": 2,
+    "repeats": 3,
+    "n": 16777217,
+    "k": 16777216,
+    "binary_sha256": {
+      "baseline": "a710dcb1d19a00ce7b081472f184a2e15240ad4458390897cc2e8e2c5884fb66",
+      "current": "a38aaa36dbd4a465c458b4b0078034a4bf1bbe897b6d8e677e28c913fef23c9f"
+    }
+  }
+}

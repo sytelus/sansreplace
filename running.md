@@ -60,6 +60,10 @@ cpp`, `--language rust`, `--repeats`, `--time-for`, and `--max-k`. The output di
 `raw.csv`, `summary.csv`, compiler/CPU/cache metadata, and the working-tree patch. Speedup is
 baseline time divided by current time. Tiny timings include function-call overhead, and shared
 machines still introduce noise; use repeated runs before interpreting small differences.
+Large, very fast outputs can also be sensitive to lazy page allocation and batch size: Rust's
+zeroed vector allocation can defer first-touch costs until the timed call. A longer `--time-for`
+amortizes those costs across more iterations. Compare revisions with the same budget, and use
+within-language speedups rather than treating the C++ and Rust timers as identical.
 The C++ generator is reset to its existing seed (324) for each batch; Rust retains the existing
 OS-seeded `SmallRng` behavior in both revisions.
 

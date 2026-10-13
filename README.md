@@ -51,6 +51,8 @@ def sorted_choose(n, k):
     return d
 ```
 
+Historical comparison-sort benchmark on Apple M4:
+
 ![graph](results/latest/cpp-sorted.webp)
 
 
