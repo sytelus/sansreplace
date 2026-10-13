@@ -128,6 +128,7 @@ fn radix_sort(data: &mut [u32], bits: u32) {
     }
 }
 
+#[inline]
 fn sorted_urn<D: FnMut(u32) -> u32>(draw: &mut D, length: u32, res: &mut [u32]) {
     if res.is_empty() {
         return; // length - amount + 1 would overflow for (u32::MAX, 0).
@@ -165,20 +166,28 @@ fn dense_choose<const SHUFFLE: bool, D: FnMut(u32) -> u32>(
 }
 
 // Fixed storage for tiny complements preserves the output-only scaling.
-fn choose_edges<D: FnMut(u32) -> u32>(draw: &mut D, length: u32, res: &mut [u32]) -> bool {
+fn choose_edges<D: FnMut(u32) -> u32>(draw: &mut D, length: u32, res: &mut [u32]) {
     if res.is_empty() {
-        return true;
+        return;
     }
     let amount = res.len() as u32;
     if amount == length {
         for (i, value) in res.iter_mut().enumerate() {
             *value = i as u32;
         }
-        return true;
+        return;
     }
     let omitted = length - amount;
-    if omitted > amount / 4 || omitted as usize > SMALL_COMPLEMENT {
-        return false;
+    if omitted == 1 {
+        let excluded = draw(length) as usize;
+        let (prefix, suffix) = res.split_at_mut(excluded);
+        for (i, value) in prefix.iter_mut().enumerate() {
+            *value = i as u32;
+        }
+        for (i, value) in suffix.iter_mut().enumerate() {
+            *value = excluded as u32 + 1 + i as u32;
+        }
+        return;
     }
     let mut missing = [0u32; SMALL_COMPLEMENT];
     let missing = &mut missing[..omitted as usize];
@@ -197,7 +206,6 @@ fn choose_edges<D: FnMut(u32) -> u32>(draw: &mut D, length: u32, res: &mut [u32]
     for (i, value) in rest.iter_mut().enumerate() {
         *value = first + i as u32;
     }
-    true
 }
 
 fn choose<const SHUFFLE: bool, D: FnMut(u32) -> u32>(draw: &mut D, length: u32, res: &mut [u32]) {
@@ -208,7 +216,17 @@ fn choose<const SHUFFLE: bool, D: FnMut(u32) -> u32>(draw: &mut D, length: u32, 
         }
         return;
     }
-    if choose_edges(draw, length, res) {
+    if res.len() == 2 && length > 2 {
+        let a = draw(length);
+        let b = draw(length - 1);
+        let b = b + u32::from(b >= a);
+        res[0] = if SHUFFLE { a } else { a.min(b) };
+        res[1] = if SHUFFLE { b } else { a.max(b) };
+        return;
+    }
+    let omitted = length - res.len() as u32;
+    if (omitted <= res.len() as u32 / 4 || omitted == 1) && omitted as usize <= SMALL_COMPLEMENT {
+        choose_edges(draw, length, res);
         if SHUFFLE {
             for i in 1..res.len() {
                 res.swap(i, draw(i as u32 + 1) as usize);
@@ -263,13 +281,18 @@ mod tests {
         let q = n - k;
         let amount = if k == 0 || k == n {
             0
-        } else if q <= k / 4 && q as usize <= SMALL_COMPLEMENT {
+        } else if (q <= k / 4 || q == 1) && q as usize <= SMALL_COMPLEMENT {
             q
         } else {
             k
         };
-        let mut bounds: Vec<u32> = (0..amount).map(|i| n - amount + 1 + i).collect();
-        if SHUFFLE {
+        let pair = k == 2 && n > 2;
+        let mut bounds: Vec<u32> = if pair {
+            vec![n, n - 1]
+        } else {
+            (0..amount).map(|i| n - amount + 1 + i).collect()
+        };
+        if SHUFFLE && !pair {
             bounds.extend(2..=k);
         }
         let mut draws = vec![0; bounds.len()];
@@ -440,6 +463,24 @@ mod tests {
                         random_order(&mut rng, n, &mut data);
                     }
                     valid(data, n, sorted);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn complement_boundaries() {
+        let mut rng = SmallRng::seed_from_u64(324);
+        for k in [4096, 65536] {
+            for omitted in [0, 1, 2, 63, 64, 65, 255, 256, 257, 1023, 1024, 1025] {
+                for sorted in [true, false] {
+                    let mut data = vec![u32::MAX; k as usize];
+                    if sorted {
+                        sorted_order(&mut rng, k + omitted, &mut data);
+                    } else {
+                        random_order(&mut rng, k + omitted, &mut data);
+                    }
+                    valid(data, k + omitted, sorted);
                 }
             }
         }

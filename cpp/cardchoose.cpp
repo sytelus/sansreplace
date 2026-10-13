@@ -128,7 +128,7 @@ void radix_sort(uint32_t* data, uint32_t size, unsigned bits) {
 }
 
 // The original Pólya urn, retaining its one bounded draw per element.
-void sorted_urn(uint32_t n, uint32_t k, uint32_t* result) {
+inline void sorted_urn(uint32_t n, uint32_t k, uint32_t* result) {
     if (k == 0) return;  // Also prevents n - k + 1 overflowing at UINT32_MAX.
     auto t = n - k + 1;
     for (uint32_t i = 0; i < k; ++i) {
@@ -165,15 +165,20 @@ void dense_choose(uint32_t n, uint32_t k, uint32_t* result) {
 
 // A fixed-size complement handles almost-full samples without allocating a
 // second array proportional to k. Complementation is a bijection on subsets.
-// The remaining dense cases still use the urn and the linear radix sorter.
-bool choose_edges(uint32_t n, uint32_t k, uint32_t* result) {
-    if (k == 0) return true;
+// The caller bounds omitted by small_complement before entering this helper.
+void choose_edges(uint32_t n, uint32_t k, uint32_t* result) {
+    if (k == 0) return;
     if (k == n) {
         std::iota(result, result + k, uint32_t{0});
-        return true;
+        return;
     }
     auto omitted = n - k;
-    if (omitted > k / 4 || omitted > small_complement) return false;
+    if (omitted == 1) {
+        auto excluded = randbelow(n);
+        std::iota(result, result + excluded, uint32_t{0});
+        std::iota(result + excluded, result + k, excluded + 1);
+        return;
+    }
     uint32_t missing[small_complement];
     sorted_urn(n, omitted, missing);
     uint32_t first = 0;
@@ -186,7 +191,6 @@ bool choose_edges(uint32_t n, uint32_t k, uint32_t* result) {
         first = excluded + 1;
     }
     std::iota(result + written, result + k, first);
-    return true;
 }
 
 }  // namespace
@@ -197,7 +201,19 @@ extern "C" void sorted_cardchoose(uint32_t n, uint32_t k, uint32_t* result) {
         if (k == 1) result[0] = n == 1 ? 0 : randbelow(n);
         return;
     }
-    if (choose_edges(n, k, result)) return;
+    if (k == 2 && n > 2) {
+        auto a = randbelow(n);
+        auto b = randbelow(n - 1);
+        b += b >= a;  // Map [0, n-1) bijectively onto [0, n) excluding a.
+        result[0] = std::min(a, b);
+        result[1] = std::max(a, b);
+        return;
+    }
+    auto omitted = n - k;
+    if ((omitted <= k / 4 || omitted == 1) && omitted <= small_complement) {
+        choose_edges(n, k, result);
+        return;
+    }
     if (k >= 128 && n - k <= k) {
         dense_choose<false>(n, k, result);
         return;
@@ -212,7 +228,16 @@ extern "C" void random_cardchoose(uint32_t n, uint32_t k, uint32_t* result) {
         if (k == 1) result[0] = n == 1 ? 0 : randbelow(n);
         return;
     }
-    if (choose_edges(n, k, result)) {
+    if (k == 2 && n > 2) {
+        auto a = randbelow(n);
+        auto b = randbelow(n - 1);
+        result[0] = a;
+        result[1] = b + (b >= a);
+        return;
+    }
+    auto omitted = n - k;
+    if ((omitted <= k / 4 || omitted == 1) && omitted <= small_complement) {
+        choose_edges(n, k, result);
         for (uint32_t i = 1; i < k; ++i) {
             std::swap(result[i], result[randbelow(i + 1)]);
         }

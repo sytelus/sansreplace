@@ -32,9 +32,12 @@ def sorted_choose(n, k):
 The C++ and Rust APIs operate on 32-bit unsigned integers with `0 <= k <= n`. They preserve the
 urn and stars-and-bars distribution; only the implementation and exact special cases change.
 
-* Empty and singleton samples return directly. A full sample is the range `[0, n)`.
-* If the complement has at most 1024 elements and at most a quarter as many elements as the
-  output, sample it in a fixed stack array and emit the gaps as contiguous runs. Complementation
+* Empty and singleton samples return directly. Two-element samples map a second draw onto
+  the population excluding the first, avoiding sorting/shuffling overhead. A full sample is
+  the range `[0, n)`.
+* A one-element complement is emitted directly from one bounded draw. If a larger complement
+  has at most 1024 elements and at most a quarter as many elements as the output, sample it in
+  a fixed stack array and emit the gaps as contiguous runs. Complementation
   is a bijection between equally likely subsets, so this remains uniform. It avoids nearly _k_
   random draws for an almost-full sample.
 * For `k >= 128` and `n <= 2*k`, use exact sequential selection (Algorithm S). It needs at most

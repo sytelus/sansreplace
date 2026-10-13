@@ -79,7 +79,8 @@ static void exact_uniformity() {
 
 static void sorting() {
     for (uint32_t n : {0u, 1u, 2u, 63u, 64u, 127u, 128u, 129u, 255u, 256u,
-                       257u, 1024u, 2047u, 2048u, 2049u, 4095u, 4096u, 4097u, 8191u, 8192u, 8193u, 16383u, 16384u, 16385u, 65536u, 1048576u}) {
+                       257u, 1024u, 2047u, 2048u, 2049u, 4095u, 4096u, 4097u,
+                       8191u, 8192u, 8193u, 16383u, 16384u, 16385u, 65536u, 1048576u}) {
         for (unsigned bits : {1u, 7u, 8u, 9u, 13u, 15u, 16u, 17u, 23u, 24u, 25u, 31u, 32u}) {
             auto mask = UINT32_MAX >> (32 - bits);
             for (unsigned pattern = 0; pattern < 6; ++pattern) {
@@ -114,6 +115,18 @@ static void boundaries() {
                 f(n, k, a.data() + 1);
                 assert(a.front() == 0xdeadbeef && a.back() == 0xdeadbeef);
                 valid({a.begin() + 1, a.end() - 1}, n, sorted);
+            }
+        }
+    }
+    for (uint32_t k : {4096u, 65536u}) {
+        for (uint32_t omitted : {0u, 1u, 2u, 63u, 64u, 65u, 255u, 256u, 257u,
+                                 1023u, 1024u, 1025u}) {
+            for (bool sorted : {true, false}) {
+                auto f = sorted ? sorted_cardchoose : random_cardchoose;
+                std::vector<uint32_t> a(k + 2, 0xdeadbeef);
+                f(k + omitted, k, a.data() + 1);
+                assert(a.front() == 0xdeadbeef && a.back() == 0xdeadbeef);
+                valid({a.begin() + 1, a.end() - 1}, k + omitted, sorted);
             }
         }
     }
