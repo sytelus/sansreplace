@@ -89,6 +89,15 @@ Rust tests in debug, release, and an explicit baseline x86-64 build with AVX/AVX
 `cargo clippy --all-targets -- -D warnings`; and equality of the Python/C++ and Rust cache grids
 through k = 1,048,576. The algorithms require no architecture intrinsics or unsafe Rust.
 
+A follow-up review added exhaustive complement-kernel checks (seven Rust tests in total) and
+validated the unbiased Rust RNG feature. It also fixed benchmark build isolation: both revisions
+now use fresh build directories, and Cargo's reported executable path determines the binary
+timed. An integration run with custom C++ flags, a custom Cargo target directory, and an explicit
+target triple verified all 192 measurements across 24 cases without touching existing builds.
+The production kernels are unchanged from `624d745`; all 10,440 saved measurements and their
+1,044 summary rows were rechecked. The saved benchmark uses the original Rust RNG settings;
+see the [uniformity assumptions](cardchoose.md#linear-native-implementation).
+
 Reproduce the main run:
 
 ```

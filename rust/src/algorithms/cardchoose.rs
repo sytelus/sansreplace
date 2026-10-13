@@ -277,16 +277,16 @@ mod tests {
         assert!(data.last().is_none_or(|&x| x < n));
     }
 
-    fn exact<const SHUFFLE: bool>(n: u32, k: u32) {
+    fn exact<const SHUFFLE: bool, const COMPLEMENT: bool>(n: u32, k: u32) {
         let q = n - k;
         let amount = if k == 0 || k == n {
             0
-        } else if (q <= k / 4 || q == 1) && q as usize <= SMALL_COMPLEMENT {
+        } else if COMPLEMENT || ((q <= k / 4 || q == 1) && q as usize <= SMALL_COMPLEMENT) {
             q
         } else {
             k
         };
-        let pair = k == 2 && n > 2;
+        let pair = !COMPLEMENT && k == 2 && n > 2;
         let mut bounds: Vec<u32> = if pair {
             vec![n, n - 1]
         } else {
@@ -300,16 +300,22 @@ mod tests {
         loop {
             let mut index = 0;
             let mut data = vec![u32::MAX; k as usize];
-            choose::<SHUFFLE, _>(
-                &mut |bound| {
-                    assert_eq!(bound, bounds[index]);
-                    let r = draws[index];
-                    index += 1;
-                    r
-                },
-                n,
-                &mut data,
-            );
+            let mut draw = |bound| {
+                assert_eq!(bound, bounds[index]);
+                let r = draws[index];
+                index += 1;
+                r
+            };
+            if COMPLEMENT {
+                choose_edges(&mut draw, n, &mut data);
+                if SHUFFLE {
+                    for i in 1..data.len() {
+                        data.swap(i, draw(i as u32 + 1) as usize);
+                    }
+                }
+            } else {
+                choose::<SHUFFLE, _>(&mut draw, n, &mut data);
+            }
             assert_eq!(index, bounds.len());
             valid(data.clone(), n, !SHUFFLE);
             *counts.entry(data).or_default() += 1;
@@ -338,12 +344,28 @@ mod tests {
     fn exact_uniformity() {
         for n in 0..=8 {
             for k in 0..=n {
-                exact::<false>(n, k);
+                exact::<false, false>(n, k);
             }
         }
         for n in 0..=6 {
             for k in 0..=n {
-                exact::<true>(n, k);
+                exact::<true, false>(n, k);
+            }
+        }
+    }
+
+    #[test]
+    fn complement_exact_uniformity() {
+        // Public dispatch needs larger n for complements with multiple values.
+        // Forcing the kernel allows exhaustive checking at small sizes.
+        for n in 0..=8 {
+            for k in 0..=n {
+                exact::<false, true>(n, k);
+            }
+        }
+        for n in 0..=6 {
+            for k in 0..=n {
+                exact::<true, true>(n, k);
             }
         }
     }

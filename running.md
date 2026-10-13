@@ -22,7 +22,8 @@ cd python
 ./scatter --help
 ```
 
-Even the C++ tests are driven from Python. The C++ tools automatically create the build directory
+The original C++ test driver runs from Python; the focused Cardchoose checks also run directly
+through Meson (see below). The C++ tools automatically create the build directory
 and build the code before running if needed; try eg `./test_choose 5 3`.
 
 The Rust implementation is separate, but its subcommands mirror the Python tools and take the same
@@ -46,7 +47,9 @@ python/bench_all results/my-run
 ## Cardchoose regression benchmark
 
 The focused benchmark builds the working tree and an archived Git revision with the same
-compiler defaults. It needs the usual C++/Rust tools, CFFI, and Python 3.12 or newer. It alternates
+compiler environment in fresh, separate temporary build directories. Existing Meson build
+settings and Cargo target directories cannot supply stale benchmark binaries. It needs the
+usual C++/Rust tools, CFFI, and Python 3.12 or newer. It alternates
 revision order, measures both output orders serially, and reports medians and median absolute
 deviations. Output allocation is outside the clock, as in the original harness; all work inside
 the sampler is timed. On Linux, an optional CPU affinity reduces scheduling noise.
@@ -57,7 +60,10 @@ python/bench_cardchoose results/cardchoose-local --baseline 6048513 --cpu 2
 
 Omit `--cpu` on other platforms or choose an available logical CPU. Options include `--language
 cpp`, `--language rust`, `--repeats`, `--time-for`, and `--max-k`. The output directory contains
-`raw.csv`, `summary.csv`, compiler/CPU/cache metadata, and the working-tree patch. Speedup is
+`raw.csv`, `summary.csv`, compiler/CPU/cache metadata (including both C++ compile commands and
+Rust executable hashes), and the working-tree patch. Use a new or empty output directory;
+existing results are never overwritten. Stage newly added files under `cpp`, `rust`, or `python`
+before running so the patch captures them. Speedup is
 baseline time divided by current time. Tiny timings include function-call overhead, and shared
 machines still introduce noise; use repeated runs before interpreting small differences.
 Large, very fast outputs can also be sensitive to lazy page allocation and batch size: Rust's
@@ -66,6 +72,18 @@ amortizes those costs across more iterations. Compare revisions with the same bu
 within-language speedups rather than treating the C++ and Rust timers as identical.
 The C++ generator is reset to its existing seed (324) for each batch; Rust retains the existing
 OS-seeded `SmallRng` behavior in both revisions.
+
+For comparability, the saved results use the repository's default Rust RNG settings, including
+the tiny bias in `rand`'s single bounded draw (at most one in 2<sup>96</sup> `u32` draws).
+To run with unbiased range reduction, enable `rand/unbiased`, for example:
+
+```
+cargo run --release --features rand/unbiased --manifest-path rust/Cargo.toml -- time --algorithm cardchoose --nk 1000000 1000
+```
+
+This enables rejection sampling for all Rust algorithms. Its runtime bound is expected O(_k_)
+for Cardchoose. The exact enumeration tests inject ideal bounded draws, independently of RNG
+settings.
 
 The `cache` value set probes small samples, implementation boundaries, typical cache working-set
 sizes, nearly full samples, half-density and sparse samples, and `UINT32_MAX` populations. It is
@@ -86,6 +104,7 @@ meson setup cpp/build/host cpp
 meson test -C cpp/build/host --print-errorlogs
 cargo test --manifest-path rust/Cargo.toml
 cargo test --release --manifest-path rust/Cargo.toml
+cargo test --release --features rand/unbiased --manifest-path rust/Cargo.toml
 ```
 
 For C++ address/undefined-behavior checks with the baseline x86-64 instruction set:
@@ -100,8 +119,10 @@ of the portable project build.
 
 ## Building the paper
 
-The paper's figures and tables are generated from the CSVs in `results/latest`. After changing
-those, regenerate them with:
+The paper describes the original comparison-sort algorithm and historical benchmarks. The new
+native implementation and measurements are documented in [cardchoose.md](cardchoose.md) and
+[results.md](results.md). The paper's figures and tables are generated from the CSVs in
+`results/latest`. After changing those, regenerate them with:
 
 ```
 cd python

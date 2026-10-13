@@ -42,6 +42,7 @@ static void enumerate(Sampler f, uint32_t n, uint32_t k, Counts& counts, bool so
     draw_index = 0;
     try {
         f(n, k, a.data());
+        assert(draw_index == draws.size());
         valid(a, n, sorted);
         ++counts[a];
     } catch (NeedDraw next) {
@@ -53,13 +54,23 @@ static void enumerate(Sampler f, uint32_t n, uint32_t k, Counts& counts, bool so
     }
 }
 
+static void random_complement(uint32_t n, uint32_t k, uint32_t* result) {
+    choose_edges(n, k, result);
+    for (uint32_t i = 1; i < k; ++i) {
+        std::swap(result[i], result[randbelow(i + 1)]);
+    }
+}
+
 static void exact_uniformity() {
     enumerate_draws = true;
-    for (bool dense : {false, true}) {
+    // Force the kernels as well: public dispatch only uses multi-element
+    // complements/dense selection above the sizes feasible to enumerate.
+    for (unsigned kernel : {0u, 1u, 2u}) {
         for (bool sorted : {true, false}) {
-            auto f = dense ? (sorted ? dense_choose<false> : dense_choose<true>)
-                           : (sorted ? sorted_cardchoose : random_cardchoose);
-            auto max_n = dense ? (sorted ? 7u : 5u) : (sorted ? 8u : 6u);
+            auto f = sorted ? sorted_cardchoose : random_cardchoose;
+            if (kernel == 1) f = sorted ? dense_choose<false> : dense_choose<true>;
+            if (kernel == 2) f = sorted ? choose_edges : random_complement;
+            auto max_n = kernel == 1 ? (sorted ? 7u : 5u) : (sorted ? 8u : 6u);
             for (uint32_t n = 0; n <= max_n; ++n) {
                 for (uint32_t k = 0; k <= n; ++k) {
                     Counts counts;

@@ -9,9 +9,11 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import os
 import pathlib
 import platform
+import shlex
 import statistics
 import subprocess
 import tarfile
@@ -32,10 +34,24 @@ def output(cmd):
     return command(cmd, capture_output=True, text=True).stdout.strip()
 
 
-def cpp_library(root):
-    ffi, lib = load_cpp.setup_module(root / 'cpp', root / 'cpp/build/host',
+def cpp_library(root, build_dir):
+    ffi, lib = load_cpp.setup_module(root / 'cpp', build_dir,
         ['sorted_cardchoose', 'random_cardchoose'])
     return ffi, lib
+
+
+def rust_binary(root, build_dir):
+    # An explicit, separate target directory prevents CARGO_TARGET_DIR (or a
+    # cached checkout build) from making both revisions use the same binary.
+    messages = output(['cargo', 'build', '--locked', '--release', '--manifest-path',
+                      root / 'rust/Cargo.toml', '--target-dir', build_dir,
+                      '--message-format=json-render-diagnostics'])
+    artifacts = [json.loads(line) for line in messages.splitlines()]
+    [executable] = [a['executable'] for a in artifacts
+                   if a.get('reason') == 'compiler-artifact'
+                   and a['target']['name'] == 'sansreplace' and a.get('executable')]
+    # Cargo may put the executable under a configured target triple.
+    return pathlib.Path(executable)
 
 
 def cpp_time(lib, func, n, k, seconds):
@@ -55,8 +71,11 @@ def rust_times(executable, order, cases, seconds, csv_path):
         cmd.extend(['--nk', str(n), str(k)])
     command(cmd, stdout=subprocess.DEVNULL)
     with csv_path.open() as f:
-        return {(int(r[2]), int(r[3])): float(r[4]) for r in csv.reader(f)
-                if r and r[0] == 'result'}
+        rows = [r for r in csv.reader(f) if r and r[0] == 'result']
+    times = {(int(r[2]), int(r[3])): float(r[4]) for r in rows}
+    if len(rows) != len(cases) or times.keys() != set(cases):
+        raise RuntimeError('Rust benchmark returned missing, duplicate, or unexpected cases')
+    return times
 
 
 def main():
@@ -69,17 +88,27 @@ def main():
     p.add_argument('--max-k', type=int, default=8388608)
     p.add_argument('--cpu', type=int, help='Pin to this logical CPU (Linux only)')
     args = p.parse_args()
-    if args.repeats < 1 or args.time_for <= 0 or args.max_k < 0:
-        p.error('repeats/time-for must be positive, max-k nonnegative')
-    if args.cpu is not None and not hasattr(os, 'sched_setaffinity'):
-        p.error('--cpu requires Linux CPU affinity support')
-    languages = args.language or ['cpp', 'rust']
+    if args.repeats < 1 or not math.isfinite(args.time_for) or args.time_for <= 0 or args.max_k < 0:
+        p.error('repeats/time-for must be finite and positive, max-k nonnegative')
+    if args.cpu is not None:
+        if not hasattr(os, 'sched_setaffinity'):
+            p.error('--cpu requires Linux CPU affinity support')
+        if args.cpu not in os.sched_getaffinity(0):
+            p.error('--cpu must be in the current process CPU affinity set')
+    languages = list(dict.fromkeys(args.language or ['cpp', 'rust']))
     cases = [(n, k) for _, n, k in nkvalues.cache_values() if k <= args.max_k]
+    if args.outdir.exists() and (not args.outdir.is_dir() or any(args.outdir.iterdir())):
+        p.error('outdir must be new or empty; existing measurements are never overwritten')
+    untracked = output(['git', '-C', ROOT, 'ls-files', '--others', '--exclude-standard',
+                        '--', 'cpp', 'rust', 'python'])
+    if untracked:
+        p.error('stage new source files first so working-tree.patch captures them:\n' + untracked)
     args.outdir.mkdir(parents=True, exist_ok=True)
     scratch = ROOT / 'scratch'
     scratch.mkdir(exist_ok=True)
-    baseline = output(['git', '-C', ROOT, 'rev-parse', args.baseline])
-    diff = command(['git', '-C', ROOT, 'diff', 'HEAD', '--', 'cpp', 'rust', 'python'],
+    baseline = output(['git', '-C', ROOT, 'rev-parse', '--verify', '--end-of-options',
+                       args.baseline + '^{commit}'])
+    diff = command(['git', '-C', ROOT, 'diff', '--binary', 'HEAD', '--', 'cpp', 'rust', 'python'],
                    capture_output=True).stdout
     (args.outdir / 'working-tree.patch').write_bytes(diff)
     metadata = {
@@ -94,11 +123,13 @@ def main():
         'allocation': 'Output allocation excluded; algorithm-internal work included',
         'flags': 'Repository defaults plus compiler_environment below',
         'compiler_environment': {k: os.environ.get(k, '') for k in
-            ['CFLAGS', 'CXXFLAGS', 'CPPFLAGS', 'RUSTFLAGS', 'CARGO_ENCODED_RUSTFLAGS']},
+            ['CC', 'CXX', 'CFLAGS', 'CXXFLAGS', 'CPPFLAGS', 'RUSTFLAGS',
+             'CARGO_ENCODED_RUSTFLAGS', 'CARGO_BUILD_TARGET']},
+        'builds': 'Fresh, separate temporary C++ and Cargo build directories per revision',
         'case_count': len(cases),
     }
     if 'cpp' in languages:
-        metadata['cxx'] = output([os.environ.get('CXX', 'c++'), '--version'])
+        metadata['cxx'] = output([*shlex.split(os.environ.get('CXX', 'c++')), '--version'])
     if 'rust' in languages:
         metadata['rustc'] = output(['rustc', '-Vv'])
     if pathlib.Path('/proc/cpuinfo').exists():
@@ -125,19 +156,21 @@ def main():
         roots = {'baseline': old, 'current': ROOT}
         cpp = {}
         rust = {}
+        metadata['cxx_compile_commands'] = {}
+        metadata['rust_binary_sha256'] = {}
         # Build everything before measuring, so compiler work cannot interfere.
         for revision, root in roots.items():
             if 'cpp' in languages:
-                cpp[revision] = cpp_library(root)
+                build_dir = temp / (revision + '-cpp')
+                cpp[revision] = cpp_library(root, build_dir)
+                commands = json.loads((build_dir / 'compile_commands.json').read_text())
+                metadata['cxx_compile_commands'][revision] = next(c['command'] for c in commands
+                    if pathlib.Path(c['file']).name == 'cardchoose.cpp')
             if 'rust' in languages:
-                command(['cargo', 'build', '--locked', '--release', '--manifest-path',
-                         root / 'rust/Cargo.toml'])
-                rust[revision] = root / 'rust/target/release/sansreplace'
-        if 'cpp' in languages:
-            commands = json.loads((ROOT / 'cpp/build/host/compile_commands.json').read_text())
-            metadata['cxx_compile_command'] = next(c['command'] for c in commands
-                if pathlib.Path(c['file']).name == 'cardchoose.cpp')
-            (args.outdir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
+                rust[revision] = rust_binary(root, temp / (revision + '-rust'))
+                metadata['rust_binary_sha256'][revision] = hashlib.sha256(
+                    rust[revision].read_bytes()).hexdigest()
+        (args.outdir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
         if args.cpu is not None:
             os.sched_setaffinity(0, {args.cpu})
         samples = {}

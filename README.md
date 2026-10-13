@@ -16,6 +16,8 @@ See the [implementation and complexity notes](cardchoose.md#linear-native-implem
 [updated measurements](results.md), and the reproducible `python/bench_cardchoose` benchmark.
 The O(_k_) bound counts a bounded uniform random draw as constant time; with the C++ generator's
 rejection loop included, it is an expected-time bound.
+Uniformity assumes uniform bounded draws; the [implementation notes](cardchoose.md#linear-native-implementation)
+also explain Rust's existing tiny RNG bias and how to enable unbiased range reduction.
 
 I first proposed Cardchoose in October 2018. Its two ingredients, a Pólya urn and the
 stars-and-bars bijection, are classical mathematics; what I have not found elsewhere is the urn
