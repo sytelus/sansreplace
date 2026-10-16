@@ -73,10 +73,10 @@ This proves the local urn and the final stars-and-bars step, including duplicate
 Let group b contain s_b original colors and receive M_b draws. The aggregated
 urn is a Pólya urn with initial group weights s_b. For counts m_b summing to k,
 
-\[
+$$
   \Pr(M_b=m_b\ \text{for all }b)
   =\frac{\prod_b {s_b+m_b-1\choose m_b}}{{t+k-1\choose k}}.
-\]
+$$
 
 Indeed, each ordered group sequence has probability
 `product(s_b(s_b+1)...(s_b+m_b-1)) / (t(t+1)...(t+k-1))`;
@@ -126,10 +126,10 @@ word widths, languages, and versions.
 
 The exact second moment of the group occupancies is
 
-\[
+$$
  \mathbb E\!\left[\sum_b M_b^2\right]
  = k + k(k-1)\frac{\sum_b s_b(s_b+1)}{t(t+1)}.
-\]
+$$
 
 To obtain it, write the sum of squared counts as k plus the number of ordered
 pairs of draws sharing a group. Exchangeability of the urn makes that pair
@@ -137,9 +137,9 @@ probability `sum(s_b(s_b+1)) / (t(t+1))`, without an independence assumption.
 
 Balanced group sizes give
 
-\[
+$$
  \frac{\sum_b s_b(s_b+1)}{t(t+1)}\le\frac1B+\frac2t.
-\]
+$$
 
 The sparse path is used only when n > 2k, hence t > k. Since B ≥ k/16,
 the expected sum of squared occupancies is at most **19k**. Insertion-sorting
@@ -147,7 +147,8 @@ a group of m elements costs O(m²), so the expected total sorting work is O(k).
 This also covers the one-group case, where k ≤ 16.
 For native intervals, s_b ≤ w ≤ t/B0, so
 `sum(s_b(s_b+1)) <= t(w+1)`. The second-moment factor is at most
-`(w+1)/(t+1) <= 1/B0 + 1/t`, bounding the expected sum of squared occupancies
+`(w+1)/(t+1) <= 1/B0 + 1/t`. For the production defaults B0 ≥ k/G; together
+these bound the expected sum of squared occupancies
 by **(G+2)k**: 18k for C++, 66k for Rust. These are conservative work bounds,
 not instruction-count predictions. The larger Rust groups measured better with
 its standard-library sorter and reduce metadata traffic. Native sorts are used only
@@ -179,7 +180,7 @@ random draws and metadata passes. Both implementations remain available, and the
 benchmark records losses as well as wins. Its 64-bit comparator is the original
 urn plus comparison sort, not a 64-bit radix implementation.
 
-## How one array is enough
+## How the output holds the group metadata
 
 The output passes through four representations:
 
@@ -219,7 +220,8 @@ across every valid (n,k) pair to detect hidden use of spare bits.
 
 For sorted samples with n ≤ 2k, Algorithm S selects the next value with
 probability `remaining selections / remaining population`. It scans at most 2k
-values. Full samples and up to two omissions have direct fill paths. Native k=1
+values. Full samples and samples with one or two omissions have direct native
+fill paths. Native k=1
 and k=2 paths avoid the group machinery. The k=2 map draws a uniformly ordered
 pair by bijectively skipping the first value; sorting it gives a uniform subset.
 Populations through 512 use the bitmap shortcut. Samples through the small-sort

@@ -8,6 +8,87 @@ The new [Grouped Cardchoose](groupedchoose.md) has a separate comparison coverin
 
 ## Grouped Cardchoose results
 
+### Review run: 2026-10-16
+
+The review implementation in `3a1fcd3` replaces group-index divisions with shifts,
+uses a fixed 64-byte Floyd bitmap for small local domains, expands small-complement dispatch,
+and emits nearly full samples as contiguous runs. Bounded comparison sorts handle at most
+128 values in C++ and 1,024 in Rust; group targets are 16 and 64 respectively. These choices
+preserve **expected O(k) word operations and the output plus O(1) auxiliary words**. The
+[proof](groupedchoose.md) covers uniformity, storage reuse, native overflow bounds and bit costs.
+
+The expanded grid covers small-sort and bitmap cutoffs, dense and sparse populations, both
+output orders, 32/64-bit limits, and outputs through 8,388,608 values (up to 64 MiB).
+**23,920 calibrated batches produce 4,784 summary rows.** Each case has five repetitions with
+a final batch of at least 0.02 seconds. All builds finish before serial measurements on CPU 2
+of an AMD EPYC 9V74 VM, reporting 32 KiB L1 data, 1 MiB L2 and 32 MiB L3. GCC 14.2.0 and
+rustc 1.99.0 use portable defaults. Native allocation, first touch and one warm-up are outside
+timing; algorithm order rotates and RNG state resets for each batch. C++ measurements call
+the exported library API.
+
+The baseline is **optimized Cardchoose at 32 bits**, and **the original urn plus comparison
+sort at 64 bits**; all bounded draws are unbiased. The latter is not a 64-bit radix baseline.
+Reservoir sampling is also measured when n <= 2k. Production Python is unchanged; its
+arbitrary-precision measurements remain in the initial run below.
+
+These are medians of pointwise baseline/grouped ratios over nonempty samples, not
+workload-weighted application speedups. Values below 1 are losses. The expanded grid differs
+from the initial run, so the aggregate medians are not a paired before/after comparison.
+
+| Native comparison | Cases per order | Median sorted | Median random | Worst sorted | Worst random |
+|---|---:|---:|---:|---:|---:|
+| C++, 32-bit | 216 | 1.01× | 1.01× | 0.38× | 0.49× |
+| C++, 64-bit | 240 | 3.42× | 2.83× | 1.00× | 0.96× |
+| Rust, 32-bit | 216 | 1.00× | 0.97× | 0.42× | 0.47× |
+| Rust, 64-bit | 240 | 1.78× | 2.46× | 0.91× | 1.02× |
+
+Selected medians, in milliseconds per sample, retain both gains and regressions.
+
+| Implementation / order | n | k | Baseline ms | Grouped ms | Speedup |
+|---|---:|---:|---:|---:|---:|
+| C++ 32-bit sorted | 65,536 | 4,096 | 0.024 | 0.055 | 0.43× |
+| C++ 32-bit random | 65,536 | 4,096 | 0.038 | 0.068 | 0.56× |
+| C++ 32-bit sorted | 2^32−1 | 1,048,576 | 12.681 | 21.346 | 0.59× |
+| C++ 32-bit sorted | 2^32−1 | 8,388,608 | 210.468 | 175.529 | 1.20× |
+| C++ 32-bit sorted | 1,059,061 | 1,048,576 | 3.582 | 0.438 | 8.17× |
+| C++ 32-bit random | 2,097,152 | 1,048,576 | 17.032 | 10.074 | 1.69× |
+| C++ 64-bit sorted | 2^64−1 | 1,048,576 | 63.437 | 20.238 | 3.13× |
+| C++ 64-bit random | 2^64−1 | 1,048,576 | 66.675 | 24.443 | 2.73× |
+| Rust 32-bit sorted | 65,536 | 4,096 | 0.020 | 0.047 | 0.42× |
+| Rust 32-bit sorted | 2^32−1 | 8,388,608 | 197.347 | 138.714 | 1.42× |
+| Rust 64-bit sorted | 2^64−1 | 1,048,576 | 21.369 | 16.843 | 1.27× |
+| Rust 64-bit random | 2^64−1 | 8,388,608 | 383.826 | 250.592 | 1.53× |
+
+C++ sorted (70,64) takes 0.071 µs versus 0.163 µs for the baseline (2.31×).
+Rust sorted (70,64) takes 0.092 µs versus 0.190 µs for the baseline (2.07×).
+
+The implementation does **not** beat every baseline case. Specialized radix sorting remains
+faster in some sparse 32-bit workloads; tiny calls can differ by a few nanoseconds of dispatch
+overhead. Expected-linear optimality does not establish universally fastest constants. The
+native bitmap is a fixed 64 bytes; bounded standard-library sort stack and scalar call frames
+are additional constant workspace. The existing specialized sampler remains available.
+
+Validation passed exact rational native probability trees; all valid 8-bit C++ (n,k) pairs,
+with additional forced packing/complement paths; bitmap and sort boundaries with canaries;
+maximum 32/64-bit inputs; C++ ASan/UBSan; Rust debug/release tests, formatting and Clippy;
+and baseline x86-64 builds with AVX/AVX2 disabled. Python's 703,266 rationally weighted paths
+and standalone function checks passed. The regenerated screenshot removes defensive
+validation, adds explanatory comments, and reconstructs all 95 source lines exactly from SVG.
+
+[Raw samples](results/groupedchoose-review-2026-10-16/raw.csv),
+[medians, MADs and all ratios](results/groupedchoose-review-2026-10-16/summary.csv), and
+[CPU/compiler/source and binary-hash metadata](results/groupedchoose-review-2026-10-16/metadata.json).
+
+Every case and repetition was checked, along with valid timing batches and independently
+recomputed medians, MADs and ratios. Results describe one shared VM; read near ties with their
+dispersion. Reproduce the review grid with:
+
+```
+python/bench_groupedchoose results/grouped-review-local --language cpp --language rust --repeats 5 --time-for 0.02 --max-k 8388608 --cpu 2
+```
+
+### Initial grouped run: 2026-10-16
+
 The October 16 run measures the implementation in `5e4ec71`, including the final small-sample
 cutoff, complement dispatch, Rust slice access, and C++ exported API adapters. It compares
 both output orders at 32 and 64 bits, plus Python populations through 4096 bits. The largest
@@ -75,7 +156,7 @@ over optimized library code at these sizes.
 retain all measured regressions. These are measurements on one shared VM, not a proof of the
 fastest constants on every machine. Near ties should be read with their dispersion.
 
-The final validation includes 703,266 rationally weighted production Python paths plus
+The validation for that revision included 703,266 rationally weighted production Python paths plus
 separate checks of the standalone function; exact grouped and complement probability trees
 in C++ and Rust; all valid 8-bit C++ (n,k) pairs; 32/64-bit boundaries and exported APIs;
 extreme occupancies and canaries; Python populations beyond 2^4096; C++ ASan/UBSan; Rust debug

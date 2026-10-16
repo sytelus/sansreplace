@@ -1,0 +1,291 @@
+{
+  "head": "3a1fcd3a73cc1fe12bc115106b77d496e1cade07",
+  "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "date_utc": "2026-10-16T23:16:43Z",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "options": {
+    "outdir": "results/groupedchoose-review-2026-10-16",
+    "language": [
+      "cpp",
+      "rust"
+    ],
+    "repeats": 5,
+    "time_for": 0.02,
+    "max_k": 8388608,
+    "cpu": 2,
+    "quick": false
+  },
+  "rng": "Unbiased bounded draws; C++ Xoshiro256++, Rust SmallRng, Python MT; reset to seed 324 per batch",
+  "timing": "Serial, rotating algorithm order; final calibrated batch >= time-for; all buffers warmed once",
+  "allocation": "Native output allocated and touched before timing; Python includes returned-list allocation",
+  "compiler_environment": {
+    "CC": "",
+    "CXX": "",
+    "CFLAGS": "",
+    "CXXFLAGS": "",
+    "CPPFLAGS": "",
+    "RUSTFLAGS": "",
+    "CARGO_ENCODED_RUSTFLAGS": "",
+    "CARGO_BUILD_TARGET": ""
+  },
+  "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+  "caches": [
+    {
+      "level": "1",
+      "type": "Data",
+      "size": "32K",
+      "coherency_line_size": "64"
+    },
+    {
+      "level": "1",
+      "type": "Instruction",
+      "size": "32K",
+      "coherency_line_size": "64"
+    },
+    {
+      "level": "2",
+      "type": "Unified",
+      "size": "1024K",
+      "coherency_line_size": "64"
+    },
+    {
+      "level": "3",
+      "type": "Unified",
+      "size": "32768K",
+      "coherency_line_size": "64"
+    }
+  ],
+  "cpp_library_sha256": "a47e1a4ce6d7466a045981157b7a8c07bb7b808d6adb76958bdc6152da61311e",
+  "cpp_commands": [
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/donothing.cpp.o -MF libsansreplace.so.p/donothing.cpp.o.d -o libsansreplace.so.p/donothing.cpp.o -c ../../../cpp/donothing.cpp",
+      "file": "../../../cpp/donothing.cpp",
+      "output": "libsansreplace.so.p/donothing.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "cc -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c11 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/randbelow.c.o -MF libsansreplace.so.p/randbelow.c.o.d -o libsansreplace.so.p/randbelow.c.o -c ../../../cpp/randbelow.c",
+      "file": "../../../cpp/randbelow.c",
+      "output": "libsansreplace.so.p/randbelow.c.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/timing.cpp.o -MF libsansreplace.so.p/timing.cpp.o.d -o libsansreplace.so.p/timing.cpp.o -c ../../../cpp/timing.cpp",
+      "file": "../../../cpp/timing.cpp",
+      "output": "libsansreplace.so.p/timing.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/quadraticreject.cpp.o -MF libsansreplace.so.p/quadraticreject.cpp.o.d -o libsansreplace.so.p/quadraticreject.cpp.o -c ../../../cpp/quadraticreject.cpp",
+      "file": "../../../cpp/quadraticreject.cpp",
+      "output": "libsansreplace.so.p/quadraticreject.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/rejectionsample.cpp.o -MF libsansreplace.so.p/rejectionsample.cpp.o.d -o libsansreplace.so.p/rejectionsample.cpp.o -c ../../../cpp/rejectionsample.cpp",
+      "file": "../../../cpp/rejectionsample.cpp",
+      "output": "libsansreplace.so.p/rejectionsample.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/ranksb.cpp.o -MF libsansreplace.so.p/ranksb.cpp.o.d -o libsansreplace.so.p/ranksb.cpp.o -c ../../../cpp/ranksb.cpp",
+      "file": "../../../cpp/ranksb.cpp",
+      "output": "libsansreplace.so.p/ranksb.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/floydf2.cpp.o -MF libsansreplace.so.p/floydf2.cpp.o.d -o libsansreplace.so.p/floydf2.cpp.o -c ../../../cpp/floydf2.cpp",
+      "file": "../../../cpp/floydf2.cpp",
+      "output": "libsansreplace.so.p/floydf2.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/quadraticf2.cpp.o -MF libsansreplace.so.p/quadraticf2.cpp.o.d -o libsansreplace.so.p/quadraticf2.cpp.o -c ../../../cpp/quadraticf2.cpp",
+      "file": "../../../cpp/quadraticf2.cpp",
+      "output": "libsansreplace.so.p/quadraticf2.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/iterativechoose.cpp.o -MF libsansreplace.so.p/iterativechoose.cpp.o.d -o libsansreplace.so.p/iterativechoose.cpp.o -c ../../../cpp/iterativechoose.cpp",
+      "file": "../../../cpp/iterativechoose.cpp",
+      "output": "libsansreplace.so.p/iterativechoose.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/reservoirsample.cpp.o -MF libsansreplace.so.p/reservoirsample.cpp.o.d -o libsansreplace.so.p/reservoirsample.cpp.o -c ../../../cpp/reservoirsample.cpp",
+      "file": "../../../cpp/reservoirsample.cpp",
+      "output": "libsansreplace.so.p/reservoirsample.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/vitterd.cpp.o -MF libsansreplace.so.p/vitterd.cpp.o.d -o libsansreplace.so.p/vitterd.cpp.o -c ../../../cpp/vitterd.cpp",
+      "file": "../../../cpp/vitterd.cpp",
+      "output": "libsansreplace.so.p/vitterd.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/select.cpp.o -MF libsansreplace.so.p/select.cpp.o.d -o libsansreplace.so.p/select.cpp.o -c ../../../cpp/select.cpp",
+      "file": "../../../cpp/select.cpp",
+      "output": "libsansreplace.so.p/select.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/hsel.cpp.o -MF libsansreplace.so.p/hsel.cpp.o.d -o libsansreplace.so.p/hsel.cpp.o -c ../../../cpp/hsel.cpp",
+      "file": "../../../cpp/hsel.cpp",
+      "output": "libsansreplace.so.p/hsel.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/cardchoose.cpp.o -MF libsansreplace.so.p/cardchoose.cpp.o.d -o libsansreplace.so.p/cardchoose.cpp.o -c ../../../cpp/cardchoose.cpp",
+      "file": "../../../cpp/cardchoose.cpp",
+      "output": "libsansreplace.so.p/cardchoose.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ilibsansreplace.so.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -fPIC -MD -MQ libsansreplace.so.p/groupedchoose.cpp.o -MF libsansreplace.so.p/groupedchoose.cpp.o.d -o libsansreplace.so.p/groupedchoose.cpp.o -c ../../../cpp/groupedchoose.cpp",
+      "file": "../../../cpp/groupedchoose.cpp",
+      "output": "libsansreplace.so.p/groupedchoose.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Icardchoose_test.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -MD -MQ cardchoose_test.p/tests_cardchoose_test.cpp.o -MF cardchoose_test.p/tests_cardchoose_test.cpp.o.d -o cardchoose_test.p/tests_cardchoose_test.cpp.o -c ../../../cpp/tests/cardchoose_test.cpp",
+      "file": "../../../cpp/tests/cardchoose_test.cpp",
+      "output": "cardchoose_test.p/tests_cardchoose_test.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Igroupedchoose_test.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -MD -MQ groupedchoose_test.p/tests_groupedchoose_test.cpp.o -MF groupedchoose_test.p/tests_groupedchoose_test.cpp.o.d -o groupedchoose_test.p/tests_groupedchoose_test.cpp.o -c ../../../cpp/tests/groupedchoose_test.cpp",
+      "file": "../../../cpp/tests/groupedchoose_test.cpp",
+      "output": "groupedchoose_test.p/tests_groupedchoose_test.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Igroupedchoose_test.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -MD -MQ groupedchoose_test.p/groupedchoose.cpp.o -MF groupedchoose_test.p/groupedchoose.cpp.o.d -o groupedchoose_test.p/groupedchoose.cpp.o -c ../../../cpp/groupedchoose.cpp",
+      "file": "../../../cpp/groupedchoose.cpp",
+      "output": "groupedchoose_test.p/groupedchoose.cpp.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "cc -Igroupedchoose_test.p -I. -I../../../cpp -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c11 -O2 -g -fno-strict-aliasing -O3 -MD -MQ groupedchoose_test.p/randbelow.c.o -MF groupedchoose_test.p/randbelow.c.o.d -o groupedchoose_test.p/randbelow.c.o -c ../../../cpp/randbelow.c",
+      "file": "../../../cpp/randbelow.c",
+      "output": "groupedchoose_test.p/randbelow.c.o"
+    },
+    {
+      "directory": "/workspace/sansreplace/scratch/grouped-bench-rdsbfete/cpp",
+      "command": "c++ -Ibench_groupedchoose.p -I. -I../../../cpp -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c++17 -O2 -g -fno-strict-aliasing -O3 -MD -MQ bench_groupedchoose.p/bench_groupedchoose.cpp.o -MF bench_groupedchoose.p/bench_groupedchoose.cpp.o.d -o bench_groupedchoose.p/bench_groupedchoose.cpp.o -c ../../../cpp/bench_groupedchoose.cpp",
+      "file": "../../../cpp/bench_groupedchoose.cpp",
+      "output": "bench_groupedchoose.p/bench_groupedchoose.cpp.o"
+    }
+  ],
+  "cpp_compilers": {
+    "host": {
+      "c": {
+        "id": "gcc",
+        "exelist": [
+          "cc"
+        ],
+        "linker_exelist": [
+          "cc"
+        ],
+        "file_suffixes": [
+          "c"
+        ],
+        "default_suffix": "c",
+        "version": "14.2.0",
+        "full_version": "cc (Debian 14.2.0-19) 14.2.0",
+        "linker_id": "ld.bfd"
+      },
+      "cpp": {
+        "id": "gcc",
+        "exelist": [
+          "c++"
+        ],
+        "linker_exelist": [
+          "c++"
+        ],
+        "file_suffixes": [
+          "cpp",
+          "cppm",
+          "cc",
+          "cp",
+          "cxx",
+          "c++",
+          "hh",
+          "hp",
+          "hpp",
+          "ipp",
+          "hxx",
+          "h++",
+          "ino",
+          "ixx",
+          "CPP",
+          "C",
+          "HPP",
+          "H"
+        ],
+        "default_suffix": "cpp",
+        "version": "14.2.0",
+        "full_version": "c++ (Debian 14.2.0-19) 14.2.0",
+        "linker_id": "ld.bfd"
+      }
+    },
+    "build": {
+      "c": {
+        "id": "gcc",
+        "exelist": [
+          "cc"
+        ],
+        "linker_exelist": [
+          "cc"
+        ],
+        "file_suffixes": [
+          "c"
+        ],
+        "default_suffix": "c",
+        "version": "14.2.0",
+        "full_version": "cc (Debian 14.2.0-19) 14.2.0",
+        "linker_id": "ld.bfd"
+      },
+      "cpp": {
+        "id": "gcc",
+        "exelist": [
+          "c++"
+        ],
+        "linker_exelist": [
+          "c++"
+        ],
+        "file_suffixes": [
+          "cpp",
+          "cppm",
+          "cc",
+          "cp",
+          "cxx",
+          "c++",
+          "hh",
+          "hp",
+          "hpp",
+          "ipp",
+          "hxx",
+          "h++",
+          "ino",
+          "ixx",
+          "CPP",
+          "C",
+          "HPP",
+          "H"
+        ],
+        "default_suffix": "cpp",
+        "version": "14.2.0",
+        "full_version": "c++ (Debian 14.2.0-19) 14.2.0",
+        "linker_id": "ld.bfd"
+      }
+    }
+  },
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.0\nLLVM version: 23.1.1",
+  "executable_sha256": {
+    "cpp": "6be15b42506264ea9dc9908a2794d6ccccc14ecf3e0d5a03aab49111982fb218",
+    "rust": "d4a88b09b35c9fe8799b3252524f7e8b229f28e74fbda8208744fbe804095a32"
+  }
+}
