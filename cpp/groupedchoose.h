@@ -27,15 +27,16 @@ void local_sample(Word* out, Word start, Word count, Word low, Word width, Draw&
         uint64_t bits[8] = {};
         const bool invert = count > domain / 2;
         const Word draws = invert ? domain - count : count;
+        const bool runs = invert && draws <= count / 16;
         for (Word j = domain - draws; j < domain; ++j) {
             const Word r = draw(Word(j + 1));
             const Word v = (bits[r / 64] & (uint64_t{1} << (r % 64))) ? j : r;
             bits[v / 64] |= uint64_t{1} << (v % 64);
         }
-        Word written = start;
+        Word written = start, first = 0;
         const unsigned words = 1 + (domain - 1) / 64;
         for (unsigned b = 0; b < words; ++b) {
-            auto mask = invert ? ~bits[b] : bits[b];
+            auto mask = invert && !runs ? ~bits[b] : bits[b];
             if (b + 1 == words && domain % 64 != 0)
                 mask &= (uint64_t{1} << (domain % 64)) - 1;
             while (mask) {
@@ -45,9 +46,20 @@ void local_sample(Word* out, Word start, Word count, Word low, Word width, Draw&
 #else
                 for (auto shifted = mask; (shifted & 1) == 0; shifted >>= 1) ++bit;
 #endif
-                out[written++] = low + start + Word(64 * b + bit);
+                const Word value = Word(64 * b + bit);
+                if (runs) {
+                    // The bits describe omissions. Fill whole included runs
+                    // instead of testing one bit for every output value.
+                    for (Word v = first; v < value; ++v) out[written++] = low + start + v;
+                    first = value + 1;
+                } else {
+                    out[written++] = low + start + value;
+                }
                 mask &= mask - 1;
             }
+        }
+        if (runs) {
+            for (Word v = first; v < domain; ++v) out[written++] = low + start + v;
         }
         return;
     }
@@ -95,13 +107,7 @@ void sparse(Word n, Word k, Word* out, Draw& draw) {
     static_assert(GroupSize >= 3);
     if (k == 0) return;  // n-k+1 need not be representable for an empty sample.
     const Word t = n - k + 1;
-    if constexpr (GroupSize == default_group_size) {
-        if (k <= small_sort) {
-            local_sample(out, Word{0}, k, Word{0}, t, draw);
-            return;
-        }
-    }
-    if (k < 4) {
+    if (k < 4 || (GroupSize == default_group_size && k <= small_sort)) {
         local_sample(out, Word{0}, k, Word{0}, t, draw);
         return;
     }
@@ -190,6 +196,14 @@ void choose(Word n, Word k, Word* out, Draw&& draw) {
         return;
     }
     if constexpr (!RandomOrder) {
+        if (n - k == 2) {
+            const Word a = draw(n), r = draw(n - 1), b = r + (r >= a);
+            const Word first = std::min(a, b), second = std::max(a, b);
+            for (Word i = 0; i < first; ++i) out[i] = i;
+            for (Word i = first; i < second - 1; ++i) out[i] = i + 1;
+            for (Word i = second - 1; i < k; ++i) out[i] = i + 2;
+            return;
+        }
         if (n - k > 1) {
             if (n <= 512) {
                 local_sample(out, Word{0}, k, Word{0}, Word(n - k + 1), draw);

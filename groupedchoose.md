@@ -5,7 +5,7 @@ digits. It samples a uniform sorted subset using **expected O(k) integer operati
 the k-element output array, and O(1) auxiliary integers**. The Python construction
 uses only the output and scalar variables. Native fast paths add a **fixed 64-byte
 bitmap** for local domains of at most 512 values and bounded standard-library
-sorts (at most 128 elements in C++, 256 in Rust). Their auxiliary workspace remains
+sorts (at most 128 elements in C++, 1024 in Rust). Their auxiliary workspace remains
 constant: the bitmap and bounded sort stack do not grow with n or k. There is no
 hash table, heap allocation, population-sized bitmap, or floating point. Local
 work operates on contiguous memory; group counts occupy a prefix of the output.
@@ -105,8 +105,11 @@ previous set must be S without j, and the a+1 choices in that set or {j} all
 produce S. In either case the probability is
 `(a+1) / ((j+1)*binomial(j,a)) = 1 / binomial(j+1,a+1)`.
 When m > D/2, sampling D−m omissions and complementing the bitmap has the same
-uniform law and uses fewer draws. Unused bits in the final word are masked out.
-Set-bit enumeration returns the values in order. No approximate probabilities
+uniform law and uses fewer draws. Every inserted bit is inside [0,D). For an
+ordinary sample, set-bit enumeration returns its values in order. A complement
+either enumerates the inverted bits (masking unused bits in the final word), or,
+when omissions are at most m/16, enumerates omissions and fills the gaps as
+contiguous runs. This avoids a bit-by-bit pass over a nearly full sample. No approximate probabilities
 or collision retry assumption enters this path.
 
 Uniformity here assumes independent uniform bounded draws. Python uses
@@ -148,7 +151,7 @@ For native intervals, s_b ≤ w ≤ t/B0, so
 by **(G+2)k**: 18k for C++, 66k for Rust. These are conservative work bounds,
 not instruction-count predictions. The larger Rust groups measured better with
 its standard-library sorter and reduce metadata traffic. Native sorts are used only
-for m ≤ 128 (C++) or m ≤ 256 (Rust); larger groups retain insertion sort.
+for m ≤ 128 (C++) or m ≤ 1024 (Rust); larger groups retain insertion sort.
 Their cost is bounded by O(m²) in either case. Skipping grouping for a sample
 within that fixed small-sort cutoff also preserves O(k) work and O(1) auxiliary
 workspace. Bitmap sampling takes at most m draws and O(m+8) work; every invoked
@@ -164,6 +167,17 @@ insertion sorting quadratic; no worst-case linear bound is claimed here.
 Writing the output already costs Ω(k) word operations, so the expected bound
 is asymptotically optimal in this arithmetic model. This establishes neither
 the smallest instruction count nor the fastest implementation on every CPU.
+
+## What the performance guarantee means
+
+Expected O(k) word operations match the Ω(k) cost of writing an explicit sample.
+This is asymptotic optimality, not a guarantee of the best constant on every CPU,
+compiler, population, and sample size. Empty and full samples leave little work
+beyond dispatch and output stores. In some sparse 32-bit cases the specialized
+Cardchoose radix buffers still beat the grouped construction's second set of
+random draws and metadata passes. Both implementations remain available, and the
+benchmark records losses as well as wins. Its 64-bit comparator is the original
+urn plus comparison sort, not a 64-bit radix implementation.
 
 ## How one array is enough
 
@@ -205,14 +219,14 @@ across every valid (n,k) pair to detect hidden use of spare bits.
 
 For sorted samples with n ≤ 2k, Algorithm S selects the next value with
 probability `remaining selections / remaining population`. It scans at most 2k
-values. Full samples and a single omission have direct fill paths. Native k=1
+values. Full samples and up to two omissions have direct fill paths. Native k=1
 and k=2 paths avoid the group machinery. The k=2 map draws a uniformly ordered
 pair by bijectively skipping the first value; sorting it gives a uniform subset.
 Populations through 512 use the bitmap shortcut. Samples through the small-sort
 cutoff use a local sampler when another edge path does not apply. Algorithm S
 is exact because each next inclusion has the conditional probability required
 by a uniform subset of the remaining population. The general dense scan avoids
-extra exit checks on every element. Full and single-omission samples are emitted
+extra exit checks on every element. Full, single- and two-omission samples are emitted
 as contiguous runs, avoiding a comparison on each output.
 
 When q = n−k is small, a complement path reduces random draws by sampling q omissions into the output

@@ -223,7 +223,7 @@ fn boundaries_and_packing() {
         assert!(out.windows(2).all(|w| w[0] < w[1]));
     }
     // Exercise the public RNG adapters, including a population beyond u32.
-    for k in [65, 128, 129, 256, 257, 512, 513, 1024] {
+    for k in [65, 128, 129, 256, 257, 512, 513, 1023, 1024, 1025] {
         let mut out32 = vec![0; k];
         let mut out64 = vec![0; k];
         sorted_order(&mut rng, u32::MAX, &mut out32);

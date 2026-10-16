@@ -86,7 +86,7 @@ void boundaries() {
         for (Word k : {Word{0}, Word{1}, Word{2}, Word{3}, Word{15}, Word{16}, Word{17}, Word{31}, Word{32}, Word{33},
                        Word{63}, Word{64}, Word{65}, Word{127}, Word{128}, Word{129}, Word{255}, Word{256}, Word{257},
                        Word{511}, Word{512}, Word{513},
-                       Word{1024}, Word{65536}}) {
+                       Word{1023}, Word{1024}, Word{1025}, Word{65536}}) {
             if (k > n) continue;
             for (bool random : {false, true}) {
                 for (unsigned mode = 0; mode < 3; ++mode) {
@@ -115,7 +115,7 @@ void boundaries() {
         groupedchoose::choose<false, 3>(n, k, out.data(), draw);
         valid(out, n, true);
     }
-    for (Word k : {Word{8}, Word{64}, Word{256}, Word{1024}, Word{65536}}) {
+    for (Word k : {Word{8}, Word{64}, Word{256}, Word{1023}, Word{1024}, Word{1025}, Word{65536}}) {
         for (Word omitted : {Word{2}, Word{3}, Word(k/4 - 1), Word(k/4), Word(k/4 + 1),
                              Word(k/16), Word(k/16 + 1), Word(k/16 == 0 ? 0 : k/16 - 1)}) {
             for (unsigned mode = 0; mode < 3; ++mode) {

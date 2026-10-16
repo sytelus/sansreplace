@@ -5,7 +5,7 @@
 //! bounded draws. A fixed 64-byte bitmap and bounded small-sort stack are the
 //! only non-scalar workspace. See groupedchoose.md for the probability and storage proofs.
 
-const SMALL_SORT: usize = 256;
+const SMALL_SORT: usize = 1024;
 const DEFAULT_GROUP_SIZE: usize = 64;
 
 macro_rules! implementation {
@@ -37,6 +37,7 @@ macro_rules! implementation {
                     } else {
                         count as $word
                     };
+                    let runs = invert && draws <= count as $word / 16;
                     for j in domain - draws..domain {
                         let r = draw(j + 1);
                         let v = if bits[(r / 64) as usize] & (1u64 << (r % 64)) != 0 {
@@ -46,19 +47,33 @@ macro_rules! implementation {
                         };
                         bits[(v / 64) as usize] |= 1u64 << (v % 64);
                     }
-                    let mut written = 0;
+                    let (mut written, mut first) = (0, 0 as $word);
                     let words = 1 + (domain as usize - 1) / 64;
                     for (b, &word) in bits[..words].iter().enumerate() {
-                        let mut mask = if invert { !word } else { word };
+                        let mut mask = if invert && !runs { !word } else { word };
                         if b + 1 == words && domain % 64 != 0 {
                             mask &= (1u64 << (domain % 64)) - 1;
                         }
                         while mask != 0 {
-                            data[written] = low
-                                + start as $word
-                                + (64 * b + mask.trailing_zeros() as usize) as $word;
-                            written += 1;
+                            let value = (64 * b + mask.trailing_zeros() as usize) as $word;
+                            if runs {
+                                // Emit gaps between omissions as contiguous runs.
+                                let end = written + (value - first) as usize;
+                                for (j, slot) in data[written..end].iter_mut().enumerate() {
+                                    *slot = low + start as $word + first + j as $word;
+                                }
+                                written = end;
+                                first = value + 1;
+                            } else {
+                                data[written] = low + start as $word + value;
+                                written += 1;
+                            }
                             mask &= mask - 1;
+                        }
+                    }
+                    if runs {
+                        for (j, slot) in data[written..].iter_mut().enumerate() {
+                            *slot = low + start as $word + first + j as $word;
                         }
                     }
                     return;
@@ -128,11 +143,7 @@ macro_rules! implementation {
                     return;
                 }
                 let t = n - k as $word + 1;
-                if GROUP_SIZE == DEFAULT_GROUP_SIZE && k <= SMALL_SORT {
-                    local_sample(out, 0, k, 0, t, draw);
-                    return;
-                }
-                if k < 4 {
+                if k < 4 || (GROUP_SIZE == DEFAULT_GROUP_SIZE && k <= SMALL_SORT) {
                     local_sample(out, 0, k, 0, t, draw);
                     return;
                 }
@@ -241,6 +252,24 @@ macro_rules! implementation {
                     let b = r + <$word>::from(r >= a);
                     out[0] = if RANDOM { a } else { a.min(b) };
                     out[1] = if RANDOM { b } else { a.max(b) };
+                    return;
+                }
+                if !RANDOM && n - k == 2 {
+                    let a = draw(n);
+                    let r = draw(n - 1);
+                    let b = r + <$word>::from(r >= a);
+                    let (first, second) = (a.min(b), a.max(b));
+                    let (prefix, rest) = out.split_at_mut(first as usize);
+                    let (middle, suffix) = rest.split_at_mut((second - first - 1) as usize);
+                    for (i, slot) in prefix.iter_mut().enumerate() {
+                        *slot = i as $word;
+                    }
+                    for (i, slot) in middle.iter_mut().enumerate() {
+                        *slot = first + 1 + i as $word;
+                    }
+                    for (i, slot) in suffix.iter_mut().enumerate() {
+                        *slot = second + 1 + i as $word;
+                    }
                     return;
                 }
                 if !RANDOM && n - k > 1 {
