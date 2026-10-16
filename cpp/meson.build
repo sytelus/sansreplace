@@ -45,7 +45,7 @@ cardchoose_test = executable('cardchoose_test', 'tests/cardchoose_test.cpp',
 test('cardchoose', cardchoose_test, timeout : 120)
 
 groupedchoose_test = executable('groupedchoose_test',
-    ['tests/groupedchoose_test.cpp', 'randbelow.c'],
+    ['tests/groupedchoose_test.cpp', 'groupedchoose.cpp', 'randbelow.c'],
     override_options : ['b_ndebug=false'])
 test('groupedchoose', groupedchoose_test, timeout : 120)
 

@@ -24,7 +24,7 @@ template<class Word> Word draw(Word bound) {
 
 template<class Word, bool Random, unsigned GroupSize = 16>
 void grouped(Word n, Word k, Word* out) {
-    groupedchoose::choose<Random, GroupSize>(n, k, out, draw<Word>);
+    groupedchoose::choose<Random, GroupSize>(n, k, out, [](Word b) { return draw(b); });
 }
 
 template<class Word, bool Random>
@@ -58,16 +58,17 @@ void reservoir(Word n, Word k, Word* out) {
 
 template<class Word, bool Random>
 auto function(const std::string& name) -> void (*)(Word, Word, Word*) {
-    if (name == "groupedchoose") return grouped<Word, Random>;
     if (name == "grouped8") return grouped<Word, Random, 8>;
     if (name == "grouped16") return grouped<Word, Random, 16>;
     if (name == "grouped32") return grouped<Word, Random, 32>;
     if (name == "grouped64") return grouped<Word, Random, 64>;
     if (name == "urnsort") return urnsort<Word, Random>;
     if constexpr (sizeof(Word) == 4) {
+        if (name == "groupedchoose") return Random ? random_groupedchoose : sorted_groupedchoose;
         if (name == "cardchoose") return Random ? random_cardchoose : sorted_cardchoose;
         if (name == "reservoirsample") return Random ? random_reservoirsample : sorted_reservoirsample;
     } else {
+        if (name == "groupedchoose") return Random ? random_groupedchoose64 : sorted_groupedchoose64;
         if (name == "reservoirsample") return reservoir<Word, Random>;
     }
     throw std::invalid_argument("unknown algorithm for this width");

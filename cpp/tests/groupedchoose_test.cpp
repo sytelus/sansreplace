@@ -115,7 +115,8 @@ void boundaries() {
         valid(out, n, true);
     }
     for (Word k : {Word{8}, Word{64}, Word{256}, Word{1024}, Word{65536}}) {
-        for (Word omitted : {Word{2}, Word{3}, Word(k/4 - 1), Word(k/4), Word(k/4 + 1)}) {
+        for (Word omitted : {Word{2}, Word{3}, Word(k/4 - 1), Word(k/4), Word(k/4 + 1),
+                             Word(k/16), Word(k/16 + 1), Word(k/16 == 0 ? 0 : k/16 - 1)}) {
             for (unsigned mode = 0; mode < 3; ++mode) {
                 auto draw = [&](Word b) {
                     if (mode == 1) return Word{0};
@@ -147,6 +148,27 @@ static void range_reduction() {
     }
 }
 
+static void exported_apis() {
+    rand_init();
+    for (bool random : {false, true}) {
+        for (uint32_t k : {0u, 1u, 2u, 16u, 32u, 64u, 65u, 1000u, 1024u}) {
+            std::vector<uint32_t> a(size_t(k) + 2, UINT32_MAX);
+            std::vector<uint64_t> b(size_t(k) + 2, UINT64_MAX);
+            for (uint64_t n : {uint64_t{1024}, uint64_t{UINT32_MAX}, uint64_t{UINT32_MAX} + 1,
+                               uint64_t{UINT64_MAX}}) {
+                if (n <= UINT32_MAX) {
+                    (random ? random_groupedchoose : sorted_groupedchoose)(uint32_t(n), k, a.data() + 1);
+                    assert(a.front() == UINT32_MAX && a.back() == UINT32_MAX);
+                    valid(std::vector<uint32_t>(a.begin() + 1, a.end() - 1), uint32_t(n), !random);
+                }
+                (random ? random_groupedchoose64 : sorted_groupedchoose64)(n, k, b.data() + 1);
+                assert(b.front() == UINT64_MAX && b.back() == UINT64_MAX);
+                valid(std::vector<uint64_t>(b.begin() + 1, b.end() - 1), n, !random);
+            }
+        }
+    }
+}
+
 int main() {
     // Exercise the complete value domain at a small word size. In particular,
     // this catches reliance on spare high bits for counts or packed records.
@@ -171,6 +193,7 @@ int main() {
     boundaries<uint32_t>();
     boundaries<uint64_t>();
     range_reduction();
+    exported_apis();
     for (uint32_t n = 5; n <= 16; ++n) for (uint32_t q = 1; q <= std::min(3u, n/5); ++q) {
         exact<uint32_t, false, false, true>(n, n-q);
         exact<uint64_t, false, false, true>(n, n-q);

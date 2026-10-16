@@ -57,6 +57,12 @@ void sparse(Word n, Word k, Word* out, Draw& draw) {
     static_assert(GroupSize >= 3);
     if (k == 0) return;  // n-k+1 need not be representable for an empty sample.
     const Word t = n - k + 1;
+    if constexpr (GroupSize == 16) {
+        if (k <= 64) {
+            local_urn(out, Word{0}, k, Word{0}, t, draw);
+            return;
+        }
+    }
     const Word groups = std::min(t, Word(1 + (k - 1) / GroupSize));
     if (groups == 1) {
         local_urn(out, Word{0}, k, Word{0}, t, draw);
@@ -138,6 +144,20 @@ void choose(Word n, Word k, Word* out, Draw&& draw) {
         out[1] = RandomOrder ? b : std::max(a, b);
         return;
     }
+    if constexpr (!RandomOrder) {
+        if (n - k > 1) {
+            if (n - k <= k / 16) {
+                complement<GroupSize>(n, k, out, draw);
+                return;
+            }
+            // A bounded insertion sort avoids grouping and a second set of
+            // random draws for tiny samples, including small dense samples.
+            if (k <= 64) {
+                local_urn(out, Word{0}, k, Word{0}, Word(n - k + 1), draw);
+                return;
+            }
+        }
+    }
     if (n - k <= k) {
         if constexpr (RandomOrder) {
             // Dense Algorithm R. Reading out[i] before writing it would be UB
@@ -157,20 +177,10 @@ void choose(Word n, Word k, Word* out, Draw&& draw) {
                 for (Word i = 0; i < k; ++i) out[i] = i + (i >= omitted);
                 return;
             }
-            if (n - k <= k / 4) {
-                complement<GroupSize>(n, k, out, draw);
-                return;
-            }
             Word written = 0;
             for (Word value = 0; value < n; ++value) {
-                const Word remaining = n - value;
-                if (k - written == remaining) {
-                    for (Word i = written; i < k; ++i) out[i] = value + (i - written);
-                    break;
-                }
-                if (draw(remaining) < k - written) {
+                if (draw(n - value) < k - written) {
                     out[written++] = value;
-                    if (written == k) break;
                 }
             }
         }
@@ -183,3 +193,10 @@ void choose(Word n, Word k, Word* out, Draw&& draw) {
 }
 
 }  // namespace groupedchoose
+
+extern "C" {
+void sorted_groupedchoose(uint32_t n, uint32_t k, uint32_t* out);
+void random_groupedchoose(uint32_t n, uint32_t k, uint32_t* out);
+void sorted_groupedchoose64(uint64_t n, uint64_t k, uint64_t* out);
+void random_groupedchoose64(uint64_t n, uint64_t k, uint64_t* out);
+}

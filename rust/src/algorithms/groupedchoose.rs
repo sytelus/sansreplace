@@ -15,32 +15,32 @@ macro_rules! implementation {
                 width: $word,
                 draw: &mut impl FnMut($word) -> $word,
             ) {
-                let stop = start + count;
+                let data = &mut out[start..start + count];
                 if width == 1 {
-                    for (i, slot) in out.iter_mut().enumerate().take(stop).skip(start) {
-                        *slot = low + i as $word;
+                    for (j, slot) in data.iter_mut().enumerate() {
+                        *slot = low + (start + j) as $word;
                     }
                     return;
                 }
-                for j in 0..count {
+                for j in 0..data.len() {
                     let r = draw(width + j as $word);
-                    out[start + j] = if r < width {
+                    data[j] = if r < width {
                         low + r
                     } else {
-                        out[start + (r - width) as usize]
+                        data[(r - width) as usize]
                     };
                 }
-                for i in start + 1..stop {
-                    let value = out[i];
+                for i in 1..data.len() {
+                    let value = data[i];
                     let mut j = i;
-                    while j > start && out[j - 1] > value {
-                        out[j] = out[j - 1];
+                    while j > 0 && data[j - 1] > value {
+                        data[j] = data[j - 1];
                         j -= 1;
                     }
-                    out[j] = value;
+                    data[j] = value;
                 }
-                for (i, slot) in out.iter_mut().enumerate().take(stop).skip(start) {
-                    *slot += i as $word;
+                for (j, slot) in data.iter_mut().enumerate() {
+                    *slot += (start + j) as $word;
                 }
             }
 
@@ -90,6 +90,10 @@ macro_rules! implementation {
                     return;
                 }
                 let t = n - k as $word + 1;
+                if GROUP_SIZE == 16 && k <= 64 {
+                    local_urn(out, 0, k, 0, t, draw);
+                    return;
+                }
                 let groups = t.min((1 + (k - 1) / GROUP_SIZE) as $word);
                 if groups == 1 {
                     local_urn(out, 0, k, 0, t, draw);
@@ -198,6 +202,16 @@ macro_rules! implementation {
                     out[1] = if RANDOM { b } else { a.max(b) };
                     return;
                 }
+                if !RANDOM && n - k > 1 {
+                    if n - k <= k / 16 {
+                        complement::<GROUP_SIZE>(n, out, draw);
+                        return;
+                    }
+                    if k <= 64 {
+                        local_urn(out, 0, k as usize, 0, n - k + 1, draw);
+                        return;
+                    }
+                }
                 if n - k <= k {
                     if RANDOM {
                         out[0] = 0;
@@ -219,25 +233,11 @@ macro_rules! implementation {
                             }
                             return;
                         }
-                        if n - k <= k / 4 {
-                            complement::<GROUP_SIZE>(n, out, draw);
-                            return;
-                        }
                         let mut written = 0;
                         for value in 0..n {
-                            let remaining = n - value;
-                            if k - written == remaining {
-                                for (i, slot) in out.iter_mut().enumerate().skip(written as usize) {
-                                    *slot = value + (i as $word - written);
-                                }
-                                break;
-                            }
-                            if draw(remaining) < k - written {
+                            if draw(n - value) < k - written {
                                 out[written as usize] = value;
                                 written += 1;
-                                if written == k {
-                                    break;
-                                }
                             }
                         }
                     }

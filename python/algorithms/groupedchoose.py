@@ -144,16 +144,9 @@ def sorted_choose(n, k):
     out = [0] * k
     written = 0
     for value in range(n):
-        remaining = n - value
-        if k - written == remaining:
-            for i in range(written, k):
-                out[i] = value + i - written
-            break
-        if random.randrange(remaining) < k - written:
+        if random.randrange(n - value) < k - written:
             out[written] = value
             written += 1
-            if written == k:
-                break
     return out
 
 

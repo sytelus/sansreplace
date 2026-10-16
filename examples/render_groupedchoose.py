@@ -35,11 +35,11 @@ def main():
     draw = ImageDraw.Draw(canvas)
     colors = {Keyword: '#72A9D6', String: '#D2A087', Number: '#B6CDA0',
               Name.Builtin: '#76C8B4', Comment: '#8F969D'}
-    ascent = font.getmetrics()[0]
+    font_family = escape(font.getname()[0], quote=True)
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
            f'<!-- Source SHA-256: {hashlib.sha256(source.encode()).hexdigest()} -->',
            '<rect width="100%" height="100%" fill="#222426"/>',
-           f'<g font-family="DejaVu Sans Mono, monospace" font-size="{size * scale}" xml:space="preserve">']
+           f'<g font-family="{font_family}, monospace" font-size="{size * scale}" xml:space="preserve">']
 
     def put(x, y, text, color, small=False):
         selected = note_font if small else font

@@ -244,7 +244,16 @@ fn invalid_sample() {
 fn complement_boundaries() {
     let mut rng = SmallRng::seed_from_u64(324);
     for k in [8usize, 64, 256, 1024, 65536] {
-        for q in [2, 3, k / 4 - 1, k / 4, k / 4 + 1] {
+        for q in [
+            2,
+            3,
+            k / 4 - 1,
+            k / 4,
+            k / 4 + 1,
+            k / 16,
+            k / 16 + 1,
+            (k / 16).saturating_sub(1),
+        ] {
             for mode in 0..3 {
                 let n = (k + q) as u64;
                 let mut out = vec![u64::MAX; k];
