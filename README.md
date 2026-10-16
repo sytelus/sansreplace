@@ -12,12 +12,22 @@ allocations, and require only the output vector plus bounded stack workspace. Th
 Pólya urn with cache-conscious integer sorting and fast paths for dense samples. The short Python
 reference below retains the original O(_k_ log _k_) comparison sort.
 
+The new [Grouped Cardchoose](groupedchoose.md) removes the fixed-width sorting requirement:
+it takes **expected O(_k_) integer operations** and uses just the output array plus O(1)
+auxiliary integers. Python supports arbitrarily large _n_; C++ and Rust provide 32- and 64-bit
+APIs. It uses exact grouped Pólya urns, small contiguous local sorts, and dense/complement
+paths, without hash tables or a second array. The [proof](groupedchoose.md#expected-linear-work)
+states the arithmetic model and explains why arbitrary-precision bit costs cannot be O(_k_).
+See its [benchmarks](results.md#grouped-cardchoose-results) and the
+[self-contained Python function](examples/groupedchoose.py) ([screenshot](examples/groupedchoose.png)).
+
 See the [implementation and complexity notes](cardchoose.md#linear-native-implementation),
 [updated measurements](results.md), and the reproducible `python/bench_cardchoose` benchmark.
 The O(_k_) bound counts a bounded uniform random draw as constant time; with the C++ generator's
 rejection loop included, it is an expected-time bound.
 Uniformity assumes uniform bounded draws; the [implementation notes](cardchoose.md#linear-native-implementation)
-also explain Rust's existing tiny RNG bias and how to enable unbiased range reduction.
+also explain the RNG assumptions. Rust now enables unbiased range reduction by default;
+the earlier saved measurements retain their recorded RNG settings.
 
 I first proposed Cardchoose in October 2018. Its two ingredients, a Pólya urn and the
 stars-and-bars bijection, are classical mathematics; what I have not found elsewhere is the urn
@@ -32,6 +42,7 @@ intrinsics, or `-march=native` build settings are required.
 
 * [Guide to algorithms tested](algorithms.md)
 * [Description of Cardchoose](cardchoose.md)
+* [Grouped Cardchoose: construction, proof, and arbitrary-size populations](groupedchoose.md)
 * [Prior art](priorart.md)
 * [Benchmark results](results.md)
 * [Running this software](running.md)

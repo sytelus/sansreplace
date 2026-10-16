@@ -19,6 +19,7 @@ Vitter's Algorithm D | [Python](python/algorithms/vitterd.py) | [C++](cpp/vitter
 SELECT | [Python](python/algorithms/select.py) | [C++](cpp/select.cpp) | Random | n-sized list | _n_
 HSEL | [Python](python/algorithms/hsel.py) | [C++](cpp/hsel.cpp) | Random | Dictionary | _k_
 [Cardchoose](cardchoose.md) | [Python reference](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | output + bounded stack workspace | _k_ (native), _k_ log _k_ (Python)
+[Grouped Cardchoose](groupedchoose.md) | [Python](python/algorithms/groupedchoose.py) | [C++](cpp/groupedchoose.h) | Sorted or random | output + O(1) integers | expected _k_ integer operations
 
 ## Quadratic rejection sampling
 
@@ -208,3 +209,15 @@ multiset, and stars and bars turns it into a uniform subset. The native implemen
 bounded radix sorting and exact dense/complement paths to obtain O(_k_) work on 32-bit integers
 (expected time including bounded-draw rejection). [Detailed
 description](cardchoose.md), including how it relates to [prior art](priorart.md).
+
+## Grouped Cardchoose
+
+The grouped variant aggregates the original urn into balanced consecutive ranges, then
+generates and insertion-sorts each local conditional multiset. A second-moment bound on the
+correlated urn occupancies makes the total work linear in expectation. Labels, counts, and
+packed records all reuse the output array. Dense selection, reservoir sampling, and a packed
+complement path cover dense samples without extra arrays. The arithmetic-operation bound
+does not depend on a fixed integer width: Python supports arbitrary-size populations, and
+the C++ and Rust implementations expose both 32- and 64-bit APIs. See the
+[proof and storage invariants](groupedchoose.md), including the unavoidable bit costs and
+the distinction between expected and worst-case runtime.

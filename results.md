@@ -3,6 +3,94 @@
 The current native Cardchoose implementation and its linear-time bounds are described in
 [cardchoose.md](cardchoose.md#linear-native-implementation). The focused before/after benchmark
 is `python/bench_cardchoose`; see [running.md](running.md#cardchoose-regression-benchmark).
+The new [Grouped Cardchoose](groupedchoose.md) has a separate comparison covering native
+32/64-bit populations and Python arbitrary precision; see [its results below](#grouped-cardchoose-results).
+
+## Grouped Cardchoose results
+
+The October 16 run measures the implementation in `5e4ec71`, including the final small-sample
+cutoff, complement dispatch, Rust slice access, and C++ exported API adapters. It compares
+both output orders at 32 and 64 bits, plus Python populations through 4096 bits. The largest
+native output contains 8,388,608 elements: 32 MiB for 32-bit words and 64 MiB for 64-bit words.
+
+Each case has five repetitions with a final batch of at least 0.02 seconds. Measurements run
+serially on CPU 2 of an AMD EPYC 9V74 VM, reporting 32 KiB L1 data cache, 1 MiB L2, and
+32 MiB L3. Fresh builds use GCC 14.2.0 and rustc 1.99.0 with
+portable repository defaults. The C++ driver calls the exported library functions directly;
+all algorithms use unbiased bounded draws. Native allocation, first touch and one warm-up
+call are outside the timer. Python includes returned-list allocation. Algorithm order rotates
+between repetitions, and the RNG is reset to seed 324 for each batch.
+
+The baseline depends on the comparison: optimized **32-bit Cardchoose** for native 32-bit
+results, the **original urn with a comparison sort** (`urnsort`) for native 64-bit results,
+and the **original Python reference** for Python results. The 64-bit baseline is not a radix
+sorter. Reservoir sampling is additionally measured for n ≤ 2k. Ratios compare within each
+language and word width; they do not isolate algorithm choice across different RNGs or languages.
+
+The run contains **10,840 calibrated samples and 2,168 summary rows**. All requested cases,
+repetition counts, medians, MADs, and ratios were independently checked. The table summarizes
+pointwise speedups (baseline / grouped), excluding empty samples. Values below 1 mean the
+grouped implementation is slower. These medians are not workload-weighted application speedups.
+
+| Native comparison | Cases per order | Median sorted | Median random | Worst sorted | Worst random |
+|---|---:|---:|---:|---:|---:|
+| C++, 32-bit | 90 | 1.00× | 1.03× | 0.15× | 0.40× |
+| C++, 64-bit | 103 | 2.47× | 2.64× | 0.91× | 0.94× |
+| Rust, 32-bit | 90 | 0.80× | 0.96× | 0.20× | 0.33× |
+| Rust, 64-bit | 103 | 1.39× | 3.02× | 0.39× | 0.53× |
+
+Selected medians show both gains and regressions; times are milliseconds per sample.
+
+| Implementation / order | n | k | Baseline ms | Grouped ms | Speedup |
+|---|---:|---:|---:|---:|---:|
+| C++ 32-bit sorted | 2^32−1 | 1,048,576 | 13.113 | 19.671 | 0.67× |
+| C++ 32-bit sorted | 2^32−1 | 8,388,608 | 210.226 | 158.810 | 1.32× |
+| C++ 32-bit sorted | 1,059,061 | 1,048,576 | 3.576 | 0.460 | 7.77× |
+| C++ 32-bit random | 2,097,152 | 1,048,576 | 17.418 | 9.643 | 1.81× |
+| C++ 64-bit sorted | 2^64−1 | 1,048,576 | 62.247 | 20.130 | 3.09× |
+| C++ 64-bit random | 2^64−1 | 1,048,576 | 66.947 | 24.275 | 2.76× |
+| Rust 32-bit sorted | 2^32−1 | 1,048,576 | 16.996 | 21.907 | 0.78× |
+| Rust 64-bit sorted | 2^64−1 | 1,048,576 | 21.237 | 22.580 | 0.94× |
+| Rust 64-bit random | 2^64−1 | 8,388,608 | 425.383 | 289.094 | 1.47× |
+| Python 4096-bit sorted | 2^4096−1 | 4,096 | 5.117 | 14.069 | 0.36× |
+
+The largest native 32-bit relative regressions occur at small or cache-resident inputs.
+C++ sorted (70, 64) took 1.04 μs grouped versus 0.16 μs for Cardchoose.
+Rust sorted (70, 64) took 1.00 μs grouped versus 0.20 μs for Cardchoose.
+C++ random (65,536, 4,096) took 95.07 μs grouped versus 37.74 μs for Cardchoose.
+Rust random (65,536, 4,096) took 79.59 μs grouped versus 26.21 μs for Cardchoose.
+The existing specialized sampler remains available; the grouped algorithm does not replace it.
+
+The grouped construction trades another set of bounded draws and metadata passes for local
+sorting and smaller auxiliary storage. The specialized 32-bit implementation remains useful
+where its fixed radix buffers are faster. Rust's comparison sort is also competitive in
+some 64-bit cases. Python's interpreted insertion and bookkeeping loops lose to the original
+reference's C-implemented `list.sort()` in these sparse measurements. The Python version is an
+executable mathematical reference; its asymptotic operation bound does not promise a speedup
+over optimized library code at these sizes.
+
+[Raw calibrated samples](results/groupedchoose-2026-10-16/raw.csv),
+[medians, MADs, and per-point ratios](results/groupedchoose-2026-10-16/summary.csv), and
+[compiler, CPU/cache, binary-hash and source metadata](results/groupedchoose-2026-10-16/metadata.json)
+retain all measured regressions. These are measurements on one shared VM, not a proof of the
+fastest constants on every machine. Near ties should be read with their dispersion.
+
+The final validation includes 703,266 rationally weighted production Python paths plus
+separate checks of the standalone function; exact grouped and complement probability trees
+in C++ and Rust; all valid 8-bit C++ (n,k) pairs; 32/64-bit boundaries and exported APIs;
+extreme occupancies and canaries; Python populations beyond 2^4096; C++ ASan/UBSan; Rust debug
+and release tests, formatting and Clippy; and baseline x86-64 builds with AVX/AVX2 disabled.
+
+Reproduce this run with:
+
+```
+python/bench_groupedchoose results/grouped-local --repeats 5 --time-for 0.02 --max-k 8388608 --cpu 2
+```
+
+See [the construction and proofs](groupedchoose.md) and
+[benchmark controls](running.md#grouped-cardchoose). The timing methodology and Rust RNG
+settings differ from the October 13 results below; those historical elapsed times are not a
+controlled comparison against this run.
 
 ## Linear native implementation: 2026-10-13
 
@@ -94,11 +182,11 @@ validated the unbiased Rust RNG feature. It also fixed benchmark build isolation
 now use fresh build directories, and Cargo's reported executable path determines the binary
 timed. An integration run with custom C++ flags, a custom Cargo target directory, and an explicit
 target triple verified all 192 measurements across 24 cases without touching existing builds.
-The production kernels are unchanged from `624d745`; all 10,440 saved measurements and their
+The production kernels in that reviewed revision were unchanged from `624d745`; all 10,440 saved measurements and their
 1,044 summary rows were rechecked. The saved benchmark uses the original Rust RNG settings;
 see the [uniformity assumptions](cardchoose.md#linear-native-implementation).
 
-Reproduce the main run:
+Repeat the same grid:
 
 ```
 python/bench_cardchoose results/cardchoose-local --baseline 6048513 --repeats 5 --time-for 0.02 --max-k 16777216 --cpu 2
@@ -106,7 +194,9 @@ python/bench_cardchoose results/cardchoose-local --baseline 6048513 --repeats 5 
 
 Use an available CPU index, or omit `--cpu` where affinity is unavailable. The benchmark rebuilds
 both revisions with the same toolchains. See [running.md](running.md#cardchoose-regression-benchmark)
-for controls and correctness checks.
+for controls and correctness checks. To reproduce the recorded implementation and RNG settings,
+use the benchmark script from revision `d9329c6`. The current script enables unbiased range
+reduction in both Rust builds, so new timings need not match the historical values above.
 
 ## Historical comparison-sort results
 

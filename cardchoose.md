@@ -30,6 +30,11 @@ def sorted_choose(n, k):
 
 ## Linear native implementation
 
+This section describes the specialized 32-bit `cardchoose` implementation.
+[Grouped Cardchoose](groupedchoose.md) is a separate implementation with expected O(_k_)
+integer operations independent of word width, 64-bit native APIs, arbitrary-size Python
+populations, and only O(1) auxiliary integers. It has different performance tradeoffs.
+
 The C++ and Rust APIs operate on 32-bit unsigned integers with `0 <= k <= n <= UINT32_MAX`.
 C++ exposes `sorted_cardchoose(n, k, result)` and `random_cardchoose(n, k, result)`; the caller
 provides space for _k_ `uint32_t` values (a null pointer is allowed when _k_ = 0). Rust exposes
@@ -78,12 +83,12 @@ path. Including the existing rejection-based bounded random generator makes the 
 unbiased bounded draws.
 
 The uniformity proof and exhaustive tests assume independent, uniform bounded draws. The C++
-range reduction is unbiased. The Rust benchmark retains the repository's existing `rand`
-configuration: its default `random_range` has a documented worst-case bias affecting at most
-one in 2<sup>96</sup> `u32` draws. Enable the dependency feature `rand/unbiased` for unbiased
-range reduction; its rejection loop gives an expected O(_k_) bound too. This choice applies to
-all Rust algorithms in the comparison. Neither the RNG configuration nor the generators were
-changed by this optimization; see the [commands](running.md#cardchoose-regression-benchmark).
+range reduction is unbiased. Rust now enables `rand/unbiased` by default for every algorithm;
+including its range-reduction loop gives an expected O(_k_) bound. The saved October 13
+measurements predate this change and used the former tiny-biased `random_range` setting in
+both revisions (documented worst case: one affected `u32` draw in 2<sup>96</sup>). New regression
+benchmarks explicitly enable the unbiased feature for both revisions, including an older
+baseline. See the [commands](running.md#cardchoose-regression-benchmark).
 
 The output uses exactly `4*k` bytes. Auxiliary storage is **O(1)**: fixed tables, a fixed radix
 buffer, a 4 KiB complement buffer, and bounded call frames. No heap allocation, hash table,
