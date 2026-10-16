@@ -9,6 +9,7 @@ pub enum ValueSet {
     Power2,
     Fib,
     Largen,
+    Cache,
 }
 
 fn small_values() -> Vec<(String, u32, u32)> {
@@ -77,6 +78,36 @@ fn largen_values() -> Vec<(String, u32, u32)> {
         .collect()
 }
 
+fn cache_values() -> Vec<(String, u32, u32)> {
+    // Match python/nkvalues.py. These probe cache transitions without assuming
+    // any particular cache geometry or instruction set.
+    let mut res = Vec::new();
+    for k in [
+        0u32, 1, 2, 4, 8, 16, 32, 63, 64, 65, 127, 128, 129, 256, 512, 1024, 2048, 4096, 8192,
+        16384, 65536, 131072, 262144, 1048576, 8388608, 16777216,
+    ] {
+        let mut ns = vec![
+            k,
+            k + 1,
+            k + 64,
+            k + 65,
+            k + 1024,
+            k + 1025,
+            k + (k / 100).max(1),
+            k + (k / 4).max(1),
+            (2 * k).max(1),
+            (16 * k).max(1),
+            u32::MAX,
+        ];
+        ns.sort_unstable();
+        ns.dedup();
+        for n in ns {
+            res.push((format!("n = {n}, k = {k}"), n, k));
+        }
+    }
+    res
+}
+
 pub fn iter_values(names: &[ValueSet]) -> impl Iterator<Item = (String, u32, u32)> + '_ {
     let mut done = HashSet::new();
     names
@@ -87,6 +118,7 @@ pub fn iter_values(names: &[ValueSet]) -> impl Iterator<Item = (String, u32, u32
             ValueSet::Power2 => power2_values(),
             ValueSet::Fib => fib_values(),
             ValueSet::Largen => largen_values(),
+            ValueSet::Cache => cache_values(),
         })
         .filter(move |(descrip, n, k)| {
             if done.insert((*n, *k)) {

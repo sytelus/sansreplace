@@ -18,7 +18,8 @@ Reservoir sampling | [Python](python/algorithms/reservoirsample.py) | [C++](cpp/
 Vitter's Algorithm D | [Python](python/algorithms/vitterd.py) | [C++](cpp/vitterd.cpp) | Sorted | none | _k_
 SELECT | [Python](python/algorithms/select.py) | [C++](cpp/select.cpp) | Random | n-sized list | _n_
 HSEL | [Python](python/algorithms/hsel.py) | [C++](cpp/hsel.cpp) | Random | Dictionary | _k_
-[Cardchoose](cardchoose.md) | [Python](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | none | _k_ log _k_
+[Cardchoose](cardchoose.md) | [Python reference](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | output + bounded stack workspace | _k_ (native), _k_ log _k_ (Python)
+[Grouped Cardchoose](groupedchoose.md) | [Python](python/algorithms/groupedchoose.py) | [C++](cpp/groupedchoose.h) | Sorted or random | output + O(1) integers | expected _k_ integer operations
 
 ## Quadratic rejection sampling
 
@@ -201,8 +202,24 @@ my attention.
 
 Algorithm | Python | C++ | Order guarantee | Data structures | Time
 ----|----|----|----|----|----
-[Cardchoose](cardchoose.md) | [Python](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | none | _k_ log _k_
+[Cardchoose](cardchoose.md) | [Python reference](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | output + bounded stack workspace | _k_ (native), _k_ log _k_ (Python)
 
 This is my algorithm: a Pólya urn generates a uniform
-multiset, and stars and bars turns it into a uniform subset. [Detailed
+multiset, and stars and bars turns it into a uniform subset. The native implementation now uses
+bounded radix sorting and exact dense/complement paths to obtain O(_k_) work on 32-bit integers
+(expected time including bounded-draw rejection). [Detailed
 description](cardchoose.md), including how it relates to [prior art](priorart.md).
+
+## Grouped Cardchoose
+
+The grouped variant aggregates the original urn into balanced consecutive ranges, then
+generates and insertion-sorts each local conditional multiset. A second-moment bound on the
+correlated urn occupancies makes the total work linear in expectation. Labels, counts, and
+packed records all reuse the output array. Dense selection, reservoir sampling, and a packed
+complement path cover dense samples. Native fast paths use power-of-two group widths,
+a fixed 64-byte local bitmap, and bounded standard-library sorts; auxiliary storage remains
+O(1). The arithmetic-operation bound
+does not depend on a fixed integer width: Python supports arbitrary-size populations, and
+the C++ and Rust implementations expose both 32- and 64-bit APIs. See the
+[proof and storage invariants](groupedchoose.md), including the unavoidable bit costs and
+the distinction between expected and worst-case runtime.

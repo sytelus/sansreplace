@@ -50,6 +50,21 @@ def largen_values():
     for k in range(0, n+1, 100_000):
         yield f"n = {n}, k = {k}", n, k
 
+def cache_values():
+    """Tiny samples, dispatch edges and working sets crossing common caches.
+
+    These are sizes to measure, not assumptions about the host's cache sizes.
+    All population sizes remain within the native implementations' u32 API.
+    """
+    for k in [0, 1, 2, 4, 8, 16, 32, 63, 64, 65, 127, 128, 129, 256,
+              512, 1024, 2048, 4096, 8192, 16384, 65536, 131072, 262144,
+              1048576, 8388608, 16777216]:
+        for n in sorted({k, k + 1, k + 64, k + 65, k + 1024, k + 1025,
+                         k + max(1, k // 100),
+                         k + max(1, k // 4), max(1, 2 * k), max(1, 16 * k),
+                         2**32 - 1}):
+            yield f"n = {n}, k = {k}", n, k
+
 def iter_values(names):
     done = set()
     for name in names:

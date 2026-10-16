@@ -1,12 +1,15 @@
 # Cardchoose algorithm
 
-Algorithm | Python | C++ | Order guarantee | Data structures | Time
-----|----|----|----|----|----
-[Cardchoose](cardchoose.md) | [Python](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | Sorted | none | _k_ log _k_
+Algorithm | Python | C++ | Rust | Order guarantee | Data structures | Time
+----|----|----|----|----|----|----
+[Cardchoose](cardchoose.md) | [Python](python/algorithms/cardchoose.py) | [C++](cpp/cardchoose.cpp) | [Rust](rust/src/algorithms/cardchoose.rs) | Sorted or random | output plus bounded workspace | _k_ (native implementations)
 
 Cardchoose returns _k_ distinct integers from 0 to _n_-1, with every _k_-element subset equally
-likely. The only storage is the output list. Everything except the final sort is O(_k_), and the
-loop that fills the list has no searches and no inner loops.
+likely, assuming uniform bounded random draws. The following Python code is the original
+mathematical reference: it stores the urn in the output list, everything except the final sort
+is O(_k_), and the urn loop has no searches or inner loops. The native implementations replace
+that final comparison sort and add the exact fast paths
+described below.
 
 ```python
 def sorted_choose(n, k):
@@ -24,6 +27,82 @@ def sorted_choose(n, k):
         d[i] += i
     return d
 ```
+
+## Linear native implementation
+
+This section describes the specialized 32-bit `cardchoose` implementation.
+[Grouped Cardchoose](groupedchoose.md) is a separate implementation with expected O(_k_)
+integer operations independent of word width, 64-bit native APIs, arbitrary-size Python
+populations, and only O(1) auxiliary integers. It has different performance tradeoffs.
+
+The C++ and Rust APIs operate on 32-bit unsigned integers with `0 <= k <= n <= UINT32_MAX`.
+C++ exposes `sorted_cardchoose(n, k, result)` and `random_cardchoose(n, k, result)`; the caller
+provides space for _k_ `uint32_t` values (a null pointer is allowed when _k_ = 0). Rust exposes
+`sorted_order(rng, length, res)` and `random_order(rng, length, res)`, with _n_ = `length` and
+_k_ = `res.len()`. Sorted output is strictly increasing; random output is a uniform ordering
+of the chosen subset, under the uniform-draw assumption. Invalid _k_ > _n_ is a caller error:
+Rust panics, and C++ checks it with an assertion when assertions are enabled.
+
+The implementations preserve the urn and stars-and-bars distribution; only the implementation
+and exact special cases change.
+
+* Empty and singleton samples return directly. Two-element samples map a second draw onto
+  the population excluding the first, avoiding sorting/shuffling overhead. A full sample is
+  the range `[0, n)`.
+* A one-element complement is emitted directly from one bounded draw. If a larger complement
+  has at most 1024 elements and at most a quarter as many elements as the output, sample it in
+  a fixed stack array and emit the gaps as contiguous runs. Complementation
+  is a bijection between equally likely subsets, so this remains uniform. It avoids nearly _k_
+  random draws for an almost-full sample.
+* For `k >= 128` and `n <= 2*k`, use exact sequential selection (Algorithm S). It needs at most
+  `2*k` selection draws, writes sorted output sequentially, and uses constant workspace.
+  Random order fuses acceptance with inside-out Fisher–Yates, adding _k_−1 shuffle draws and
+  scattered swaps. This restriction is essential:
+  unrestricted Algorithm S would take O(_n_) time.
+* Otherwise, generate the original urn values and sort them with an in-place most-significant
+  digit radix partition. Digits have at most eight bits. The first digit is aligned to the
+  significant bits of `n-k`, avoiding mostly empty top-level buckets. Each level has two 256-entry
+  `uint32_t` tables; recursive buckets are contiguous, and there are at most four levels.
+* Small buckets use bounded comparison sorting; medium buckets use stable least-significant
+  digit passes in a fixed stack buffer. Histograms for all needed digits are built in one scan.
+  The last digit can instead be emitted from its counts. C++ limits a buffer to 8192 words and
+  Rust to 16384 words; Rust uses smaller buffers for smaller buckets. These are portable tuning
+  choices, not requirements on cache sizes or instruction sets.
+* On the urn path, add ranks to turn the multiset into the subset. For random order, fuse that
+  addition with inside-out Fisher–Yates and omit the unnecessary one-choice draw at index zero.
+
+The general path still takes exactly _k_ bounded draws to generate its urn. Every partition and
+radix pass is linear. There are at most four digit levels; every comparison sort is capped at
+128 elements in C++, and at 256 (or fewer than 1024 for a sparse last digit) in Rust. Therefore
+comparison sorting contributes only a fixed multiple of _k_, even for adversarial inputs.
+Initializing and scanning the fixed tables is also O(_k_), since only buckets larger than the
+fixed small-sort cutoff use them. Shuffling, dense selection and complement expansion each take
+O(_k_). The result is O(_k_) algorithmic work, with no dependence on the size of _n_ in the sparse
+path. Including the existing rejection-based bounded random generator makes the C++ running time
+**expected O(_k_)**; an arbitrary random bit stream cannot give a finite worst-case bound for
+unbiased bounded draws.
+
+The uniformity proof and exhaustive tests assume independent, uniform bounded draws. The C++
+range reduction is unbiased. Rust now enables `rand/unbiased` by default for every algorithm;
+including its range-reduction loop gives an expected O(_k_) bound. The saved October 13
+measurements predate this change and used the former tiny-biased `random_range` setting in
+both revisions (documented worst case: one affected `u32` draw in 2<sup>96</sup>). New regression
+benchmarks explicitly enable the unbiased feature for both revisions, including an older
+baseline. See the [commands](running.md#cardchoose-regression-benchmark).
+
+The output uses exactly `4*k` bytes. Auxiliary storage is **O(1)**: fixed tables, a fixed radix
+buffer, a 4 KiB complement buffer, and bounded call frames. No heap allocation, hash table,
+bitmap indexed by _n_, or additional array proportional to _k_ is used. A conservative bound on
+the explicit arrays is 48 KiB for C++ and 80 KiB for Rust; actual live storage depends on the
+path, and compiler-generated call frames are additional. Total space is `4*k + O(1)` bytes,
+the minimum coefficient for this API's uncompressed 32-bit output. The Python reference remains
+O(_k_ log _k_); these fixed-width bounds do not extend to arbitrary-precision integers.
+
+The fast paths change seeded output sequences. They preserve the subset and ordering
+distributions, not bit-for-bit agreement with older versions. Exhaustive bounded-draw tests check
+small subsets and ordered samples, including forced dense and complement kernels. Adversarial
+sort tests cover partial digits, repeated values, sorted/reverse inputs, dispatch boundaries,
+and the full 32-bit range. See [running the checks and benchmarks](running.md#cardchoose-regression-benchmark).
 
 ## A subset is a row of stars and bars
 
@@ -141,7 +220,8 @@ positions 1, 2 and 5, with the unchosen numbers 0, 3, 4 and 6 as the bars.
 
 ## Random order
 
-For unsorted output, `random_choose` runs the sorted version and then shuffles the result, which
-costs one extra random number per element.
+In the Python reference, `random_choose` runs the sorted version and then shuffles the result.
+The native implementations fuse this work where possible and use _k_−1 bounded draws for the
+shuffle when _k_ is positive.
 
 How this relates to earlier work is in [prior art](priorart.md).
