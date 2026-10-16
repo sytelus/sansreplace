@@ -23,7 +23,7 @@
 extern "C" void random_reservoirsample(uint32_t n, uint32_t k, uint32_t* result) {
     for (uint32_t i = 0; i < k; i++) {
         uint32_t r = randbelow(i + 1);
-        result[i] = result[r];
+        if (r != i) result[i] = result[r];  // The caller's buffer may be uninitialized.
         result[r] = i;
     }
     for (uint32_t i = k; i < n; i++) {

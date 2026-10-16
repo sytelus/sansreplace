@@ -1,4 +1,4 @@
-mod cardchoose;
+use sansreplace::{cardchoose, groupedchoose, reservoirsample};
 mod floydf2;
 mod hsel;
 mod iterativechoose;
@@ -6,7 +6,6 @@ mod quadraticf2;
 mod quadraticreject;
 mod ranksb;
 mod rejectionsample;
-mod reservoirsample;
 mod select;
 mod vitterd;
 
@@ -45,6 +44,7 @@ where
         vitterd,
         select,
         hsel,
-        cardchoose
+        cardchoose,
+        groupedchoose
     ]
 }

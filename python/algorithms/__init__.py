@@ -13,4 +13,5 @@ ALGORITHMS = [
     "select",
     "hsel",
     "cardchoose",
+    "groupedchoose",
 ]

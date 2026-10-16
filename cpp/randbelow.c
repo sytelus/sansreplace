@@ -85,6 +85,18 @@ uint32_t randbelow(uint32_t range) {
     return multiresult >> 32;
 }
 
+// Unbiased 64-bit range reduction without a 128-bit type or CPU intrinsics.
+// Accept only complete intervals of 'range' consecutive raw values. Each
+// residue then has exactly the same number of preimages. Acceptance is > 1/2.
+uint64_t randbelow64(uint64_t range) {
+    uint64_t r, remainder;
+    do {
+        r = random64();
+        remainder = r % range;
+    } while (r - remainder > UINT64_MAX - (range - 1));
+    return remainder;
+}
+
 // Uniform in [0, 1) with 53 random bits: the top 53 bits of one output
 double randdouble() {
     return (double)(random64() >> 11) * (1.0 / 9007199254740992.0);

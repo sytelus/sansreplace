@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""Compare grouped Cardchoose at 32/64 bits, and Python arbitrary precision.
+
+Native drivers warm and first-touch their output before timing. All builds finish
+before serial measurements start. Every algorithm uses unbiased bounded draws.
+"""
+import argparse
+import csv
+import gc
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import random
+import statistics
+import subprocess
+import tempfile
+import time
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def command(args, **kwargs):
+    return subprocess.run([str(x) for x in args], check=True, **kwargs)
+
+
+def output(args):
+    return command(args, capture_output=True, text=True).stdout.strip()
+
+
+def cases(width, max_k, quick):
+    sizes = [0, 1, 32, 1024, 65536] if quick else [0, 1, 2, 32, 33, 256, 4096, 65536, 1048576, 8388608]
+    for k in sizes:
+        if k > max_k:
+            continue
+        populations = {k, k + 1, k + 64, k + max(1, k//10), max(1, 2*k), max(1, 16*k), 2**width - 1}
+        if width == 64:
+            populations.add(2**32 + 1)
+        for n in sorted(populations):
+            yield n, k
+
+
+def calibrated(batch, budget):
+    iters = 1
+    while True:
+        elapsed = batch(iters)
+        if not math.isfinite(elapsed) or elapsed <= 0:
+            raise RuntimeError(f'invalid batch time: {elapsed}')
+        if elapsed >= budget:
+            return elapsed / iters, iters, elapsed
+        iters = max(iters + 1, min(iters * 10, math.ceil(iters * budget / elapsed)))
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('outdir', type=Path)
+    p.add_argument('--language', action='append', choices=['cpp', 'rust', 'python'])
+    p.add_argument('--repeats', type=int, default=5)
+    p.add_argument('--time-for', type=float, default=0.02)
+    p.add_argument('--max-k', type=int, default=1048576)
+    p.add_argument('--cpu', type=int)
+    p.add_argument('--quick', action='store_true')
+    args = p.parse_args()
+    if args.repeats < 1 or not math.isfinite(args.time_for) or args.time_for <= 0 or args.max_k < 0:
+        p.error('require positive finite time-for, positive repeats and nonnegative max-k')
+    if args.cpu is not None and (not hasattr(os, 'sched_getaffinity') or args.cpu not in os.sched_getaffinity(0)):
+        p.error('--cpu must name an available logical CPU on Linux')
+    if args.outdir.exists() and (not args.outdir.is_dir() or any(args.outdir.iterdir())):
+        p.error('output directory must be new or empty')
+    untracked = output(['git', '-C', ROOT, 'ls-files', '--others', '--exclude-standard', '--', 'cpp', 'rust', 'python'])
+    if untracked:
+        p.error('stage new source files first so provenance captures them:\n' + untracked)
+    languages = list(dict.fromkeys(args.language or ['cpp', 'rust', 'python']))
+    args.outdir.mkdir(parents=True, exist_ok=True)
+    patch = command(['git', '-C', ROOT, 'diff', '--binary', 'HEAD', '--', 'cpp', 'rust', 'python'], capture_output=True).stdout
+    (args.outdir / 'working-tree.patch').write_bytes(patch)
+    metadata = {
+        'head': output(['git', '-C', ROOT, 'rev-parse', 'HEAD']),
+        'patch_sha256': hashlib.sha256(patch).hexdigest(),
+        'date_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+        'platform': platform.platform(), 'python': platform.python_version(),
+        'options': {**vars(args), 'outdir': str(args.outdir)},
+        'rng': 'Unbiased bounded draws; C++ Xoshiro256++, Rust SmallRng, Python MT; reset to seed 324 per batch',
+        'timing': 'Serial, rotating algorithm order; final calibrated batch >= time-for; all buffers warmed once',
+        'allocation': 'Native output allocated and touched before timing; Python includes returned-list allocation',
+        'compiler_environment': {k: os.environ.get(k, '') for k in
+            ['CC', 'CXX', 'CFLAGS', 'CXXFLAGS', 'CPPFLAGS', 'RUSTFLAGS', 'CARGO_ENCODED_RUSTFLAGS', 'CARGO_BUILD_TARGET']},
+    }
+    if Path('/proc/cpuinfo').exists():
+        metadata['cpu_model'] = next(line.split(':', 1)[1].strip()
+            for line in Path('/proc/cpuinfo').read_text().splitlines() if line.startswith('model name'))
+        cpu = args.cpu if args.cpu is not None else min(os.sched_getaffinity(0))
+        cache = Path(f'/sys/devices/system/cpu/cpu{cpu}/cache')
+        metadata['caches'] = [{key: (index / key).read_text().strip()
+            for key in ['level', 'type', 'size', 'coherency_line_size']} for index in sorted(cache.glob('index*'))]
+
+    scratch = ROOT / 'scratch'
+    scratch.mkdir(exist_ok=True)
+    samples = {}
+    with tempfile.TemporaryDirectory(prefix='grouped-bench-', dir=scratch) as folder:
+        folder = Path(folder)
+        binaries = {}
+        if 'cpp' in languages:
+            build = folder / 'cpp'
+            command(['meson', 'setup', build, ROOT / 'cpp'])
+            command(['ninja', '-C', build])
+            targets = json.loads(output(['meson', 'introspect', build, '--targets']))
+            [binary] = [t['filename'][0] for t in targets if t['name'] == 'bench_groupedchoose']
+            binaries['cpp'] = Path(binary)
+            metadata['cpp_commands'] = json.loads((build / 'compile_commands.json').read_text())
+            metadata['cpp_compilers'] = json.loads(output(['meson', 'introspect', build, '--compilers']))
+        if 'rust' in languages:
+            messages = output(['cargo', 'build', '--locked', '--release', '--manifest-path', ROOT / 'rust/Cargo.toml',
+                              '--bin', 'bench_groupedchoose', '--target-dir', folder / 'rust',
+                              '--message-format=json-render-diagnostics'])
+            artifacts = [json.loads(line) for line in messages.splitlines()]
+            [binary] = [a['executable'] for a in artifacts if a.get('reason') == 'compiler-artifact'
+                        and a['target']['name'] == 'bench_groupedchoose' and a.get('executable')]
+            binaries['rust'] = Path(binary)
+            metadata['rustc'] = output(['rustc', '-Vv'])
+        metadata['executable_sha256'] = {name: hashlib.sha256(path.read_bytes()).hexdigest() for name, path in binaries.items()}
+        (args.outdir / 'metadata.json').write_text(json.dumps(metadata, indent=2) + '\n')
+        if args.cpu is not None:
+            os.sched_setaffinity(0, {args.cpu})
+        if 'python' in languages:
+            from algorithms import cardchoose, groupedchoose
+            python_modules = {'cardchoose': cardchoose, 'groupedchoose': groupedchoose}
+        with (args.outdir / 'raw.csv').open('w') as raw:
+            writer = csv.writer(raw)
+            writer.writerow(['language', 'width', 'order', 'n', 'k', 'algorithm', 'repeat', 'seconds', 'iterations', 'batch_seconds'])
+            for language in languages:
+                widths = [32, 64] if language != 'python' else [32, 64, 256, 4096]
+                for width in widths:
+                    grid = list(cases(width, args.max_k, args.quick)) if language != 'python' else [
+                        (2**width - 1, k) for k in [0, 1, 32, 1024, 4096] if k <= args.max_k]
+                    for order in ['sorted', 'random']:
+                        for rep in range(args.repeats):
+                            for n, k in grid:
+                                baseline = 'cardchoose' if width == 32 or language == 'python' else 'urnsort'
+                                algorithms = [baseline, 'groupedchoose']
+                                # Scanning a huge sparse population is intentionally excluded.
+                                if language != 'python' and n <= 2*k:
+                                    algorithms.append('reservoirsample')
+                                rotate = rep % len(algorithms)
+                                algorithms = algorithms[rotate:] + algorithms[:rotate]
+                                for algorithm in algorithms:
+                                    if language == 'python':
+                                        choose = getattr(python_modules[algorithm], order + '_choose')
+
+                                        def batch(iters):
+                                            random.seed(324)
+                                            choose(n, k)
+                                            random.seed(324)
+                                            enabled = gc.isenabled()
+                                            gc.disable()
+                                            try:
+                                                start = time.perf_counter()
+                                                for _ in range(iters):
+                                                    choose(n, k)
+                                                return time.perf_counter() - start
+                                            finally:
+                                                if enabled:
+                                                    gc.enable()
+                                    else:
+                                        def batch(iters):
+                                            record = json.loads(output([binaries[language], width, algorithm, order, n, k, iters]))
+                                            return float(record['seconds'])
+                                    seconds, iters, elapsed = calibrated(batch, args.time_for)
+                                    key = (language, width, order, n, k, algorithm)
+                                    samples.setdefault(key, []).append(seconds)
+                                    writer.writerow([*key, rep + 1, seconds, iters, elapsed])
+                            raw.flush()
+                            print(f'{language} {width}-bit {order}: repetition {rep + 1}/{args.repeats}', flush=True)
+        with (args.outdir / 'summary.csv').open('w') as summary:
+            writer = csv.writer(summary)
+            writer.writerow(['language', 'width', 'order', 'n', 'k', 'algorithm', 'median_s', 'mad_s', 'baseline', 'speedup'])
+            for key, values in samples.items():
+                language, width, order, n, k, algorithm = key
+                baseline = 'cardchoose' if width == 32 or language == 'python' else 'urnsort'
+                baseline_median = statistics.median(samples[(*key[:-1], baseline)])
+                median = statistics.median(values)
+                mad = statistics.median(abs(v - median) for v in values)
+                writer.writerow([*key, median, mad, baseline, baseline_median / median])
+    print(f'Results: {args.outdir / "summary.csv"}')
+
+
+if __name__ == '__main__':
+    main()

@@ -57,6 +57,7 @@ def main():
         'select': 'x',
         'hsel': 'h',
         'cardchoose': '^',
+        'groupedchoose': 'P',
     }
     fig = plt.figure()
     ax = plt.gca()

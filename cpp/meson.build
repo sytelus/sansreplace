@@ -34,6 +34,7 @@ libsrc = [
     'select.cpp',
     'hsel.cpp',
     'cardchoose.cpp',
+    'groupedchoose.cpp',
 ]
 lib = shared_library('sansreplace',
                         libsrc,
@@ -42,3 +43,10 @@ lib = shared_library('sansreplace',
 cardchoose_test = executable('cardchoose_test', 'tests/cardchoose_test.cpp',
     override_options : ['b_ndebug=false'])
 test('cardchoose', cardchoose_test, timeout : 120)
+
+groupedchoose_test = executable('groupedchoose_test',
+    ['tests/groupedchoose_test.cpp', 'randbelow.c'],
+    override_options : ['b_ndebug=false'])
+test('groupedchoose', groupedchoose_test, timeout : 120)
+
+executable('bench_groupedchoose', 'bench_groupedchoose.cpp', link_with : lib)
