@@ -2,12 +2,17 @@
 //!
 //! `sorted_order` / `random_order` use u32, and the `64` variants use u64.
 //! All accept a caller-owned output slice, allocate nothing, and use unbiased
-//! bounded draws. See groupedchoose.md for the probability and storage proofs.
+//! bounded draws. A fixed 64-byte bitmap and bounded small-sort stack are the
+//! only non-scalar workspace. See groupedchoose.md for the probability and storage proofs.
+
+const SMALL_SORT: usize = 256;
+const DEFAULT_GROUP_SIZE: usize = 64;
 
 macro_rules! implementation {
     ($module:ident, $word:ty) => {
         mod $module {
-            fn local_urn(
+            use super::{DEFAULT_GROUP_SIZE, SMALL_SORT};
+            pub(super) fn local_sample(
                 out: &mut [$word],
                 start: usize,
                 count: usize,
@@ -22,6 +27,42 @@ macro_rules! implementation {
                     }
                     return;
                 }
+                let domain = width + (count as $word - 1);
+                if domain <= 512 {
+                    // A fixed bitmap implements Floyd's sampler without a sort.
+                    let mut bits = [0u64; 8];
+                    let invert = count as $word > domain / 2;
+                    let draws = if invert {
+                        domain - count as $word
+                    } else {
+                        count as $word
+                    };
+                    for j in domain - draws..domain {
+                        let r = draw(j + 1);
+                        let v = if bits[(r / 64) as usize] & (1u64 << (r % 64)) != 0 {
+                            j
+                        } else {
+                            r
+                        };
+                        bits[(v / 64) as usize] |= 1u64 << (v % 64);
+                    }
+                    let mut written = 0;
+                    let words = 1 + (domain as usize - 1) / 64;
+                    for (b, &word) in bits[..words].iter().enumerate() {
+                        let mut mask = if invert { !word } else { word };
+                        if b + 1 == words && domain % 64 != 0 {
+                            mask &= (1u64 << (domain % 64)) - 1;
+                        }
+                        while mask != 0 {
+                            data[written] = low
+                                + start as $word
+                                + (64 * b + mask.trailing_zeros() as usize) as $word;
+                            written += 1;
+                            mask &= mask - 1;
+                        }
+                    }
+                    return;
+                }
                 for j in 0..data.len() {
                     let r = draw(width + j as $word);
                     data[j] = if r < width {
@@ -30,14 +71,18 @@ macro_rules! implementation {
                         data[(r - width) as usize]
                     };
                 }
-                for i in 1..data.len() {
-                    let value = data[i];
-                    let mut j = i;
-                    while j > 0 && data[j - 1] > value {
-                        data[j] = data[j - 1];
-                        j -= 1;
+                if count <= SMALL_SORT {
+                    data.sort_unstable();
+                } else {
+                    for i in 1..data.len() {
+                        let value = data[i];
+                        let mut j = i;
+                        while j > 0 && data[j - 1] > value {
+                            data[j] = data[j - 1];
+                            j -= 1;
+                        }
+                        data[j] = value;
                     }
-                    data[j] = value;
                 }
                 for (j, slot) in data.iter_mut().enumerate() {
                     *slot += (start + j) as $word;
@@ -49,7 +94,6 @@ macro_rules! implementation {
                 mut read: usize,
                 t: $word,
                 width: $word,
-                extra: $word,
                 draw: &mut impl FnMut($word) -> $word,
             ) {
                 let k = out.len();
@@ -65,14 +109,8 @@ macro_rules! implementation {
                         let b = out[read];
                         read += 1;
                         debug_assert!(start + count <= read);
-                        local_urn(
-                            out,
-                            start,
-                            count,
-                            b * width + b.min(extra),
-                            width + <$word>::from(b < extra),
-                            draw,
-                        );
+                        let low = b * width;
+                        local_sample(out, start, count, low, width.min(t - low), draw);
                         start += count;
                     }
                 }
@@ -90,26 +128,29 @@ macro_rules! implementation {
                     return;
                 }
                 let t = n - k as $word + 1;
-                if GROUP_SIZE == 16 && k <= 64 {
-                    local_urn(out, 0, k, 0, t, draw);
+                if GROUP_SIZE == DEFAULT_GROUP_SIZE && k <= SMALL_SORT {
+                    local_sample(out, 0, k, 0, t, draw);
                     return;
                 }
-                let groups = t.min((1 + (k - 1) / GROUP_SIZE) as $word);
+                if k < 4 {
+                    local_sample(out, 0, k, 0, t, draw);
+                    return;
+                }
+                let wanted = t.min((k / 4).min(1 + (k - 1) / GROUP_SIZE) as $word);
+                let shift = <$word>::BITS - 1 - (t / wanted).leading_zeros();
+                let width = (1 as $word) << shift;
+                let groups = 1 + ((t - 1) >> shift);
                 if groups == 1 {
-                    local_urn(out, 0, k, 0, t, draw);
+                    local_sample(out, 0, k, 0, t, draw);
                     return;
                 }
                 debug_assert!(groups as usize <= k / 2);
-                let (width, extra) = (t / groups, t % groups);
-                let split = (width + 1) * extra;
+                // Power-of-two intervals need only a shift per fresh draw.
+                // The final interval is the only one that may be shorter.
                 for i in 0..k {
                     let r = draw(t + i as $word);
                     out[i] = if r < t {
-                        1 + if r < split {
-                            r / (width + 1)
-                        } else {
-                            extra + (r - split) / width
-                        }
+                        1 + (r >> shift)
                     } else {
                         out[(r - t) as usize]
                     };
@@ -140,8 +181,8 @@ macro_rules! implementation {
                     };
                     if count == 1 {
                         read -= 1;
-                        out[read] =
-                            b * width + b.min(extra) + draw(width + <$word>::from(b < extra));
+                        let low = b * width;
+                        out[read] = low + draw(width.min(t - low));
                     } else if count > 1 {
                         read -= 2;
                         out[read] = t + (count - 2);
@@ -149,7 +190,7 @@ macro_rules! implementation {
                     }
                     debug_assert!(read >= b as usize);
                 }
-                emit_records(out, read, t, width, extra, draw);
+                emit_records(out, read, t, width, draw);
             }
 
             pub(super) fn complement<const GROUP_SIZE: usize>(
@@ -177,7 +218,7 @@ macro_rules! implementation {
                     }
                     debug_assert!(read >= b as usize);
                 }
-                emit_records(out, read, t, 1, 0, draw);
+                emit_records(out, read, t, 1, draw);
             }
 
             pub(super) fn choose<const RANDOM: bool, const GROUP_SIZE: usize>(
@@ -203,12 +244,16 @@ macro_rules! implementation {
                     return;
                 }
                 if !RANDOM && n - k > 1 {
-                    if n - k <= k / 16 {
+                    if n <= 512 {
+                        local_sample(out, 0, k as usize, 0, n - k + 1, draw);
+                        return;
+                    }
+                    if n - k <= k / 4 && (n - k <= 1024 || n - k <= k / 16) {
                         complement::<GROUP_SIZE>(n, out, draw);
                         return;
                     }
-                    if k <= 64 {
-                        local_urn(out, 0, k as usize, 0, n - k + 1, draw);
+                    if k <= SMALL_SORT as $word {
+                        local_sample(out, 0, k as usize, 0, n - k + 1, draw);
                         return;
                     }
                 }
@@ -227,9 +272,13 @@ macro_rules! implementation {
                         }
                     } else {
                         if n - k <= 1 {
-                            let omitted = if n == k { n } else { draw(n) };
-                            for (i, slot) in out.iter_mut().enumerate() {
-                                *slot = i as $word + <$word>::from(i as $word >= omitted);
+                            let omitted = if n == k { k } else { draw(n) };
+                            let (prefix, suffix) = out.split_at_mut(omitted as usize);
+                            for (i, slot) in prefix.iter_mut().enumerate() {
+                                *slot = i as $word;
+                            }
+                            for (i, slot) in suffix.iter_mut().enumerate() {
+                                *slot = omitted + 1 + i as $word;
                             }
                             return;
                         }
@@ -259,19 +308,19 @@ implementation!(word64, u64);
 
 /// Uniform sorted sample from 0..n. Panics if the output is longer than n.
 pub fn sorted_order<R: rand::RngExt + ?Sized>(rng: &mut R, n: u32, out: &mut [u32]) {
-    word32::choose::<false, 16>(n, out, &mut |b| rng.random_range(0..b));
+    word32::choose::<false, DEFAULT_GROUP_SIZE>(n, out, &mut |b| rng.random_range(0..b));
 }
 /// Uniform ordered sample from 0..n. Panics if the output is longer than n.
 pub fn random_order<R: rand::RngExt + ?Sized>(rng: &mut R, n: u32, out: &mut [u32]) {
-    word32::choose::<true, 16>(n, out, &mut |b| rng.random_range(0..b));
+    word32::choose::<true, DEFAULT_GROUP_SIZE>(n, out, &mut |b| rng.random_range(0..b));
 }
 /// Uniform sorted sample with a 64-bit population and 64-bit output elements.
 pub fn sorted_order64<R: rand::RngExt + ?Sized>(rng: &mut R, n: u64, out: &mut [u64]) {
-    word64::choose::<false, 16>(n, out, &mut |b| rng.random_range(0..b));
+    word64::choose::<false, DEFAULT_GROUP_SIZE>(n, out, &mut |b| rng.random_range(0..b));
 }
 /// Uniform ordered sample with a 64-bit population and 64-bit output elements.
 pub fn random_order64<R: rand::RngExt + ?Sized>(rng: &mut R, n: u64, out: &mut [u64]) {
-    word64::choose::<true, 16>(n, out, &mut |b| rng.random_range(0..b));
+    word64::choose::<true, DEFAULT_GROUP_SIZE>(n, out, &mut |b| rng.random_range(0..b));
 }
 
 #[cfg(test)]

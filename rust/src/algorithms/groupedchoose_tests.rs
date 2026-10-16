@@ -185,7 +185,8 @@ fn boundaries_and_packing() {
         u64::MAX,
     ] {
         for k in [
-            0, 1, 2, 3, 31, 32, 33, 63, 64, 65, 127, 128, 129, 1024, 65536,
+            0, 1, 2, 3, 31, 32, 33, 63, 64, 65, 127, 128, 129, 255, 256, 257, 511, 512, 513, 1024,
+            65536,
         ] {
             if k as u64 > n {
                 continue;
@@ -199,9 +200,9 @@ fn boundaries_and_packing() {
                     };
                     let mut out = vec![u64::MAX; k];
                     if random {
-                        word64::choose::<true, 32>(n, &mut out, &mut draw);
+                        word64::choose::<true, DEFAULT_GROUP_SIZE>(n, &mut out, &mut draw);
                     } else {
-                        word64::choose::<false, 32>(n, &mut out, &mut draw);
+                        word64::choose::<false, DEFAULT_GROUP_SIZE>(n, &mut out, &mut draw);
                     }
                     if !random {
                         assert!(out.is_sorted());
@@ -222,16 +223,24 @@ fn boundaries_and_packing() {
         assert!(out.windows(2).all(|w| w[0] < w[1]));
     }
     // Exercise the public RNG adapters, including a population beyond u32.
-    let mut out32 = [0; 65];
-    let mut out64 = [0; 65];
-    sorted_order(&mut rng, u32::MAX, &mut out32);
-    random_order(&mut rng, u32::MAX, &mut out32);
-    sorted_order64(&mut rng, u64::MAX, &mut out64);
-    random_order64(&mut rng, u64::MAX, &mut out64);
-    out32.sort_unstable();
-    out64.sort_unstable();
-    assert!(out32.windows(2).all(|w| w[0] < w[1]));
-    assert!(out64.windows(2).all(|w| w[0] < w[1]));
+    for k in [65, 128, 129, 256, 257, 512, 513, 1024] {
+        let mut out32 = vec![0; k];
+        let mut out64 = vec![0; k];
+        sorted_order(&mut rng, u32::MAX, &mut out32);
+        sorted_order64(&mut rng, u64::MAX, &mut out64);
+        assert!(out32.windows(2).all(|w| w[0] < w[1]));
+        assert!(out64.windows(2).all(|w| w[0] < w[1]));
+        assert!(out32.iter().all(|&v| v < u32::MAX));
+        assert!(out64.iter().all(|&v| v < u64::MAX));
+        random_order(&mut rng, u32::MAX, &mut out32);
+        random_order64(&mut rng, u64::MAX, &mut out64);
+        out32.sort_unstable();
+        out64.sort_unstable();
+        assert!(out32.windows(2).all(|w| w[0] < w[1]));
+        assert!(out64.windows(2).all(|w| w[0] < w[1]));
+        assert!(out32.iter().all(|&v| v < u32::MAX));
+        assert!(out64.iter().all(|&v| v < u64::MAX));
+    }
 }
 
 #[test]
@@ -257,13 +266,60 @@ fn complement_boundaries() {
             for mode in 0..3 {
                 let n = (k + q) as u64;
                 let mut out = vec![u64::MAX; k];
-                word64::choose::<false, 16>(n, &mut out, &mut |b| match mode {
+                word64::choose::<false, DEFAULT_GROUP_SIZE>(n, &mut out, &mut |b| match mode {
                     0 => rng.random_range(0..b),
                     1 => 0,
                     _ => b - 1,
                 });
                 assert!(out.iter().all(|&x| x < n));
                 assert!(out.windows(2).all(|w| w[0] < w[1]));
+            }
+        }
+    }
+}
+
+#[test]
+fn local_bitmap_and_sort_boundaries() {
+    let mut rng = SmallRng::seed_from_u64(612);
+    for domain in [
+        2, 63, 64, 65, 127, 128, 129, 255, 256, 257, 511, 512, 513, 1024,
+    ] {
+        for count in [
+            1, 2, 3, 16, 63, 64, 65, 127, 128, 129, 255, 256, 257, 511, 512,
+        ] {
+            if count > domain {
+                continue;
+            }
+            for mode in 0..3 {
+                macro_rules! check {
+                    ($module:ident, $word:ty) => {{
+                        let guard = <$word>::MAX;
+                        let mut out = vec![guard; count + 5];
+                        $module::local_sample(
+                            &mut out,
+                            3,
+                            count,
+                            guard - domain as $word - 3,
+                            (domain - count + 1) as $word,
+                            &mut |bound| match mode {
+                                0 => 0,
+                                1 => bound - 1,
+                                _ => rng.random_range(0..bound),
+                            },
+                        );
+                        assert_eq!(out[..3], [guard; 3]);
+                        assert_eq!(out[count + 3..], [guard; 2]);
+                        let result = &out[3..count + 3];
+                        assert!(result.windows(2).all(|w| w[0] < w[1]));
+                        assert!(
+                            result
+                                .iter()
+                                .all(|&x| x >= guard - domain as $word && x < guard)
+                        );
+                    }};
+                }
+                check!(word32, u32);
+                check!(word64, u64);
             }
         }
     }

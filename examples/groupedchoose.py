@@ -1,14 +1,11 @@
 def sorted_choose(n, k):
-    """Uniform sorted k-subset; expected O(k) integer operations."""
+    """Uniform sorted k-subset of range(n); require 0 <= k <= n."""
     from random import randrange
 
-    if not 0 <= k <= n:
-        raise ValueError("require 0 <= k <= n")
-    if k == n:
+    if k == 0 or k == n:
         return list(range(k))
     out = [0] * k
-    if not k:
-        return out
+    # Dense samples need only a scan of at most 2k values.
     if n <= 2 * k:
         written = 0
         for value in range(n):
@@ -20,25 +17,30 @@ def sorted_choose(n, k):
         return out
 
     def emit(start, count, low, width):
+        # A local Pólya urn gives a uniform multiset of colors.
         for j in range(count):
             r = randrange(width + j)
             out[start + j] = (low + r if r < width
                               else out[start + r - width])
+        # Small groups make insertion sorting linear in expectation.
         for i in range(start + 1, start + count):
             value, j = out[i], i
             while j > start and out[j - 1] > value:
                 out[j] = out[j - 1]
                 j -= 1
             out[j] = value
+        # Stars and bars: adding ranks makes the colors distinct.
         for i in range(start, start + count):
             out[i] += i
 
+    # Balance the t colors among about k/16 contiguous groups.
     t, groups = n - k + 1, 1 + (k - 1) // 16
     if groups == 1:
         emit(0, k, 0, t)
         return out
     width, extra = divmod(t, groups)
     split = (width + 1) * extra
+    # The global urn records group labels, not individual colors.
     for i in range(k):
         r = randrange(t + i)
         if r < t:
@@ -49,6 +51,7 @@ def sorted_choose(n, k):
             out[i] = out[r - t]
 
     # Reuse the output prefix for group counts.
+    # Labels are 1..groups; a counter holding m is groups + m.
     i = 0
     while i < k:
         if not 1 <= out[i] <= groups:
@@ -63,7 +66,8 @@ def sorted_choose(n, k):
             out[i] = 0
             i += 1
 
-    # Pack records at the right, then emit at the left.
+    # Pack right to left: one color, or (tagged count, group).
+    # Each record uses no more space than the output it describes.
     read = k
     for b in range(groups - 1, -1, -1):
         count = out[b] - groups if out[b] else 0
@@ -74,6 +78,7 @@ def sorted_choose(n, k):
         elif count > 1:
             read -= 2
             out[read], out[read + 1] = t + count - 2, b
+    # Decode left to right without overwriting unread records.
     start = 0
     while read < k:
         tag = out[read]

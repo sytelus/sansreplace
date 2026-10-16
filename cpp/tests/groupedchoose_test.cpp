@@ -84,7 +84,8 @@ void boundaries() {
                    Word(std::numeric_limits<Word>::max() / 2 + 1),
                    std::numeric_limits<Word>::max()}) {
         for (Word k : {Word{0}, Word{1}, Word{2}, Word{3}, Word{15}, Word{16}, Word{17}, Word{31}, Word{32}, Word{33},
-                       Word{63}, Word{64}, Word{65}, Word{127}, Word{128}, Word{129},
+                       Word{63}, Word{64}, Word{65}, Word{127}, Word{128}, Word{129}, Word{255}, Word{256}, Word{257},
+                       Word{511}, Word{512}, Word{513},
                        Word{1024}, Word{65536}}) {
             if (k > n) continue;
             for (bool random : {false, true}) {
@@ -169,6 +170,36 @@ static void exported_apis() {
     }
 }
 
+template<class Word>
+void local_boundaries() {
+    std::mt19937_64 rng(612);
+    const Word guard = std::numeric_limits<Word>::max(), start = 3;
+    for (Word domain : {2u, 63u, 64u, 65u, 127u, 128u, 129u, 255u, 256u,
+                        257u, 511u, 512u, 513u, 1024u}) {
+        for (Word count : {1u, 2u, 3u, 16u, 63u, 64u, 65u, 127u, 128u,
+                           129u, 255u, 256u, 257u, 511u, 512u}) {
+            if (count > domain) continue;
+            for (unsigned mode = 0; mode < 3; ++mode) {
+                auto draw = [&](Word bound) {
+                    assert(bound != 0);
+                    if (mode == 0) return Word{0};
+                    if (mode == 1) return Word(bound - 1);
+                    return std::uniform_int_distribution<Word>(0, bound - 1)(rng);
+                };
+                std::vector<Word> out(size_t(count) + start + 2, guard);
+                groupedchoose::local_sample(out.data(), start, count,
+                    Word(guard - domain - start), Word(domain - count + 1), draw);
+                assert(std::all_of(out.begin(), out.begin() + start,
+                                   [=](Word x) { return x == guard; }));
+                assert(out[out.size() - 2] == guard && out.back() == guard);
+                const std::vector<Word> result(out.begin() + start, out.end() - 2);
+                valid(result, guard, true);
+                assert(result.front() >= guard - domain);
+            }
+        }
+    }
+}
+
 int main() {
     // Exercise the complete value domain at a small word size. In particular,
     // this catches reliance on spare high bits for counts or packed records.
@@ -180,6 +211,16 @@ int main() {
         };
         groupedchoose::choose(uint8_t(n), uint8_t(k), out.data(), draw);
         valid(out, uint8_t(n), true);
+        // The public bitmap shortcut covers this entire word size. Force the
+        // packed representations too, so spare-bit/overflow coverage survives.
+        if (n > 2 * k) {
+            groupedchoose::sparse<3>(uint8_t(n), uint8_t(k), out.data(), draw);
+            valid(out, uint8_t(n), true);
+        }
+        if (n > k && n - k <= k / 4) {
+            groupedchoose::complement<3>(uint8_t(n), uint8_t(k), out.data(), draw);
+            valid(out, uint8_t(n), true);
+        }
     }
     for (uint32_t n = 0; n <= 7; ++n) for (uint32_t k = 0; k <= n; ++k) {
         exact<uint32_t, false, false>(n, k);
@@ -194,6 +235,8 @@ int main() {
     boundaries<uint64_t>();
     range_reduction();
     exported_apis();
+    local_boundaries<uint32_t>();
+    local_boundaries<uint64_t>();
     for (uint32_t n = 5; n <= 16; ++n) for (uint32_t q = 1; q <= std::min(3u, n/5); ++q) {
         exact<uint32_t, false, false, true>(n, n-q);
         exact<uint64_t, false, false, true>(n, n-q);

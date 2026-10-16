@@ -134,6 +134,9 @@ The focused benchmark adds native 64-bit populations and Python populations thro
 python/bench_groupedchoose results/grouped-local --repeats 5 --time-for 0.02 --max-k 8388608 --cpu 2
 ```
 
+The full native grid includes the 128/256 sample cutoffs and both sides of the
+512-value bitmap boundary, in addition to tiny, dense, nearly full and sparse samples.
+
 Choose an available CPU or omit `--cpu`. The default maximum k is 1,048,576; the command above
 also includes 8,388,608-element outputs (32 MiB / 64 MiB). `--quick` reduces the grid, and
 `--language cpp`, `--language rust`, or `--language python` select implementations. A new or

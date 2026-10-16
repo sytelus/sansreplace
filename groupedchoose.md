@@ -2,9 +2,13 @@
 
 Grouped Cardchoose removes the algorithm's dependence on a fixed number of integer
 digits. It samples a uniform sorted subset using **expected O(k) integer operations,
-the k-element output array, and O(1) auxiliary integers**. It uses no hash table,
-bitmap, recursion, floating point, or second array. Its small local sorts operate on
-contiguous memory; the temporary count table occupies only a prefix of the output.
+the k-element output array, and O(1) auxiliary integers**. The Python construction
+uses only the output and scalar variables. Native fast paths add a **fixed 64-byte
+bitmap** for local domains of at most 512 values and bounded standard-library
+sorts (at most 128 elements in C++, 256 in Rust). Their auxiliary workspace remains
+constant: the bitmap and bounded sort stack do not grow with n or k. There is no
+hash table, heap allocation, population-sized bitmap, or floating point. Local
+work operates on contiguous memory; group counts occupy a prefix of the output.
 
 This is an expected bound, not a worst-case linear sorting guarantee. It counts
 integer arithmetic, including division, and a bounded uniform draw as constant-time
@@ -46,7 +50,25 @@ Typical local working sets are small even when the full output is much larger
 than the CPU caches. No cache size, AVX2 instruction, or `-march=native` setting
 is assumed.
 
+The native implementations use power-of-two intervals to replace per-draw
+division with a shift. Let B0 = ceil(k/G), with G=16 in C++ and G=64 in Rust,
+and let w be the greatest power of two
+not exceeding t/B0. There are B = ceil(t/w) groups; all have width w except the
+last, which may be shorter. Thus B0 ≤ B ≤ 2B0. For the public grouped path,
+k exceeds the bounded small-sample cutoff, so 2B ≤ 4B0 ≤ k. The test hook for
+smaller target sizes caps B0 at floor(k/4) to retain this storage inequality.
+The C++ setup finds w with at most 63 scalar shifts; Rust uses `leading_zeros`.
+Neither operation needs a particular CPU instruction. Python retains the balanced
+intervals above, without a fixed integer-width assumption.
+
 ## Why the distribution is exactly uniform
+
+For the original urn, an ordered color sequence with multiplicities c_a has
+probability `product(c_a!) / (t(t+1)...(t+k-1))`. There are
+`k! / product(c_a!)` such orders. Consequently every multiset has probability
+`1 / binomial(t+k-1,k)`. If its sorted colors are z_i, the map y_i = z_i + i
+is a bijection onto increasing k-tuples in [0,n): its inverse is z_i = y_i − i.
+This proves the local urn and the final stars-and-bars step, including duplicates.
 
 Let group b contain s_b original colors and receive M_b draws. The aggregated
 urn is a Pólya urn with initial group weights s_b. For counts m_b summing to k,
@@ -56,12 +78,36 @@ urn is a Pólya urn with initial group weights s_b. For counts m_b summing to k,
   =\frac{\prod_b {s_b+m_b-1\choose m_b}}{{t+k-1\choose k}}.
 \]
 
+Indeed, each ordered group sequence has probability
+`product(s_b(s_b+1)...(s_b+m_b-1)) / (t(t+1)...(t+k-1))`;
+multiplying by its `k! / product(m_b!)` possible orders gives this formula.
+
 The local urn produces each local multiset with probability
 `1 / binomial(s_b + m_b - 1, m_b)`. Conditional on the counts, the local draws
 are independent. Multiplication cancels every numerator factor, leaving
 `1 / binomial(n,k)` for each global multiset, and therefore for each subset.
 This argument includes repeated colors and correlated group occupancies; it
 does not assume that the urn draws are independent uniform keys.
+
+This cancellation applies to **any partition into consecutive color intervals**,
+including the native power-of-two intervals. Given a group count m and color
+width s, a local sorted m-subset of [0,s+m−1) is equivalent to its uniform color
+multiset by the same bijection. Adding the group's first color and global start
+index produces exactly the same conditional distribution as the local urn.
+
+For local domain D = s+m−1 ≤ 512, the native code obtains this subset with
+Floyd's sampler in eight 64-bit words. Starting with an empty set, for
+j = D−m,...,D−1 it draws r uniformly in [0,j] and inserts j if r is already
+present, otherwise r. To prove the induction, suppose the old set is a uniform
+a-subset of [0,j). A target (a+1)-subset S not containing j has a+1 possible
+last choices r in S, each with previous set S without r. If S contains j, its
+previous set must be S without j, and the a+1 choices in that set or {j} all
+produce S. In either case the probability is
+`(a+1) / ((j+1)*binomial(j,a)) = 1 / binomial(j+1,a+1)`.
+When m > D/2, sampling D−m omissions and complementing the bitmap has the same
+uniform law and uses fewer draws. Unused bits in the final word are masked out.
+Set-bit enumeration returns the values in order. No approximate probabilities
+or collision retry assumption enters this path.
 
 Uniformity here assumes independent uniform bounded draws. Python uses
 `random.randrange`; C++ uses rejection-based range reduction for both widths;
@@ -82,6 +128,10 @@ The exact second moment of the group occupancies is
  = k + k(k-1)\frac{\sum_b s_b(s_b+1)}{t(t+1)}.
 \]
 
+To obtain it, write the sum of squared counts as k plus the number of ordered
+pairs of draws sharing a group. Exchangeability of the urn makes that pair
+probability `sum(s_b(s_b+1)) / (t(t+1))`, without an independence assumption.
+
 Balanced group sizes give
 
 \[
@@ -92,9 +142,18 @@ The sparse path is used only when n > 2k, hence t > k. Since B ≥ k/16,
 the expected sum of squared occupancies is at most **19k**. Insertion-sorting
 a group of m elements costs O(m²), so the expected total sorting work is O(k).
 This also covers the one-group case, where k ≤ 16.
-The native implementations also skip grouping for at most 64 outputs; insertion
-sorting that bounded range costs at most O(64k), still O(k). The compact Python
-reference uses the group construction directly.
+For native intervals, s_b ≤ w ≤ t/B0, so
+`sum(s_b(s_b+1)) <= t(w+1)`. The second-moment factor is at most
+`(w+1)/(t+1) <= 1/B0 + 1/t`, bounding the expected sum of squared occupancies
+by **(G+2)k**: 18k for C++, 66k for Rust. These are conservative work bounds,
+not instruction-count predictions. The larger Rust groups measured better with
+its standard-library sorter and reduce metadata traffic. Native sorts are used only
+for m ≤ 128 (C++) or m ≤ 256 (Rust); larger groups retain insertion sort.
+Their cost is bounded by O(m²) in either case. Skipping grouping for a sample
+within that fixed small-sort cutoff also preserves O(k) work and O(1) auxiliary
+workspace. Bitmap sampling takes at most m draws and O(m+8) work; every invoked
+local group is nonempty, so this is O(m). The global bitmap shortcut is likewise
+restricted to n ≤ 512 and k > 0.
 
 Generating labels, counting, packing records, and writing output take O(k)
 work. There are at most 2k bounded draws in the sparse sorted path and fewer
@@ -136,7 +195,7 @@ reading a record, that entire group's output ends at or before the next unread
 record. Local urn generation and insertion sorting therefore cannot corrupt
 metadata, even for an unusually large group.
 
-All stored temporary values fit in [0,n). Scalar expressions are also arranged
+All temporary values stored in the output fit in [0,n). Scalar expressions are also arranged
 to avoid overflow: for example `t + (count - 2)`, rather than `(t + count) - 2`.
 Empty samples return before computing n−k+1, which would overflow at the native
 maximum population. Tests also instantiate the C++ kernel with 8-bit words
@@ -147,9 +206,14 @@ across every valid (n,k) pair to detect hidden use of spare bits.
 For sorted samples with n ≤ 2k, Algorithm S selects the next value with
 probability `remaining selections / remaining population`. It scans at most 2k
 values. Full samples and a single omission have direct fill paths. Native k=1
-and k=2 paths avoid the group machinery, and small sorted samples through k=64
-use the original urn and a bounded insertion sort when another edge path does
-not apply. The general dense scan avoids extra exit checks on every element.
+and k=2 paths avoid the group machinery. The k=2 map draws a uniformly ordered
+pair by bijectively skipping the first value; sorting it gives a uniform subset.
+Populations through 512 use the bitmap shortcut. Samples through the small-sort
+cutoff use a local sampler when another edge path does not apply. Algorithm S
+is exact because each next inclusion has the conditional probability required
+by a uniform subset of the remaining population. The general dense scan avoids
+extra exit checks on every element. Full and single-omission samples are emitted
+as contiguous runs, avoiding a comparison on each output.
 
 When q = n−k is small, a complement path reduces random draws by sampling q omissions into the output
 prefix using the sparse kernel. It then converts gaps between omissions into
@@ -161,9 +225,11 @@ forward decoder emits those runs with local color width 1, requiring no further
 random draws or sorting. This takes expected O(q)+O(k) work and no extra array.
 Directly expanding the omitted values into the same array would be unsafe;
 the packed intermediate representation is what prevents overwrites.
-The native dispatch uses the more conservative `q <= k/16` cutoff selected
-by measurements; Python uses `q <= k/4`. The helper's storage proof supports
-either cutoff. None of these choices assumes a specific cache capacity.
+The native dispatch requires `q <= k/4` and either `q <= 1024` or `q <= k/16`;
+Python uses `q <= k/4`. The bounded exception avoids scanning or sorting a large
+sample when only a few values are omitted. Complementation is a bijection between
+q-subsets and k-subsets, so the output is uniform. The storage proof supports
+both dispatch rules. None of these choices assumes a specific cache capacity.
 
 For **random order**, dense samples use Algorithm R: build a uniformly shuffled
 initial reservoir, then scan the remaining population and replace a uniformly
@@ -171,6 +237,14 @@ chosen reservoir entry when appropriate. The n ≤ 2k restriction makes its work
 O(k); applying it to arbitrary sparse populations would instead cost O(n).
 Sparse samples use grouped sorted sampling followed by Fisher–Yates. These
 return uniform **ordered** samples, a stronger requirement than arbitrary order.
+For Algorithm R, induction preserves probability `1 / (i(i-1)...(i-k+1))` for
+each ordered reservoir after i population values: either the new item is absent
+and the old tuple is unchanged, or it replaces its specified position and the
+removed item can be any of the i−k old values outside the new tuple. Inside-out
+Fisher–Yates supplies the uniform initial permutation; the same shuffle after
+sorted sampling gives probability `1/(binomial(n,k)*k!)` for each ordered sample.
+All dispatch decisions depend only on n, k, and fixed constants, so choosing
+between these exact samplers preserves their common uniform law.
 
 ## APIs and reproducibility
 
@@ -229,3 +303,6 @@ the [self-contained Python function](examples/groupedchoose.py) and
 [code screenshot](examples/groupedchoose.png). The compact function keeps the
 general grouped construction and dense selection; it omits optional native
 tiny-sample and complement optimizations, retaining the same bounds and law.
+The screenshot states the precondition `0 <= k <= n` and omits defensive input
+validation for readability. Production Python retains its validation. Comments
+explain the urn, grouping, rank conversion, counters, and safe record decoding.

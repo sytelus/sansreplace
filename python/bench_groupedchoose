@@ -31,11 +31,13 @@ def output(args):
 
 
 def cases(width, max_k, quick):
-    sizes = [0, 1, 32, 1024, 65536] if quick else [0, 1, 2, 16, 17, 32, 33, 64, 65, 256, 4096, 65536, 1048576, 8388608]
+    sizes = [0, 1, 32, 1024, 65536] if quick else [0, 1, 2, 16, 17, 32, 33, 64, 65, 127, 128, 129, 255, 256, 257, 511, 512, 513, 4096, 65536, 1048576, 8388608]
     for k in sizes:
         if k > max_k:
             continue
         populations = {k, k + 1, k + 64, k + max(1, k//100), k + max(1, k//10), max(1, 2*k), max(1, 16*k), 2**width - 1}
+        if not quick and k <= 513:
+            populations.update(n for n in [511, 512, 513] if n >= k)
         if width == 64:
             populations.add(2**32 + 1)
         for n in sorted(populations):

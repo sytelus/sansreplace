@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="4420" height="3668" viewBox="0 0 4420 3668">
-<!-- Source SHA-256: 3a8b4f4f0b7b0bc62363bc251c14f21b321ec13c7baf4d4a3ed3d013829867a8 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="4420" height="3800" viewBox="0 0 4420 3800">
+<!-- Source SHA-256: f5b0bcb5ba11dcb1e0086ddcb1f3885a2cec4d7c78c8d32d3f577b7eaa127b7e -->
 <rect width="100%" height="100%" fill="#222426"/>
 <g font-family="DejaVu Sans Mono, monospace" font-size="48" xml:space="preserve">
 <text x="72" y="104" fill="#CACACA" font-size="34">GROUPED CARDCHOOSE  /  SELF-CONTAINED PYTHON</text>
-<text x="72" y="3594" fill="#8F969D" font-size="34">Expected O(k) integer operations  |  k output slots + O(1) auxiliary integers  |  no fixed integer width</text>
-<path d="M 2210.0 200 V 3500" stroke="#41474B" stroke-width="2"/>
+<text x="72" y="3726" fill="#8F969D" font-size="34">Expected O(k) integer operations  |  k output slots + O(1) auxiliary integers  |  no fixed integer width</text>
+<path d="M 2210.0 200 V 3632" stroke="#41474B" stroke-width="2"/>
 <text x="72" y="232" fill="#626D75" font-size="34">01</text>
 <text x="72" y="298" fill="#626D75" font-size="34">02</text>
 <text x="72" y="364" fill="#626D75" font-size="34">03</text>
@@ -55,6 +55,8 @@
 <text x="72" y="3334" fill="#626D75" font-size="34">48</text>
 <text x="72" y="3400" fill="#626D75" font-size="34">49</text>
 <text x="72" y="3466" fill="#626D75" font-size="34">50</text>
+<text x="72" y="3532" fill="#626D75" font-size="34">51</text>
+<text x="72" y="3598" fill="#626D75" font-size="34">52</text>
 <text x="188" y="245" fill="#72A9D6" font-size="48">def</text>
 <text x="274.71875" y="245" fill="#CACACA" font-size="48"> </text>
 <text x="303.625" y="245" fill="#CACACA" font-size="48">sorted_choose</text>
@@ -66,7 +68,7 @@
 <text x="823.9375" y="245" fill="#CACACA" font-size="48">)</text>
 <text x="852.84375" y="245" fill="#CACACA" font-size="48">:</text>
 <text x="188" y="311" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="311" fill="#D2A087" font-size="48">&quot;&quot;&quot;Uniform sorted k-subset; expected O(k) integer operations.&quot;&quot;&quot;</text>
+<text x="303.625" y="311" fill="#D2A087" font-size="48">&quot;&quot;&quot;Uniform sorted k-subset of range(n); require 0 &lt;= k &lt;= n.&quot;&quot;&quot;</text>
 <text x="188" y="377" fill="#CACACA" font-size="48">    </text>
 <text x="303.625" y="377" fill="#72A9D6" font-size="48">from</text>
 <text x="419.25" y="377" fill="#CACACA" font-size="48"> </text>
@@ -78,332 +80,311 @@
 <text x="188" y="509" fill="#CACACA" font-size="48">    </text>
 <text x="303.625" y="509" fill="#72A9D6" font-size="48">if</text>
 <text x="361.4375" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="390.34375" y="509" fill="#CACACA" font-size="48">not</text>
-<text x="477.0625" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="505.96875" y="509" fill="#B6CDA0" font-size="48">0</text>
-<text x="534.875" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="563.78125" y="509" fill="#CACACA" font-size="48">&lt;</text>
-<text x="592.6875" y="509" fill="#CACACA" font-size="48">=</text>
-<text x="621.59375" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="650.5" y="509" fill="#CACACA" font-size="48">k</text>
-<text x="679.40625" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="708.3125" y="509" fill="#CACACA" font-size="48">&lt;</text>
-<text x="737.21875" y="509" fill="#CACACA" font-size="48">=</text>
-<text x="766.125" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="509" fill="#CACACA" font-size="48">n</text>
-<text x="823.9375" y="509" fill="#CACACA" font-size="48">:</text>
+<text x="390.34375" y="509" fill="#CACACA" font-size="48">k</text>
+<text x="419.25" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="448.15625" y="509" fill="#CACACA" font-size="48">==</text>
+<text x="505.96875" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="534.875" y="509" fill="#B6CDA0" font-size="48">0</text>
+<text x="563.78125" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="592.6875" y="509" fill="#CACACA" font-size="48">or</text>
+<text x="650.5" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="679.40625" y="509" fill="#CACACA" font-size="48">k</text>
+<text x="708.3125" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="737.21875" y="509" fill="#CACACA" font-size="48">==</text>
+<text x="795.03125" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="823.9375" y="509" fill="#CACACA" font-size="48">n</text>
+<text x="852.84375" y="509" fill="#CACACA" font-size="48">:</text>
 <text x="188" y="575" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="575" fill="#72A9D6" font-size="48">raise</text>
-<text x="563.78125" y="575" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="575" fill="#CACACA" font-size="48">ValueError</text>
-<text x="881.75" y="575" fill="#CACACA" font-size="48">(</text>
-<text x="910.65625" y="575" fill="#D2A087" font-size="48">&quot;</text>
-<text x="939.5625" y="575" fill="#D2A087" font-size="48">require 0 &lt;= k &lt;= n</text>
-<text x="1488.78125" y="575" fill="#D2A087" font-size="48">&quot;</text>
-<text x="1517.6875" y="575" fill="#CACACA" font-size="48">)</text>
+<text x="419.25" y="575" fill="#72A9D6" font-size="48">return</text>
+<text x="592.6875" y="575" fill="#CACACA" font-size="48"> </text>
+<text x="621.59375" y="575" fill="#76C8B4" font-size="48">list</text>
+<text x="737.21875" y="575" fill="#CACACA" font-size="48">(</text>
+<text x="766.125" y="575" fill="#76C8B4" font-size="48">range</text>
+<text x="910.65625" y="575" fill="#CACACA" font-size="48">(</text>
+<text x="939.5625" y="575" fill="#CACACA" font-size="48">k</text>
+<text x="968.46875" y="575" fill="#CACACA" font-size="48">)</text>
+<text x="997.375" y="575" fill="#CACACA" font-size="48">)</text>
 <text x="188" y="641" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="641" fill="#72A9D6" font-size="48">if</text>
-<text x="361.4375" y="641" fill="#CACACA" font-size="48"> </text>
-<text x="390.34375" y="641" fill="#CACACA" font-size="48">k</text>
-<text x="419.25" y="641" fill="#CACACA" font-size="48"> </text>
-<text x="448.15625" y="641" fill="#CACACA" font-size="48">==</text>
-<text x="505.96875" y="641" fill="#CACACA" font-size="48"> </text>
-<text x="534.875" y="641" fill="#CACACA" font-size="48">n</text>
-<text x="563.78125" y="641" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="707" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="707" fill="#72A9D6" font-size="48">return</text>
-<text x="592.6875" y="707" fill="#CACACA" font-size="48"> </text>
-<text x="621.59375" y="707" fill="#76C8B4" font-size="48">list</text>
-<text x="737.21875" y="707" fill="#CACACA" font-size="48">(</text>
-<text x="766.125" y="707" fill="#76C8B4" font-size="48">range</text>
-<text x="910.65625" y="707" fill="#CACACA" font-size="48">(</text>
-<text x="939.5625" y="707" fill="#CACACA" font-size="48">k</text>
-<text x="968.46875" y="707" fill="#CACACA" font-size="48">)</text>
-<text x="997.375" y="707" fill="#CACACA" font-size="48">)</text>
+<text x="303.625" y="641" fill="#CACACA" font-size="48">out</text>
+<text x="390.34375" y="641" fill="#CACACA" font-size="48"> </text>
+<text x="419.25" y="641" fill="#CACACA" font-size="48">=</text>
+<text x="448.15625" y="641" fill="#CACACA" font-size="48"> </text>
+<text x="477.0625" y="641" fill="#CACACA" font-size="48">[</text>
+<text x="505.96875" y="641" fill="#B6CDA0" font-size="48">0</text>
+<text x="534.875" y="641" fill="#CACACA" font-size="48">]</text>
+<text x="563.78125" y="641" fill="#CACACA" font-size="48"> </text>
+<text x="592.6875" y="641" fill="#CACACA" font-size="48">*</text>
+<text x="621.59375" y="641" fill="#CACACA" font-size="48"> </text>
+<text x="650.5" y="641" fill="#CACACA" font-size="48">k</text>
+<text x="188" y="707" fill="#CACACA" font-size="48">    </text>
+<text x="303.625" y="707" fill="#8F969D" font-size="48"># Dense samples need only a scan of at most 2k values.</text>
 <text x="188" y="773" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="773" fill="#CACACA" font-size="48">out</text>
-<text x="390.34375" y="773" fill="#CACACA" font-size="48"> </text>
-<text x="419.25" y="773" fill="#CACACA" font-size="48">=</text>
-<text x="448.15625" y="773" fill="#CACACA" font-size="48"> </text>
-<text x="477.0625" y="773" fill="#CACACA" font-size="48">[</text>
-<text x="505.96875" y="773" fill="#B6CDA0" font-size="48">0</text>
-<text x="534.875" y="773" fill="#CACACA" font-size="48">]</text>
+<text x="303.625" y="773" fill="#72A9D6" font-size="48">if</text>
+<text x="361.4375" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="390.34375" y="773" fill="#CACACA" font-size="48">n</text>
+<text x="419.25" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="448.15625" y="773" fill="#CACACA" font-size="48">&lt;</text>
+<text x="477.0625" y="773" fill="#CACACA" font-size="48">=</text>
+<text x="505.96875" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="534.875" y="773" fill="#B6CDA0" font-size="48">2</text>
 <text x="563.78125" y="773" fill="#CACACA" font-size="48"> </text>
 <text x="592.6875" y="773" fill="#CACACA" font-size="48">*</text>
 <text x="621.59375" y="773" fill="#CACACA" font-size="48"> </text>
 <text x="650.5" y="773" fill="#CACACA" font-size="48">k</text>
-<text x="188" y="839" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="839" fill="#72A9D6" font-size="48">if</text>
-<text x="361.4375" y="839" fill="#CACACA" font-size="48"> </text>
-<text x="390.34375" y="839" fill="#CACACA" font-size="48">not</text>
-<text x="477.0625" y="839" fill="#CACACA" font-size="48"> </text>
-<text x="505.96875" y="839" fill="#CACACA" font-size="48">k</text>
-<text x="534.875" y="839" fill="#CACACA" font-size="48">:</text>
+<text x="679.40625" y="773" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="839" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="839" fill="#CACACA" font-size="48">written</text>
+<text x="621.59375" y="839" fill="#CACACA" font-size="48"> </text>
+<text x="650.5" y="839" fill="#CACACA" font-size="48">=</text>
+<text x="679.40625" y="839" fill="#CACACA" font-size="48"> </text>
+<text x="708.3125" y="839" fill="#B6CDA0" font-size="48">0</text>
 <text x="188" y="905" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="905" fill="#72A9D6" font-size="48">return</text>
-<text x="592.6875" y="905" fill="#CACACA" font-size="48"> </text>
-<text x="621.59375" y="905" fill="#CACACA" font-size="48">out</text>
-<text x="188" y="971" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="971" fill="#72A9D6" font-size="48">if</text>
-<text x="361.4375" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="390.34375" y="971" fill="#CACACA" font-size="48">n</text>
-<text x="419.25" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="448.15625" y="971" fill="#CACACA" font-size="48">&lt;</text>
-<text x="477.0625" y="971" fill="#CACACA" font-size="48">=</text>
-<text x="505.96875" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="534.875" y="971" fill="#B6CDA0" font-size="48">2</text>
-<text x="563.78125" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="971" fill="#CACACA" font-size="48">*</text>
-<text x="621.59375" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="650.5" y="971" fill="#CACACA" font-size="48">k</text>
-<text x="679.40625" y="971" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="1037" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="1037" fill="#CACACA" font-size="48">written</text>
-<text x="621.59375" y="1037" fill="#CACACA" font-size="48"> </text>
-<text x="650.5" y="1037" fill="#CACACA" font-size="48">=</text>
-<text x="679.40625" y="1037" fill="#CACACA" font-size="48"> </text>
-<text x="708.3125" y="1037" fill="#B6CDA0" font-size="48">0</text>
-<text x="188" y="1103" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="1103" fill="#72A9D6" font-size="48">for</text>
-<text x="505.96875" y="1103" fill="#CACACA" font-size="48"> </text>
-<text x="534.875" y="1103" fill="#CACACA" font-size="48">value</text>
-<text x="679.40625" y="1103" fill="#CACACA" font-size="48"> </text>
-<text x="708.3125" y="1103" fill="#CACACA" font-size="48">in</text>
-<text x="766.125" y="1103" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="1103" fill="#76C8B4" font-size="48">range</text>
-<text x="939.5625" y="1103" fill="#CACACA" font-size="48">(</text>
-<text x="968.46875" y="1103" fill="#CACACA" font-size="48">n</text>
-<text x="997.375" y="1103" fill="#CACACA" font-size="48">)</text>
-<text x="1026.28125" y="1103" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="1169" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="1169" fill="#72A9D6" font-size="48">if</text>
-<text x="592.6875" y="1169" fill="#CACACA" font-size="48"> </text>
-<text x="621.59375" y="1169" fill="#CACACA" font-size="48">randrange</text>
-<text x="881.75" y="1169" fill="#CACACA" font-size="48">(</text>
-<text x="910.65625" y="1169" fill="#CACACA" font-size="48">n</text>
+<text x="419.25" y="905" fill="#72A9D6" font-size="48">for</text>
+<text x="505.96875" y="905" fill="#CACACA" font-size="48"> </text>
+<text x="534.875" y="905" fill="#CACACA" font-size="48">value</text>
+<text x="679.40625" y="905" fill="#CACACA" font-size="48"> </text>
+<text x="708.3125" y="905" fill="#CACACA" font-size="48">in</text>
+<text x="766.125" y="905" fill="#CACACA" font-size="48"> </text>
+<text x="795.03125" y="905" fill="#76C8B4" font-size="48">range</text>
+<text x="939.5625" y="905" fill="#CACACA" font-size="48">(</text>
+<text x="968.46875" y="905" fill="#CACACA" font-size="48">n</text>
+<text x="997.375" y="905" fill="#CACACA" font-size="48">)</text>
+<text x="1026.28125" y="905" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="971" fill="#CACACA" font-size="48">            </text>
+<text x="534.875" y="971" fill="#72A9D6" font-size="48">if</text>
+<text x="592.6875" y="971" fill="#CACACA" font-size="48"> </text>
+<text x="621.59375" y="971" fill="#CACACA" font-size="48">randrange</text>
+<text x="881.75" y="971" fill="#CACACA" font-size="48">(</text>
+<text x="910.65625" y="971" fill="#CACACA" font-size="48">n</text>
+<text x="939.5625" y="971" fill="#CACACA" font-size="48"> </text>
+<text x="968.46875" y="971" fill="#CACACA" font-size="48">-</text>
+<text x="997.375" y="971" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="971" fill="#CACACA" font-size="48">value</text>
+<text x="1170.8125" y="971" fill="#CACACA" font-size="48">)</text>
+<text x="1199.71875" y="971" fill="#CACACA" font-size="48"> </text>
+<text x="1228.625" y="971" fill="#CACACA" font-size="48">&lt;</text>
+<text x="1257.53125" y="971" fill="#CACACA" font-size="48"> </text>
+<text x="1286.4375" y="971" fill="#CACACA" font-size="48">k</text>
+<text x="1315.34375" y="971" fill="#CACACA" font-size="48"> </text>
+<text x="1344.25" y="971" fill="#CACACA" font-size="48">-</text>
+<text x="1373.15625" y="971" fill="#CACACA" font-size="48"> </text>
+<text x="1402.0625" y="971" fill="#CACACA" font-size="48">written</text>
+<text x="1604.40625" y="971" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="1037" fill="#CACACA" font-size="48">                </text>
+<text x="650.5" y="1037" fill="#CACACA" font-size="48">out</text>
+<text x="737.21875" y="1037" fill="#CACACA" font-size="48">[</text>
+<text x="766.125" y="1037" fill="#CACACA" font-size="48">written</text>
+<text x="968.46875" y="1037" fill="#CACACA" font-size="48">]</text>
+<text x="997.375" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="1037" fill="#CACACA" font-size="48">=</text>
+<text x="1055.1875" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="1084.09375" y="1037" fill="#CACACA" font-size="48">value</text>
+<text x="188" y="1103" fill="#CACACA" font-size="48">                </text>
+<text x="650.5" y="1103" fill="#CACACA" font-size="48">written</text>
+<text x="852.84375" y="1103" fill="#CACACA" font-size="48"> </text>
+<text x="881.75" y="1103" fill="#CACACA" font-size="48">+</text>
+<text x="910.65625" y="1103" fill="#CACACA" font-size="48">=</text>
+<text x="939.5625" y="1103" fill="#CACACA" font-size="48"> </text>
+<text x="968.46875" y="1103" fill="#B6CDA0" font-size="48">1</text>
+<text x="188" y="1169" fill="#CACACA" font-size="48">                </text>
+<text x="650.5" y="1169" fill="#72A9D6" font-size="48">if</text>
+<text x="708.3125" y="1169" fill="#CACACA" font-size="48"> </text>
+<text x="737.21875" y="1169" fill="#CACACA" font-size="48">written</text>
 <text x="939.5625" y="1169" fill="#CACACA" font-size="48"> </text>
-<text x="968.46875" y="1169" fill="#CACACA" font-size="48">-</text>
-<text x="997.375" y="1169" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="1169" fill="#CACACA" font-size="48">value</text>
-<text x="1170.8125" y="1169" fill="#CACACA" font-size="48">)</text>
-<text x="1199.71875" y="1169" fill="#CACACA" font-size="48"> </text>
-<text x="1228.625" y="1169" fill="#CACACA" font-size="48">&lt;</text>
-<text x="1257.53125" y="1169" fill="#CACACA" font-size="48"> </text>
-<text x="1286.4375" y="1169" fill="#CACACA" font-size="48">k</text>
-<text x="1315.34375" y="1169" fill="#CACACA" font-size="48"> </text>
-<text x="1344.25" y="1169" fill="#CACACA" font-size="48">-</text>
-<text x="1373.15625" y="1169" fill="#CACACA" font-size="48"> </text>
-<text x="1402.0625" y="1169" fill="#CACACA" font-size="48">written</text>
-<text x="1604.40625" y="1169" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="1235" fill="#CACACA" font-size="48">                </text>
-<text x="650.5" y="1235" fill="#CACACA" font-size="48">out</text>
-<text x="737.21875" y="1235" fill="#CACACA" font-size="48">[</text>
-<text x="766.125" y="1235" fill="#CACACA" font-size="48">written</text>
-<text x="968.46875" y="1235" fill="#CACACA" font-size="48">]</text>
-<text x="997.375" y="1235" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="1235" fill="#CACACA" font-size="48">=</text>
-<text x="1055.1875" y="1235" fill="#CACACA" font-size="48"> </text>
-<text x="1084.09375" y="1235" fill="#CACACA" font-size="48">value</text>
-<text x="188" y="1301" fill="#CACACA" font-size="48">                </text>
-<text x="650.5" y="1301" fill="#CACACA" font-size="48">written</text>
-<text x="852.84375" y="1301" fill="#CACACA" font-size="48"> </text>
-<text x="881.75" y="1301" fill="#CACACA" font-size="48">+</text>
-<text x="910.65625" y="1301" fill="#CACACA" font-size="48">=</text>
-<text x="939.5625" y="1301" fill="#CACACA" font-size="48"> </text>
-<text x="968.46875" y="1301" fill="#B6CDA0" font-size="48">1</text>
-<text x="188" y="1367" fill="#CACACA" font-size="48">                </text>
-<text x="650.5" y="1367" fill="#72A9D6" font-size="48">if</text>
-<text x="708.3125" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="1367" fill="#CACACA" font-size="48">written</text>
-<text x="939.5625" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="968.46875" y="1367" fill="#CACACA" font-size="48">==</text>
-<text x="1026.28125" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="1055.1875" y="1367" fill="#CACACA" font-size="48">k</text>
-<text x="1084.09375" y="1367" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="1433" fill="#CACACA" font-size="48">                    </text>
-<text x="766.125" y="1433" fill="#72A9D6" font-size="48">break</text>
+<text x="968.46875" y="1169" fill="#CACACA" font-size="48">==</text>
+<text x="1026.28125" y="1169" fill="#CACACA" font-size="48"> </text>
+<text x="1055.1875" y="1169" fill="#CACACA" font-size="48">k</text>
+<text x="1084.09375" y="1169" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="1235" fill="#CACACA" font-size="48">                    </text>
+<text x="766.125" y="1235" fill="#72A9D6" font-size="48">break</text>
+<text x="188" y="1301" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="1301" fill="#72A9D6" font-size="48">return</text>
+<text x="592.6875" y="1301" fill="#CACACA" font-size="48"> </text>
+<text x="621.59375" y="1301" fill="#CACACA" font-size="48">out</text>
+<text x="188" y="1433" fill="#CACACA" font-size="48">    </text>
+<text x="303.625" y="1433" fill="#72A9D6" font-size="48">def</text>
+<text x="390.34375" y="1433" fill="#CACACA" font-size="48"> </text>
+<text x="419.25" y="1433" fill="#CACACA" font-size="48">emit</text>
+<text x="534.875" y="1433" fill="#CACACA" font-size="48">(</text>
+<text x="563.78125" y="1433" fill="#CACACA" font-size="48">start</text>
+<text x="708.3125" y="1433" fill="#CACACA" font-size="48">,</text>
+<text x="737.21875" y="1433" fill="#CACACA" font-size="48"> </text>
+<text x="766.125" y="1433" fill="#CACACA" font-size="48">count</text>
+<text x="910.65625" y="1433" fill="#CACACA" font-size="48">,</text>
+<text x="939.5625" y="1433" fill="#CACACA" font-size="48"> </text>
+<text x="968.46875" y="1433" fill="#CACACA" font-size="48">low</text>
+<text x="1055.1875" y="1433" fill="#CACACA" font-size="48">,</text>
+<text x="1084.09375" y="1433" fill="#CACACA" font-size="48"> </text>
+<text x="1113.0" y="1433" fill="#CACACA" font-size="48">width</text>
+<text x="1257.53125" y="1433" fill="#CACACA" font-size="48">)</text>
+<text x="1286.4375" y="1433" fill="#CACACA" font-size="48">:</text>
 <text x="188" y="1499" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="1499" fill="#72A9D6" font-size="48">return</text>
-<text x="592.6875" y="1499" fill="#CACACA" font-size="48"> </text>
-<text x="621.59375" y="1499" fill="#CACACA" font-size="48">out</text>
-<text x="188" y="1631" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="1631" fill="#72A9D6" font-size="48">def</text>
-<text x="390.34375" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="419.25" y="1631" fill="#CACACA" font-size="48">emit</text>
-<text x="534.875" y="1631" fill="#CACACA" font-size="48">(</text>
-<text x="563.78125" y="1631" fill="#CACACA" font-size="48">start</text>
-<text x="708.3125" y="1631" fill="#CACACA" font-size="48">,</text>
-<text x="737.21875" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="766.125" y="1631" fill="#CACACA" font-size="48">count</text>
-<text x="910.65625" y="1631" fill="#CACACA" font-size="48">,</text>
-<text x="939.5625" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="968.46875" y="1631" fill="#CACACA" font-size="48">low</text>
-<text x="1055.1875" y="1631" fill="#CACACA" font-size="48">,</text>
+<text x="419.25" y="1499" fill="#8F969D" font-size="48"># A local Pólya urn gives a uniform multiset of colors.</text>
+<text x="188" y="1565" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="1565" fill="#72A9D6" font-size="48">for</text>
+<text x="505.96875" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="534.875" y="1565" fill="#CACACA" font-size="48">j</text>
+<text x="563.78125" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="592.6875" y="1565" fill="#CACACA" font-size="48">in</text>
+<text x="650.5" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="679.40625" y="1565" fill="#76C8B4" font-size="48">range</text>
+<text x="823.9375" y="1565" fill="#CACACA" font-size="48">(</text>
+<text x="852.84375" y="1565" fill="#CACACA" font-size="48">count</text>
+<text x="997.375" y="1565" fill="#CACACA" font-size="48">)</text>
+<text x="1026.28125" y="1565" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="1631" fill="#CACACA" font-size="48">            </text>
+<text x="534.875" y="1631" fill="#CACACA" font-size="48">r</text>
+<text x="563.78125" y="1631" fill="#CACACA" font-size="48"> </text>
+<text x="592.6875" y="1631" fill="#CACACA" font-size="48">=</text>
+<text x="621.59375" y="1631" fill="#CACACA" font-size="48"> </text>
+<text x="650.5" y="1631" fill="#CACACA" font-size="48">randrange</text>
+<text x="910.65625" y="1631" fill="#CACACA" font-size="48">(</text>
+<text x="939.5625" y="1631" fill="#CACACA" font-size="48">width</text>
 <text x="1084.09375" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="1113.0" y="1631" fill="#CACACA" font-size="48">width</text>
-<text x="1257.53125" y="1631" fill="#CACACA" font-size="48">)</text>
-<text x="1286.4375" y="1631" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="1697" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="1697" fill="#72A9D6" font-size="48">for</text>
-<text x="505.96875" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="534.875" y="1697" fill="#CACACA" font-size="48">j</text>
-<text x="563.78125" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="1697" fill="#CACACA" font-size="48">in</text>
-<text x="650.5" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="679.40625" y="1697" fill="#76C8B4" font-size="48">range</text>
-<text x="823.9375" y="1697" fill="#CACACA" font-size="48">(</text>
-<text x="852.84375" y="1697" fill="#CACACA" font-size="48">count</text>
-<text x="997.375" y="1697" fill="#CACACA" font-size="48">)</text>
-<text x="1026.28125" y="1697" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="1763" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="1763" fill="#CACACA" font-size="48">r</text>
-<text x="563.78125" y="1763" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="1763" fill="#CACACA" font-size="48">=</text>
-<text x="621.59375" y="1763" fill="#CACACA" font-size="48"> </text>
-<text x="650.5" y="1763" fill="#CACACA" font-size="48">randrange</text>
-<text x="910.65625" y="1763" fill="#CACACA" font-size="48">(</text>
-<text x="939.5625" y="1763" fill="#CACACA" font-size="48">width</text>
-<text x="1084.09375" y="1763" fill="#CACACA" font-size="48"> </text>
-<text x="1113.0" y="1763" fill="#CACACA" font-size="48">+</text>
-<text x="1141.90625" y="1763" fill="#CACACA" font-size="48"> </text>
-<text x="1170.8125" y="1763" fill="#CACACA" font-size="48">j</text>
-<text x="1199.71875" y="1763" fill="#CACACA" font-size="48">)</text>
-<text x="188" y="1829" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="1829" fill="#CACACA" font-size="48">out</text>
-<text x="621.59375" y="1829" fill="#CACACA" font-size="48">[</text>
-<text x="650.5" y="1829" fill="#CACACA" font-size="48">start</text>
-<text x="795.03125" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="823.9375" y="1829" fill="#CACACA" font-size="48">+</text>
-<text x="852.84375" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="881.75" y="1829" fill="#CACACA" font-size="48">j</text>
-<text x="910.65625" y="1829" fill="#CACACA" font-size="48">]</text>
-<text x="939.5625" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="968.46875" y="1829" fill="#CACACA" font-size="48">=</text>
-<text x="997.375" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="1829" fill="#CACACA" font-size="48">(</text>
-<text x="1055.1875" y="1829" fill="#CACACA" font-size="48">low</text>
-<text x="1141.90625" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="1170.8125" y="1829" fill="#CACACA" font-size="48">+</text>
-<text x="1199.71875" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="1228.625" y="1829" fill="#CACACA" font-size="48">r</text>
-<text x="1257.53125" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="1286.4375" y="1829" fill="#72A9D6" font-size="48">if</text>
-<text x="1344.25" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="1373.15625" y="1829" fill="#CACACA" font-size="48">r</text>
-<text x="1402.0625" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="1430.96875" y="1829" fill="#CACACA" font-size="48">&lt;</text>
-<text x="1459.875" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="1488.78125" y="1829" fill="#CACACA" font-size="48">width</text>
-<text x="188" y="1895" fill="#CACACA" font-size="48">                              </text>
-<text x="1055.1875" y="1895" fill="#72A9D6" font-size="48">else</text>
-<text x="1170.8125" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="1199.71875" y="1895" fill="#CACACA" font-size="48">out</text>
-<text x="1286.4375" y="1895" fill="#CACACA" font-size="48">[</text>
-<text x="1315.34375" y="1895" fill="#CACACA" font-size="48">start</text>
-<text x="1459.875" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="1488.78125" y="1895" fill="#CACACA" font-size="48">+</text>
-<text x="1517.6875" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="1546.59375" y="1895" fill="#CACACA" font-size="48">r</text>
-<text x="1575.5" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="1604.40625" y="1895" fill="#CACACA" font-size="48">-</text>
-<text x="1633.3125" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="1662.21875" y="1895" fill="#CACACA" font-size="48">width</text>
-<text x="1806.75" y="1895" fill="#CACACA" font-size="48">]</text>
-<text x="1835.65625" y="1895" fill="#CACACA" font-size="48">)</text>
-<text x="188" y="1961" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="1961" fill="#72A9D6" font-size="48">for</text>
-<text x="505.96875" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="534.875" y="1961" fill="#CACACA" font-size="48">i</text>
-<text x="563.78125" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="1961" fill="#CACACA" font-size="48">in</text>
-<text x="650.5" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="679.40625" y="1961" fill="#76C8B4" font-size="48">range</text>
-<text x="823.9375" y="1961" fill="#CACACA" font-size="48">(</text>
-<text x="852.84375" y="1961" fill="#CACACA" font-size="48">start</text>
-<text x="997.375" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="1961" fill="#CACACA" font-size="48">+</text>
+<text x="1113.0" y="1631" fill="#CACACA" font-size="48">+</text>
+<text x="1141.90625" y="1631" fill="#CACACA" font-size="48"> </text>
+<text x="1170.8125" y="1631" fill="#CACACA" font-size="48">j</text>
+<text x="1199.71875" y="1631" fill="#CACACA" font-size="48">)</text>
+<text x="188" y="1697" fill="#CACACA" font-size="48">            </text>
+<text x="534.875" y="1697" fill="#CACACA" font-size="48">out</text>
+<text x="621.59375" y="1697" fill="#CACACA" font-size="48">[</text>
+<text x="650.5" y="1697" fill="#CACACA" font-size="48">start</text>
+<text x="795.03125" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="823.9375" y="1697" fill="#CACACA" font-size="48">+</text>
+<text x="852.84375" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="881.75" y="1697" fill="#CACACA" font-size="48">j</text>
+<text x="910.65625" y="1697" fill="#CACACA" font-size="48">]</text>
+<text x="939.5625" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="968.46875" y="1697" fill="#CACACA" font-size="48">=</text>
+<text x="997.375" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="1697" fill="#CACACA" font-size="48">(</text>
+<text x="1055.1875" y="1697" fill="#CACACA" font-size="48">low</text>
+<text x="1141.90625" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="1170.8125" y="1697" fill="#CACACA" font-size="48">+</text>
+<text x="1199.71875" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="1228.625" y="1697" fill="#CACACA" font-size="48">r</text>
+<text x="1257.53125" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="1286.4375" y="1697" fill="#72A9D6" font-size="48">if</text>
+<text x="1344.25" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="1373.15625" y="1697" fill="#CACACA" font-size="48">r</text>
+<text x="1402.0625" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="1430.96875" y="1697" fill="#CACACA" font-size="48">&lt;</text>
+<text x="1459.875" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="1488.78125" y="1697" fill="#CACACA" font-size="48">width</text>
+<text x="188" y="1763" fill="#CACACA" font-size="48">                              </text>
+<text x="1055.1875" y="1763" fill="#72A9D6" font-size="48">else</text>
+<text x="1170.8125" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="1199.71875" y="1763" fill="#CACACA" font-size="48">out</text>
+<text x="1286.4375" y="1763" fill="#CACACA" font-size="48">[</text>
+<text x="1315.34375" y="1763" fill="#CACACA" font-size="48">start</text>
+<text x="1459.875" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="1488.78125" y="1763" fill="#CACACA" font-size="48">+</text>
+<text x="1517.6875" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="1546.59375" y="1763" fill="#CACACA" font-size="48">r</text>
+<text x="1575.5" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="1604.40625" y="1763" fill="#CACACA" font-size="48">-</text>
+<text x="1633.3125" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="1662.21875" y="1763" fill="#CACACA" font-size="48">width</text>
+<text x="1806.75" y="1763" fill="#CACACA" font-size="48">]</text>
+<text x="1835.65625" y="1763" fill="#CACACA" font-size="48">)</text>
+<text x="188" y="1829" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="1829" fill="#8F969D" font-size="48"># Small groups make insertion sorting linear in expectation.</text>
+<text x="188" y="1895" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="1895" fill="#72A9D6" font-size="48">for</text>
+<text x="505.96875" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="534.875" y="1895" fill="#CACACA" font-size="48">i</text>
+<text x="563.78125" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="592.6875" y="1895" fill="#CACACA" font-size="48">in</text>
+<text x="650.5" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="679.40625" y="1895" fill="#76C8B4" font-size="48">range</text>
+<text x="823.9375" y="1895" fill="#CACACA" font-size="48">(</text>
+<text x="852.84375" y="1895" fill="#CACACA" font-size="48">start</text>
+<text x="997.375" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="1895" fill="#CACACA" font-size="48">+</text>
+<text x="1055.1875" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="1084.09375" y="1895" fill="#B6CDA0" font-size="48">1</text>
+<text x="1113.0" y="1895" fill="#CACACA" font-size="48">,</text>
+<text x="1141.90625" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="1170.8125" y="1895" fill="#CACACA" font-size="48">start</text>
+<text x="1315.34375" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="1344.25" y="1895" fill="#CACACA" font-size="48">+</text>
+<text x="1373.15625" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="1402.0625" y="1895" fill="#CACACA" font-size="48">count</text>
+<text x="1546.59375" y="1895" fill="#CACACA" font-size="48">)</text>
+<text x="1575.5" y="1895" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="1961" fill="#CACACA" font-size="48">            </text>
+<text x="534.875" y="1961" fill="#CACACA" font-size="48">value</text>
+<text x="679.40625" y="1961" fill="#CACACA" font-size="48">,</text>
+<text x="708.3125" y="1961" fill="#CACACA" font-size="48"> </text>
+<text x="737.21875" y="1961" fill="#CACACA" font-size="48">j</text>
+<text x="766.125" y="1961" fill="#CACACA" font-size="48"> </text>
+<text x="795.03125" y="1961" fill="#CACACA" font-size="48">=</text>
+<text x="823.9375" y="1961" fill="#CACACA" font-size="48"> </text>
+<text x="852.84375" y="1961" fill="#CACACA" font-size="48">out</text>
+<text x="939.5625" y="1961" fill="#CACACA" font-size="48">[</text>
+<text x="968.46875" y="1961" fill="#CACACA" font-size="48">i</text>
+<text x="997.375" y="1961" fill="#CACACA" font-size="48">]</text>
+<text x="1026.28125" y="1961" fill="#CACACA" font-size="48">,</text>
 <text x="1055.1875" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="1084.09375" y="1961" fill="#B6CDA0" font-size="48">1</text>
-<text x="1113.0" y="1961" fill="#CACACA" font-size="48">,</text>
-<text x="1141.90625" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="1170.8125" y="1961" fill="#CACACA" font-size="48">start</text>
-<text x="1315.34375" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="1344.25" y="1961" fill="#CACACA" font-size="48">+</text>
-<text x="1373.15625" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="1402.0625" y="1961" fill="#CACACA" font-size="48">count</text>
-<text x="1546.59375" y="1961" fill="#CACACA" font-size="48">)</text>
-<text x="1575.5" y="1961" fill="#CACACA" font-size="48">:</text>
+<text x="1084.09375" y="1961" fill="#CACACA" font-size="48">i</text>
 <text x="188" y="2027" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="2027" fill="#CACACA" font-size="48">value</text>
-<text x="679.40625" y="2027" fill="#CACACA" font-size="48">,</text>
-<text x="708.3125" y="2027" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="2027" fill="#CACACA" font-size="48">j</text>
-<text x="766.125" y="2027" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="2027" fill="#CACACA" font-size="48">=</text>
-<text x="823.9375" y="2027" fill="#CACACA" font-size="48"> </text>
-<text x="852.84375" y="2027" fill="#CACACA" font-size="48">out</text>
-<text x="939.5625" y="2027" fill="#CACACA" font-size="48">[</text>
-<text x="968.46875" y="2027" fill="#CACACA" font-size="48">i</text>
-<text x="997.375" y="2027" fill="#CACACA" font-size="48">]</text>
-<text x="1026.28125" y="2027" fill="#CACACA" font-size="48">,</text>
-<text x="1055.1875" y="2027" fill="#CACACA" font-size="48"> </text>
-<text x="1084.09375" y="2027" fill="#CACACA" font-size="48">i</text>
-<text x="188" y="2093" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="2093" fill="#72A9D6" font-size="48">while</text>
-<text x="679.40625" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="708.3125" y="2093" fill="#CACACA" font-size="48">j</text>
-<text x="737.21875" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="766.125" y="2093" fill="#CACACA" font-size="48">&gt;</text>
-<text x="795.03125" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="823.9375" y="2093" fill="#CACACA" font-size="48">start</text>
-<text x="968.46875" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="997.375" y="2093" fill="#CACACA" font-size="48">and</text>
-<text x="1084.09375" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="1113.0" y="2093" fill="#CACACA" font-size="48">out</text>
-<text x="1199.71875" y="2093" fill="#CACACA" font-size="48">[</text>
-<text x="1228.625" y="2093" fill="#CACACA" font-size="48">j</text>
-<text x="1257.53125" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="1286.4375" y="2093" fill="#CACACA" font-size="48">-</text>
-<text x="1315.34375" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="1344.25" y="2093" fill="#B6CDA0" font-size="48">1</text>
-<text x="1373.15625" y="2093" fill="#CACACA" font-size="48">]</text>
-<text x="1402.0625" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="1430.96875" y="2093" fill="#CACACA" font-size="48">&gt;</text>
-<text x="1459.875" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="1488.78125" y="2093" fill="#CACACA" font-size="48">value</text>
-<text x="1633.3125" y="2093" fill="#CACACA" font-size="48">:</text>
+<text x="534.875" y="2027" fill="#72A9D6" font-size="48">while</text>
+<text x="679.40625" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="708.3125" y="2027" fill="#CACACA" font-size="48">j</text>
+<text x="737.21875" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="766.125" y="2027" fill="#CACACA" font-size="48">&gt;</text>
+<text x="795.03125" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="823.9375" y="2027" fill="#CACACA" font-size="48">start</text>
+<text x="968.46875" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="997.375" y="2027" fill="#CACACA" font-size="48">and</text>
+<text x="1084.09375" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="1113.0" y="2027" fill="#CACACA" font-size="48">out</text>
+<text x="1199.71875" y="2027" fill="#CACACA" font-size="48">[</text>
+<text x="1228.625" y="2027" fill="#CACACA" font-size="48">j</text>
+<text x="1257.53125" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="1286.4375" y="2027" fill="#CACACA" font-size="48">-</text>
+<text x="1315.34375" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="1344.25" y="2027" fill="#B6CDA0" font-size="48">1</text>
+<text x="1373.15625" y="2027" fill="#CACACA" font-size="48">]</text>
+<text x="1402.0625" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="1430.96875" y="2027" fill="#CACACA" font-size="48">&gt;</text>
+<text x="1459.875" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="1488.78125" y="2027" fill="#CACACA" font-size="48">value</text>
+<text x="1633.3125" y="2027" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="2093" fill="#CACACA" font-size="48">                </text>
+<text x="650.5" y="2093" fill="#CACACA" font-size="48">out</text>
+<text x="737.21875" y="2093" fill="#CACACA" font-size="48">[</text>
+<text x="766.125" y="2093" fill="#CACACA" font-size="48">j</text>
+<text x="795.03125" y="2093" fill="#CACACA" font-size="48">]</text>
+<text x="823.9375" y="2093" fill="#CACACA" font-size="48"> </text>
+<text x="852.84375" y="2093" fill="#CACACA" font-size="48">=</text>
+<text x="881.75" y="2093" fill="#CACACA" font-size="48"> </text>
+<text x="910.65625" y="2093" fill="#CACACA" font-size="48">out</text>
+<text x="997.375" y="2093" fill="#CACACA" font-size="48">[</text>
+<text x="1026.28125" y="2093" fill="#CACACA" font-size="48">j</text>
+<text x="1055.1875" y="2093" fill="#CACACA" font-size="48"> </text>
+<text x="1084.09375" y="2093" fill="#CACACA" font-size="48">-</text>
+<text x="1113.0" y="2093" fill="#CACACA" font-size="48"> </text>
+<text x="1141.90625" y="2093" fill="#B6CDA0" font-size="48">1</text>
+<text x="1170.8125" y="2093" fill="#CACACA" font-size="48">]</text>
 <text x="188" y="2159" fill="#CACACA" font-size="48">                </text>
-<text x="650.5" y="2159" fill="#CACACA" font-size="48">out</text>
-<text x="737.21875" y="2159" fill="#CACACA" font-size="48">[</text>
-<text x="766.125" y="2159" fill="#CACACA" font-size="48">j</text>
-<text x="795.03125" y="2159" fill="#CACACA" font-size="48">]</text>
-<text x="823.9375" y="2159" fill="#CACACA" font-size="48"> </text>
-<text x="852.84375" y="2159" fill="#CACACA" font-size="48">=</text>
-<text x="881.75" y="2159" fill="#CACACA" font-size="48"> </text>
-<text x="910.65625" y="2159" fill="#CACACA" font-size="48">out</text>
-<text x="997.375" y="2159" fill="#CACACA" font-size="48">[</text>
-<text x="1026.28125" y="2159" fill="#CACACA" font-size="48">j</text>
-<text x="1055.1875" y="2159" fill="#CACACA" font-size="48"> </text>
-<text x="1084.09375" y="2159" fill="#CACACA" font-size="48">-</text>
-<text x="1113.0" y="2159" fill="#CACACA" font-size="48"> </text>
-<text x="1141.90625" y="2159" fill="#B6CDA0" font-size="48">1</text>
-<text x="1170.8125" y="2159" fill="#CACACA" font-size="48">]</text>
-<text x="188" y="2225" fill="#CACACA" font-size="48">                </text>
+<text x="650.5" y="2159" fill="#CACACA" font-size="48">j</text>
+<text x="679.40625" y="2159" fill="#CACACA" font-size="48"> </text>
+<text x="708.3125" y="2159" fill="#CACACA" font-size="48">-</text>
+<text x="737.21875" y="2159" fill="#CACACA" font-size="48">=</text>
+<text x="766.125" y="2159" fill="#CACACA" font-size="48"> </text>
+<text x="795.03125" y="2159" fill="#B6CDA0" font-size="48">1</text>
+<text x="188" y="2225" fill="#CACACA" font-size="48">            </text>
+<text x="534.875" y="2225" fill="#CACACA" font-size="48">out</text>
+<text x="621.59375" y="2225" fill="#CACACA" font-size="48">[</text>
 <text x="650.5" y="2225" fill="#CACACA" font-size="48">j</text>
-<text x="679.40625" y="2225" fill="#CACACA" font-size="48"> </text>
-<text x="708.3125" y="2225" fill="#CACACA" font-size="48">-</text>
+<text x="679.40625" y="2225" fill="#CACACA" font-size="48">]</text>
+<text x="708.3125" y="2225" fill="#CACACA" font-size="48"> </text>
 <text x="737.21875" y="2225" fill="#CACACA" font-size="48">=</text>
 <text x="766.125" y="2225" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="2225" fill="#B6CDA0" font-size="48">1</text>
-<text x="188" y="2291" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="2291" fill="#CACACA" font-size="48">out</text>
-<text x="621.59375" y="2291" fill="#CACACA" font-size="48">[</text>
-<text x="650.5" y="2291" fill="#CACACA" font-size="48">j</text>
-<text x="679.40625" y="2291" fill="#CACACA" font-size="48">]</text>
-<text x="708.3125" y="2291" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="2291" fill="#CACACA" font-size="48">=</text>
-<text x="766.125" y="2291" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="2291" fill="#CACACA" font-size="48">value</text>
+<text x="795.03125" y="2225" fill="#CACACA" font-size="48">value</text>
+<text x="188" y="2291" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="2291" fill="#8F969D" font-size="48"># Stars and bars: adding ranks makes the colors distinct.</text>
 <text x="188" y="2357" fill="#CACACA" font-size="48">        </text>
 <text x="419.25" y="2357" fill="#72A9D6" font-size="48">for</text>
 <text x="505.96875" y="2357" fill="#CACACA" font-size="48"> </text>
@@ -434,194 +415,182 @@
 <text x="795.03125" y="2423" fill="#CACACA" font-size="48"> </text>
 <text x="823.9375" y="2423" fill="#CACACA" font-size="48">i</text>
 <text x="188" y="2555" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="2555" fill="#CACACA" font-size="48">t</text>
-<text x="332.53125" y="2555" fill="#CACACA" font-size="48">,</text>
-<text x="361.4375" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="390.34375" y="2555" fill="#CACACA" font-size="48">groups</text>
-<text x="563.78125" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="2555" fill="#CACACA" font-size="48">=</text>
-<text x="621.59375" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="650.5" y="2555" fill="#CACACA" font-size="48">n</text>
-<text x="679.40625" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="708.3125" y="2555" fill="#CACACA" font-size="48">-</text>
-<text x="737.21875" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="766.125" y="2555" fill="#CACACA" font-size="48">k</text>
-<text x="795.03125" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="823.9375" y="2555" fill="#CACACA" font-size="48">+</text>
-<text x="852.84375" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="881.75" y="2555" fill="#B6CDA0" font-size="48">1</text>
-<text x="910.65625" y="2555" fill="#CACACA" font-size="48">,</text>
-<text x="939.5625" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="968.46875" y="2555" fill="#B6CDA0" font-size="48">1</text>
-<text x="997.375" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="2555" fill="#CACACA" font-size="48">+</text>
-<text x="1055.1875" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="1084.09375" y="2555" fill="#CACACA" font-size="48">(</text>
-<text x="1113.0" y="2555" fill="#CACACA" font-size="48">k</text>
-<text x="1141.90625" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="1170.8125" y="2555" fill="#CACACA" font-size="48">-</text>
-<text x="1199.71875" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="1228.625" y="2555" fill="#B6CDA0" font-size="48">1</text>
-<text x="1257.53125" y="2555" fill="#CACACA" font-size="48">)</text>
-<text x="1286.4375" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="1315.34375" y="2555" fill="#CACACA" font-size="48">/</text>
-<text x="1344.25" y="2555" fill="#CACACA" font-size="48">/</text>
-<text x="1373.15625" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="1402.0625" y="2555" fill="#B6CDA0" font-size="48">16</text>
+<text x="303.625" y="2555" fill="#8F969D" font-size="48"># Balance the t colors among about k/16 contiguous groups.</text>
 <text x="188" y="2621" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="2621" fill="#72A9D6" font-size="48">if</text>
+<text x="303.625" y="2621" fill="#CACACA" font-size="48">t</text>
+<text x="332.53125" y="2621" fill="#CACACA" font-size="48">,</text>
 <text x="361.4375" y="2621" fill="#CACACA" font-size="48"> </text>
 <text x="390.34375" y="2621" fill="#CACACA" font-size="48">groups</text>
 <text x="563.78125" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="2621" fill="#CACACA" font-size="48">==</text>
-<text x="650.5" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="679.40625" y="2621" fill="#B6CDA0" font-size="48">1</text>
-<text x="708.3125" y="2621" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="2687" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="2687" fill="#CACACA" font-size="48">emit</text>
-<text x="534.875" y="2687" fill="#CACACA" font-size="48">(</text>
-<text x="563.78125" y="2687" fill="#B6CDA0" font-size="48">0</text>
-<text x="592.6875" y="2687" fill="#CACACA" font-size="48">,</text>
-<text x="621.59375" y="2687" fill="#CACACA" font-size="48"> </text>
-<text x="650.5" y="2687" fill="#CACACA" font-size="48">k</text>
-<text x="679.40625" y="2687" fill="#CACACA" font-size="48">,</text>
-<text x="708.3125" y="2687" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="2687" fill="#B6CDA0" font-size="48">0</text>
-<text x="766.125" y="2687" fill="#CACACA" font-size="48">,</text>
-<text x="795.03125" y="2687" fill="#CACACA" font-size="48"> </text>
-<text x="823.9375" y="2687" fill="#CACACA" font-size="48">t</text>
-<text x="852.84375" y="2687" fill="#CACACA" font-size="48">)</text>
+<text x="592.6875" y="2621" fill="#CACACA" font-size="48">=</text>
+<text x="621.59375" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="650.5" y="2621" fill="#CACACA" font-size="48">n</text>
+<text x="679.40625" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="708.3125" y="2621" fill="#CACACA" font-size="48">-</text>
+<text x="737.21875" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="766.125" y="2621" fill="#CACACA" font-size="48">k</text>
+<text x="795.03125" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="823.9375" y="2621" fill="#CACACA" font-size="48">+</text>
+<text x="852.84375" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="881.75" y="2621" fill="#B6CDA0" font-size="48">1</text>
+<text x="910.65625" y="2621" fill="#CACACA" font-size="48">,</text>
+<text x="939.5625" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="968.46875" y="2621" fill="#B6CDA0" font-size="48">1</text>
+<text x="997.375" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="2621" fill="#CACACA" font-size="48">+</text>
+<text x="1055.1875" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="1084.09375" y="2621" fill="#CACACA" font-size="48">(</text>
+<text x="1113.0" y="2621" fill="#CACACA" font-size="48">k</text>
+<text x="1141.90625" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="1170.8125" y="2621" fill="#CACACA" font-size="48">-</text>
+<text x="1199.71875" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="1228.625" y="2621" fill="#B6CDA0" font-size="48">1</text>
+<text x="1257.53125" y="2621" fill="#CACACA" font-size="48">)</text>
+<text x="1286.4375" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="1315.34375" y="2621" fill="#CACACA" font-size="48">/</text>
+<text x="1344.25" y="2621" fill="#CACACA" font-size="48">/</text>
+<text x="1373.15625" y="2621" fill="#CACACA" font-size="48"> </text>
+<text x="1402.0625" y="2621" fill="#B6CDA0" font-size="48">16</text>
+<text x="188" y="2687" fill="#CACACA" font-size="48">    </text>
+<text x="303.625" y="2687" fill="#72A9D6" font-size="48">if</text>
+<text x="361.4375" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="390.34375" y="2687" fill="#CACACA" font-size="48">groups</text>
+<text x="563.78125" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="592.6875" y="2687" fill="#CACACA" font-size="48">==</text>
+<text x="650.5" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="679.40625" y="2687" fill="#B6CDA0" font-size="48">1</text>
+<text x="708.3125" y="2687" fill="#CACACA" font-size="48">:</text>
 <text x="188" y="2753" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="2753" fill="#72A9D6" font-size="48">return</text>
-<text x="592.6875" y="2753" fill="#CACACA" font-size="48"> </text>
-<text x="621.59375" y="2753" fill="#CACACA" font-size="48">out</text>
-<text x="188" y="2819" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="2819" fill="#CACACA" font-size="48">width</text>
-<text x="448.15625" y="2819" fill="#CACACA" font-size="48">,</text>
-<text x="477.0625" y="2819" fill="#CACACA" font-size="48"> </text>
-<text x="505.96875" y="2819" fill="#CACACA" font-size="48">extra</text>
-<text x="650.5" y="2819" fill="#CACACA" font-size="48"> </text>
-<text x="679.40625" y="2819" fill="#CACACA" font-size="48">=</text>
-<text x="708.3125" y="2819" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="2819" fill="#76C8B4" font-size="48">divmod</text>
-<text x="910.65625" y="2819" fill="#CACACA" font-size="48">(</text>
-<text x="939.5625" y="2819" fill="#CACACA" font-size="48">t</text>
-<text x="968.46875" y="2819" fill="#CACACA" font-size="48">,</text>
-<text x="997.375" y="2819" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="2819" fill="#CACACA" font-size="48">groups</text>
-<text x="1199.71875" y="2819" fill="#CACACA" font-size="48">)</text>
+<text x="419.25" y="2753" fill="#CACACA" font-size="48">emit</text>
+<text x="534.875" y="2753" fill="#CACACA" font-size="48">(</text>
+<text x="563.78125" y="2753" fill="#B6CDA0" font-size="48">0</text>
+<text x="592.6875" y="2753" fill="#CACACA" font-size="48">,</text>
+<text x="621.59375" y="2753" fill="#CACACA" font-size="48"> </text>
+<text x="650.5" y="2753" fill="#CACACA" font-size="48">k</text>
+<text x="679.40625" y="2753" fill="#CACACA" font-size="48">,</text>
+<text x="708.3125" y="2753" fill="#CACACA" font-size="48"> </text>
+<text x="737.21875" y="2753" fill="#B6CDA0" font-size="48">0</text>
+<text x="766.125" y="2753" fill="#CACACA" font-size="48">,</text>
+<text x="795.03125" y="2753" fill="#CACACA" font-size="48"> </text>
+<text x="823.9375" y="2753" fill="#CACACA" font-size="48">t</text>
+<text x="852.84375" y="2753" fill="#CACACA" font-size="48">)</text>
+<text x="188" y="2819" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="2819" fill="#72A9D6" font-size="48">return</text>
+<text x="592.6875" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="621.59375" y="2819" fill="#CACACA" font-size="48">out</text>
 <text x="188" y="2885" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="2885" fill="#CACACA" font-size="48">split</text>
-<text x="448.15625" y="2885" fill="#CACACA" font-size="48"> </text>
-<text x="477.0625" y="2885" fill="#CACACA" font-size="48">=</text>
-<text x="505.96875" y="2885" fill="#CACACA" font-size="48"> </text>
-<text x="534.875" y="2885" fill="#CACACA" font-size="48">(</text>
-<text x="563.78125" y="2885" fill="#CACACA" font-size="48">width</text>
+<text x="303.625" y="2885" fill="#CACACA" font-size="48">width</text>
+<text x="448.15625" y="2885" fill="#CACACA" font-size="48">,</text>
+<text x="477.0625" y="2885" fill="#CACACA" font-size="48"> </text>
+<text x="505.96875" y="2885" fill="#CACACA" font-size="48">extra</text>
+<text x="650.5" y="2885" fill="#CACACA" font-size="48"> </text>
+<text x="679.40625" y="2885" fill="#CACACA" font-size="48">=</text>
 <text x="708.3125" y="2885" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="2885" fill="#CACACA" font-size="48">+</text>
-<text x="766.125" y="2885" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="2885" fill="#B6CDA0" font-size="48">1</text>
-<text x="823.9375" y="2885" fill="#CACACA" font-size="48">)</text>
-<text x="852.84375" y="2885" fill="#CACACA" font-size="48"> </text>
-<text x="881.75" y="2885" fill="#CACACA" font-size="48">*</text>
-<text x="910.65625" y="2885" fill="#CACACA" font-size="48"> </text>
-<text x="939.5625" y="2885" fill="#CACACA" font-size="48">extra</text>
+<text x="737.21875" y="2885" fill="#76C8B4" font-size="48">divmod</text>
+<text x="910.65625" y="2885" fill="#CACACA" font-size="48">(</text>
+<text x="939.5625" y="2885" fill="#CACACA" font-size="48">t</text>
+<text x="968.46875" y="2885" fill="#CACACA" font-size="48">,</text>
+<text x="997.375" y="2885" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="2885" fill="#CACACA" font-size="48">groups</text>
+<text x="1199.71875" y="2885" fill="#CACACA" font-size="48">)</text>
 <text x="188" y="2951" fill="#CACACA" font-size="48">    </text>
-<text x="303.625" y="2951" fill="#72A9D6" font-size="48">for</text>
-<text x="390.34375" y="2951" fill="#CACACA" font-size="48"> </text>
-<text x="419.25" y="2951" fill="#CACACA" font-size="48">i</text>
+<text x="303.625" y="2951" fill="#CACACA" font-size="48">split</text>
 <text x="448.15625" y="2951" fill="#CACACA" font-size="48"> </text>
-<text x="477.0625" y="2951" fill="#CACACA" font-size="48">in</text>
-<text x="534.875" y="2951" fill="#CACACA" font-size="48"> </text>
-<text x="563.78125" y="2951" fill="#76C8B4" font-size="48">range</text>
-<text x="708.3125" y="2951" fill="#CACACA" font-size="48">(</text>
-<text x="737.21875" y="2951" fill="#CACACA" font-size="48">k</text>
-<text x="766.125" y="2951" fill="#CACACA" font-size="48">)</text>
-<text x="795.03125" y="2951" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="3017" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="3017" fill="#CACACA" font-size="48">r</text>
-<text x="448.15625" y="3017" fill="#CACACA" font-size="48"> </text>
-<text x="477.0625" y="3017" fill="#CACACA" font-size="48">=</text>
-<text x="505.96875" y="3017" fill="#CACACA" font-size="48"> </text>
-<text x="534.875" y="3017" fill="#CACACA" font-size="48">randrange</text>
-<text x="795.03125" y="3017" fill="#CACACA" font-size="48">(</text>
-<text x="823.9375" y="3017" fill="#CACACA" font-size="48">t</text>
-<text x="852.84375" y="3017" fill="#CACACA" font-size="48"> </text>
-<text x="881.75" y="3017" fill="#CACACA" font-size="48">+</text>
-<text x="910.65625" y="3017" fill="#CACACA" font-size="48"> </text>
-<text x="939.5625" y="3017" fill="#CACACA" font-size="48">i</text>
-<text x="968.46875" y="3017" fill="#CACACA" font-size="48">)</text>
-<text x="188" y="3083" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="3083" fill="#72A9D6" font-size="48">if</text>
-<text x="477.0625" y="3083" fill="#CACACA" font-size="48"> </text>
-<text x="505.96875" y="3083" fill="#CACACA" font-size="48">r</text>
+<text x="477.0625" y="2951" fill="#CACACA" font-size="48">=</text>
+<text x="505.96875" y="2951" fill="#CACACA" font-size="48"> </text>
+<text x="534.875" y="2951" fill="#CACACA" font-size="48">(</text>
+<text x="563.78125" y="2951" fill="#CACACA" font-size="48">width</text>
+<text x="708.3125" y="2951" fill="#CACACA" font-size="48"> </text>
+<text x="737.21875" y="2951" fill="#CACACA" font-size="48">+</text>
+<text x="766.125" y="2951" fill="#CACACA" font-size="48"> </text>
+<text x="795.03125" y="2951" fill="#B6CDA0" font-size="48">1</text>
+<text x="823.9375" y="2951" fill="#CACACA" font-size="48">)</text>
+<text x="852.84375" y="2951" fill="#CACACA" font-size="48"> </text>
+<text x="881.75" y="2951" fill="#CACACA" font-size="48">*</text>
+<text x="910.65625" y="2951" fill="#CACACA" font-size="48"> </text>
+<text x="939.5625" y="2951" fill="#CACACA" font-size="48">extra</text>
+<text x="188" y="3017" fill="#CACACA" font-size="48">    </text>
+<text x="303.625" y="3017" fill="#8F969D" font-size="48"># The global urn records group labels, not individual colors.</text>
+<text x="188" y="3083" fill="#CACACA" font-size="48">    </text>
+<text x="303.625" y="3083" fill="#72A9D6" font-size="48">for</text>
+<text x="390.34375" y="3083" fill="#CACACA" font-size="48"> </text>
+<text x="419.25" y="3083" fill="#CACACA" font-size="48">i</text>
+<text x="448.15625" y="3083" fill="#CACACA" font-size="48"> </text>
+<text x="477.0625" y="3083" fill="#CACACA" font-size="48">in</text>
 <text x="534.875" y="3083" fill="#CACACA" font-size="48"> </text>
-<text x="563.78125" y="3083" fill="#CACACA" font-size="48">&lt;</text>
-<text x="592.6875" y="3083" fill="#CACACA" font-size="48"> </text>
-<text x="621.59375" y="3083" fill="#CACACA" font-size="48">t</text>
-<text x="650.5" y="3083" fill="#CACACA" font-size="48">:</text>
-<text x="188" y="3149" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="3149" fill="#CACACA" font-size="48">b</text>
-<text x="563.78125" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="592.6875" y="3149" fill="#CACACA" font-size="48">=</text>
-<text x="621.59375" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="650.5" y="3149" fill="#CACACA" font-size="48">(</text>
-<text x="679.40625" y="3149" fill="#CACACA" font-size="48">r</text>
-<text x="708.3125" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="3149" fill="#CACACA" font-size="48">/</text>
-<text x="766.125" y="3149" fill="#CACACA" font-size="48">/</text>
-<text x="795.03125" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="823.9375" y="3149" fill="#CACACA" font-size="48">(</text>
-<text x="852.84375" y="3149" fill="#CACACA" font-size="48">width</text>
-<text x="997.375" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="3149" fill="#CACACA" font-size="48">+</text>
-<text x="1055.1875" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="1084.09375" y="3149" fill="#B6CDA0" font-size="48">1</text>
-<text x="1113.0" y="3149" fill="#CACACA" font-size="48">)</text>
-<text x="1141.90625" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="1170.8125" y="3149" fill="#72A9D6" font-size="48">if</text>
-<text x="1228.625" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="1257.53125" y="3149" fill="#CACACA" font-size="48">r</text>
-<text x="1286.4375" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="1315.34375" y="3149" fill="#CACACA" font-size="48">&lt;</text>
-<text x="1344.25" y="3149" fill="#CACACA" font-size="48"> </text>
-<text x="1373.15625" y="3149" fill="#CACACA" font-size="48">split</text>
-<text x="188" y="3215" fill="#CACACA" font-size="48">                 </text>
-<text x="679.40625" y="3215" fill="#72A9D6" font-size="48">else</text>
-<text x="795.03125" y="3215" fill="#CACACA" font-size="48"> </text>
-<text x="823.9375" y="3215" fill="#CACACA" font-size="48">extra</text>
-<text x="968.46875" y="3215" fill="#CACACA" font-size="48"> </text>
-<text x="997.375" y="3215" fill="#CACACA" font-size="48">+</text>
-<text x="1026.28125" y="3215" fill="#CACACA" font-size="48"> </text>
-<text x="1055.1875" y="3215" fill="#CACACA" font-size="48">(</text>
-<text x="1084.09375" y="3215" fill="#CACACA" font-size="48">r</text>
-<text x="1113.0" y="3215" fill="#CACACA" font-size="48"> </text>
-<text x="1141.90625" y="3215" fill="#CACACA" font-size="48">-</text>
-<text x="1170.8125" y="3215" fill="#CACACA" font-size="48"> </text>
-<text x="1199.71875" y="3215" fill="#CACACA" font-size="48">split</text>
-<text x="1344.25" y="3215" fill="#CACACA" font-size="48">)</text>
-<text x="1373.15625" y="3215" fill="#CACACA" font-size="48"> </text>
-<text x="1402.0625" y="3215" fill="#CACACA" font-size="48">/</text>
-<text x="1430.96875" y="3215" fill="#CACACA" font-size="48">/</text>
-<text x="1459.875" y="3215" fill="#CACACA" font-size="48"> </text>
-<text x="1488.78125" y="3215" fill="#CACACA" font-size="48">width</text>
-<text x="1633.3125" y="3215" fill="#CACACA" font-size="48">)</text>
+<text x="563.78125" y="3083" fill="#76C8B4" font-size="48">range</text>
+<text x="708.3125" y="3083" fill="#CACACA" font-size="48">(</text>
+<text x="737.21875" y="3083" fill="#CACACA" font-size="48">k</text>
+<text x="766.125" y="3083" fill="#CACACA" font-size="48">)</text>
+<text x="795.03125" y="3083" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="3149" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="3149" fill="#CACACA" font-size="48">r</text>
+<text x="448.15625" y="3149" fill="#CACACA" font-size="48"> </text>
+<text x="477.0625" y="3149" fill="#CACACA" font-size="48">=</text>
+<text x="505.96875" y="3149" fill="#CACACA" font-size="48"> </text>
+<text x="534.875" y="3149" fill="#CACACA" font-size="48">randrange</text>
+<text x="795.03125" y="3149" fill="#CACACA" font-size="48">(</text>
+<text x="823.9375" y="3149" fill="#CACACA" font-size="48">t</text>
+<text x="852.84375" y="3149" fill="#CACACA" font-size="48"> </text>
+<text x="881.75" y="3149" fill="#CACACA" font-size="48">+</text>
+<text x="910.65625" y="3149" fill="#CACACA" font-size="48"> </text>
+<text x="939.5625" y="3149" fill="#CACACA" font-size="48">i</text>
+<text x="968.46875" y="3149" fill="#CACACA" font-size="48">)</text>
+<text x="188" y="3215" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="3215" fill="#72A9D6" font-size="48">if</text>
+<text x="477.0625" y="3215" fill="#CACACA" font-size="48"> </text>
+<text x="505.96875" y="3215" fill="#CACACA" font-size="48">r</text>
+<text x="534.875" y="3215" fill="#CACACA" font-size="48"> </text>
+<text x="563.78125" y="3215" fill="#CACACA" font-size="48">&lt;</text>
+<text x="592.6875" y="3215" fill="#CACACA" font-size="48"> </text>
+<text x="621.59375" y="3215" fill="#CACACA" font-size="48">t</text>
+<text x="650.5" y="3215" fill="#CACACA" font-size="48">:</text>
 <text x="188" y="3281" fill="#CACACA" font-size="48">            </text>
-<text x="534.875" y="3281" fill="#CACACA" font-size="48">out</text>
-<text x="621.59375" y="3281" fill="#CACACA" font-size="48">[</text>
-<text x="650.5" y="3281" fill="#CACACA" font-size="48">i</text>
-<text x="679.40625" y="3281" fill="#CACACA" font-size="48">]</text>
+<text x="534.875" y="3281" fill="#CACACA" font-size="48">b</text>
+<text x="563.78125" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="592.6875" y="3281" fill="#CACACA" font-size="48">=</text>
+<text x="621.59375" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="650.5" y="3281" fill="#CACACA" font-size="48">(</text>
+<text x="679.40625" y="3281" fill="#CACACA" font-size="48">r</text>
 <text x="708.3125" y="3281" fill="#CACACA" font-size="48"> </text>
-<text x="737.21875" y="3281" fill="#CACACA" font-size="48">=</text>
-<text x="766.125" y="3281" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="3281" fill="#CACACA" font-size="48">b</text>
-<text x="823.9375" y="3281" fill="#CACACA" font-size="48"> </text>
-<text x="852.84375" y="3281" fill="#CACACA" font-size="48">+</text>
-<text x="881.75" y="3281" fill="#CACACA" font-size="48"> </text>
-<text x="910.65625" y="3281" fill="#B6CDA0" font-size="48">1</text>
-<text x="188" y="3347" fill="#CACACA" font-size="48">        </text>
-<text x="419.25" y="3347" fill="#72A9D6" font-size="48">else</text>
-<text x="534.875" y="3347" fill="#CACACA" font-size="48">:</text>
+<text x="737.21875" y="3281" fill="#CACACA" font-size="48">/</text>
+<text x="766.125" y="3281" fill="#CACACA" font-size="48">/</text>
+<text x="795.03125" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="823.9375" y="3281" fill="#CACACA" font-size="48">(</text>
+<text x="852.84375" y="3281" fill="#CACACA" font-size="48">width</text>
+<text x="997.375" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="3281" fill="#CACACA" font-size="48">+</text>
+<text x="1055.1875" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="1084.09375" y="3281" fill="#B6CDA0" font-size="48">1</text>
+<text x="1113.0" y="3281" fill="#CACACA" font-size="48">)</text>
+<text x="1141.90625" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="1170.8125" y="3281" fill="#72A9D6" font-size="48">if</text>
+<text x="1228.625" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="1257.53125" y="3281" fill="#CACACA" font-size="48">r</text>
+<text x="1286.4375" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="1315.34375" y="3281" fill="#CACACA" font-size="48">&lt;</text>
+<text x="1344.25" y="3281" fill="#CACACA" font-size="48"> </text>
+<text x="1373.15625" y="3281" fill="#CACACA" font-size="48">split</text>
+<text x="188" y="3347" fill="#CACACA" font-size="48">                 </text>
+<text x="679.40625" y="3347" fill="#72A9D6" font-size="48">else</text>
+<text x="795.03125" y="3347" fill="#CACACA" font-size="48"> </text>
+<text x="823.9375" y="3347" fill="#CACACA" font-size="48">extra</text>
+<text x="968.46875" y="3347" fill="#CACACA" font-size="48"> </text>
+<text x="997.375" y="3347" fill="#CACACA" font-size="48">+</text>
+<text x="1026.28125" y="3347" fill="#CACACA" font-size="48"> </text>
+<text x="1055.1875" y="3347" fill="#CACACA" font-size="48">(</text>
+<text x="1084.09375" y="3347" fill="#CACACA" font-size="48">r</text>
+<text x="1113.0" y="3347" fill="#CACACA" font-size="48"> </text>
+<text x="1141.90625" y="3347" fill="#CACACA" font-size="48">-</text>
+<text x="1170.8125" y="3347" fill="#CACACA" font-size="48"> </text>
+<text x="1199.71875" y="3347" fill="#CACACA" font-size="48">split</text>
+<text x="1344.25" y="3347" fill="#CACACA" font-size="48">)</text>
+<text x="1373.15625" y="3347" fill="#CACACA" font-size="48"> </text>
+<text x="1402.0625" y="3347" fill="#CACACA" font-size="48">/</text>
+<text x="1430.96875" y="3347" fill="#CACACA" font-size="48">/</text>
+<text x="1459.875" y="3347" fill="#CACACA" font-size="48"> </text>
+<text x="1488.78125" y="3347" fill="#CACACA" font-size="48">width</text>
+<text x="1633.3125" y="3347" fill="#CACACA" font-size="48">)</text>
 <text x="188" y="3413" fill="#CACACA" font-size="48">            </text>
 <text x="534.875" y="3413" fill="#CACACA" font-size="48">out</text>
 <text x="621.59375" y="3413" fill="#CACACA" font-size="48">[</text>
@@ -630,509 +599,534 @@
 <text x="708.3125" y="3413" fill="#CACACA" font-size="48"> </text>
 <text x="737.21875" y="3413" fill="#CACACA" font-size="48">=</text>
 <text x="766.125" y="3413" fill="#CACACA" font-size="48"> </text>
-<text x="795.03125" y="3413" fill="#CACACA" font-size="48">out</text>
-<text x="881.75" y="3413" fill="#CACACA" font-size="48">[</text>
-<text x="910.65625" y="3413" fill="#CACACA" font-size="48">r</text>
-<text x="939.5625" y="3413" fill="#CACACA" font-size="48"> </text>
-<text x="968.46875" y="3413" fill="#CACACA" font-size="48">-</text>
-<text x="997.375" y="3413" fill="#CACACA" font-size="48"> </text>
-<text x="1026.28125" y="3413" fill="#CACACA" font-size="48">t</text>
-<text x="1055.1875" y="3413" fill="#CACACA" font-size="48">]</text>
-<text x="2266" y="232" fill="#626D75" font-size="34">51</text>
-<text x="2266" y="298" fill="#626D75" font-size="34">52</text>
-<text x="2266" y="364" fill="#626D75" font-size="34">53</text>
-<text x="2266" y="430" fill="#626D75" font-size="34">54</text>
-<text x="2266" y="496" fill="#626D75" font-size="34">55</text>
-<text x="2266" y="562" fill="#626D75" font-size="34">56</text>
-<text x="2266" y="628" fill="#626D75" font-size="34">57</text>
-<text x="2266" y="694" fill="#626D75" font-size="34">58</text>
-<text x="2266" y="760" fill="#626D75" font-size="34">59</text>
-<text x="2266" y="826" fill="#626D75" font-size="34">60</text>
-<text x="2266" y="892" fill="#626D75" font-size="34">61</text>
-<text x="2266" y="958" fill="#626D75" font-size="34">62</text>
-<text x="2266" y="1024" fill="#626D75" font-size="34">63</text>
-<text x="2266" y="1090" fill="#626D75" font-size="34">64</text>
-<text x="2266" y="1156" fill="#626D75" font-size="34">65</text>
-<text x="2266" y="1222" fill="#626D75" font-size="34">66</text>
-<text x="2266" y="1288" fill="#626D75" font-size="34">67</text>
-<text x="2266" y="1354" fill="#626D75" font-size="34">68</text>
-<text x="2266" y="1420" fill="#626D75" font-size="34">69</text>
-<text x="2266" y="1486" fill="#626D75" font-size="34">70</text>
-<text x="2266" y="1552" fill="#626D75" font-size="34">71</text>
-<text x="2266" y="1618" fill="#626D75" font-size="34">72</text>
-<text x="2266" y="1684" fill="#626D75" font-size="34">73</text>
-<text x="2266" y="1750" fill="#626D75" font-size="34">74</text>
-<text x="2266" y="1816" fill="#626D75" font-size="34">75</text>
-<text x="2266" y="1882" fill="#626D75" font-size="34">76</text>
-<text x="2266" y="1948" fill="#626D75" font-size="34">77</text>
-<text x="2266" y="2014" fill="#626D75" font-size="34">78</text>
-<text x="2266" y="2080" fill="#626D75" font-size="34">79</text>
-<text x="2266" y="2146" fill="#626D75" font-size="34">80</text>
-<text x="2266" y="2212" fill="#626D75" font-size="34">81</text>
-<text x="2266" y="2278" fill="#626D75" font-size="34">82</text>
-<text x="2266" y="2344" fill="#626D75" font-size="34">83</text>
-<text x="2266" y="2410" fill="#626D75" font-size="34">84</text>
-<text x="2266" y="2476" fill="#626D75" font-size="34">85</text>
-<text x="2266" y="2542" fill="#626D75" font-size="34">86</text>
-<text x="2266" y="2608" fill="#626D75" font-size="34">87</text>
-<text x="2266" y="2674" fill="#626D75" font-size="34">88</text>
-<text x="2266" y="2740" fill="#626D75" font-size="34">89</text>
-<text x="2266" y="2806" fill="#626D75" font-size="34">90</text>
+<text x="795.03125" y="3413" fill="#CACACA" font-size="48">b</text>
+<text x="823.9375" y="3413" fill="#CACACA" font-size="48"> </text>
+<text x="852.84375" y="3413" fill="#CACACA" font-size="48">+</text>
+<text x="881.75" y="3413" fill="#CACACA" font-size="48"> </text>
+<text x="910.65625" y="3413" fill="#B6CDA0" font-size="48">1</text>
+<text x="188" y="3479" fill="#CACACA" font-size="48">        </text>
+<text x="419.25" y="3479" fill="#72A9D6" font-size="48">else</text>
+<text x="534.875" y="3479" fill="#CACACA" font-size="48">:</text>
+<text x="188" y="3545" fill="#CACACA" font-size="48">            </text>
+<text x="534.875" y="3545" fill="#CACACA" font-size="48">out</text>
+<text x="621.59375" y="3545" fill="#CACACA" font-size="48">[</text>
+<text x="650.5" y="3545" fill="#CACACA" font-size="48">i</text>
+<text x="679.40625" y="3545" fill="#CACACA" font-size="48">]</text>
+<text x="708.3125" y="3545" fill="#CACACA" font-size="48"> </text>
+<text x="737.21875" y="3545" fill="#CACACA" font-size="48">=</text>
+<text x="766.125" y="3545" fill="#CACACA" font-size="48"> </text>
+<text x="795.03125" y="3545" fill="#CACACA" font-size="48">out</text>
+<text x="881.75" y="3545" fill="#CACACA" font-size="48">[</text>
+<text x="910.65625" y="3545" fill="#CACACA" font-size="48">r</text>
+<text x="939.5625" y="3545" fill="#CACACA" font-size="48"> </text>
+<text x="968.46875" y="3545" fill="#CACACA" font-size="48">-</text>
+<text x="997.375" y="3545" fill="#CACACA" font-size="48"> </text>
+<text x="1026.28125" y="3545" fill="#CACACA" font-size="48">t</text>
+<text x="1055.1875" y="3545" fill="#CACACA" font-size="48">]</text>
+<text x="2266" y="232" fill="#626D75" font-size="34">53</text>
+<text x="2266" y="298" fill="#626D75" font-size="34">54</text>
+<text x="2266" y="364" fill="#626D75" font-size="34">55</text>
+<text x="2266" y="430" fill="#626D75" font-size="34">56</text>
+<text x="2266" y="496" fill="#626D75" font-size="34">57</text>
+<text x="2266" y="562" fill="#626D75" font-size="34">58</text>
+<text x="2266" y="628" fill="#626D75" font-size="34">59</text>
+<text x="2266" y="694" fill="#626D75" font-size="34">60</text>
+<text x="2266" y="760" fill="#626D75" font-size="34">61</text>
+<text x="2266" y="826" fill="#626D75" font-size="34">62</text>
+<text x="2266" y="892" fill="#626D75" font-size="34">63</text>
+<text x="2266" y="958" fill="#626D75" font-size="34">64</text>
+<text x="2266" y="1024" fill="#626D75" font-size="34">65</text>
+<text x="2266" y="1090" fill="#626D75" font-size="34">66</text>
+<text x="2266" y="1156" fill="#626D75" font-size="34">67</text>
+<text x="2266" y="1222" fill="#626D75" font-size="34">68</text>
+<text x="2266" y="1288" fill="#626D75" font-size="34">69</text>
+<text x="2266" y="1354" fill="#626D75" font-size="34">70</text>
+<text x="2266" y="1420" fill="#626D75" font-size="34">71</text>
+<text x="2266" y="1486" fill="#626D75" font-size="34">72</text>
+<text x="2266" y="1552" fill="#626D75" font-size="34">73</text>
+<text x="2266" y="1618" fill="#626D75" font-size="34">74</text>
+<text x="2266" y="1684" fill="#626D75" font-size="34">75</text>
+<text x="2266" y="1750" fill="#626D75" font-size="34">76</text>
+<text x="2266" y="1816" fill="#626D75" font-size="34">77</text>
+<text x="2266" y="1882" fill="#626D75" font-size="34">78</text>
+<text x="2266" y="1948" fill="#626D75" font-size="34">79</text>
+<text x="2266" y="2014" fill="#626D75" font-size="34">80</text>
+<text x="2266" y="2080" fill="#626D75" font-size="34">81</text>
+<text x="2266" y="2146" fill="#626D75" font-size="34">82</text>
+<text x="2266" y="2212" fill="#626D75" font-size="34">83</text>
+<text x="2266" y="2278" fill="#626D75" font-size="34">84</text>
+<text x="2266" y="2344" fill="#626D75" font-size="34">85</text>
+<text x="2266" y="2410" fill="#626D75" font-size="34">86</text>
+<text x="2266" y="2476" fill="#626D75" font-size="34">87</text>
+<text x="2266" y="2542" fill="#626D75" font-size="34">88</text>
+<text x="2266" y="2608" fill="#626D75" font-size="34">89</text>
+<text x="2266" y="2674" fill="#626D75" font-size="34">90</text>
+<text x="2266" y="2740" fill="#626D75" font-size="34">91</text>
+<text x="2266" y="2806" fill="#626D75" font-size="34">92</text>
+<text x="2266" y="2872" fill="#626D75" font-size="34">93</text>
+<text x="2266" y="2938" fill="#626D75" font-size="34">94</text>
+<text x="2266" y="3004" fill="#626D75" font-size="34">95</text>
 <text x="2382" y="245" fill="#CACACA" font-size="48">    </text>
 <text x="2497.625" y="245" fill="#8F969D" font-size="48"># Reuse the output prefix for group counts.</text>
 <text x="2382" y="311" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="311" fill="#CACACA" font-size="48">i</text>
-<text x="2526.53125" y="311" fill="#CACACA" font-size="48"> </text>
-<text x="2555.4375" y="311" fill="#CACACA" font-size="48">=</text>
-<text x="2584.34375" y="311" fill="#CACACA" font-size="48"> </text>
-<text x="2613.25" y="311" fill="#B6CDA0" font-size="48">0</text>
+<text x="2497.625" y="311" fill="#8F969D" font-size="48"># Labels are 1..groups; a counter holding m is groups + m.</text>
 <text x="2382" y="377" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="377" fill="#72A9D6" font-size="48">while</text>
-<text x="2642.15625" y="377" fill="#CACACA" font-size="48"> </text>
-<text x="2671.0625" y="377" fill="#CACACA" font-size="48">i</text>
-<text x="2699.96875" y="377" fill="#CACACA" font-size="48"> </text>
-<text x="2728.875" y="377" fill="#CACACA" font-size="48">&lt;</text>
-<text x="2757.78125" y="377" fill="#CACACA" font-size="48"> </text>
-<text x="2786.6875" y="377" fill="#CACACA" font-size="48">k</text>
-<text x="2815.59375" y="377" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="443" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="443" fill="#72A9D6" font-size="48">if</text>
-<text x="2671.0625" y="443" fill="#CACACA" font-size="48"> </text>
-<text x="2699.96875" y="443" fill="#CACACA" font-size="48">not</text>
-<text x="2786.6875" y="443" fill="#CACACA" font-size="48"> </text>
-<text x="2815.59375" y="443" fill="#B6CDA0" font-size="48">1</text>
-<text x="2844.5" y="443" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="443" fill="#CACACA" font-size="48">&lt;</text>
-<text x="2902.3125" y="443" fill="#CACACA" font-size="48">=</text>
-<text x="2931.21875" y="443" fill="#CACACA" font-size="48"> </text>
-<text x="2960.125" y="443" fill="#CACACA" font-size="48">out</text>
-<text x="3046.84375" y="443" fill="#CACACA" font-size="48">[</text>
-<text x="3075.75" y="443" fill="#CACACA" font-size="48">i</text>
-<text x="3104.65625" y="443" fill="#CACACA" font-size="48">]</text>
-<text x="3133.5625" y="443" fill="#CACACA" font-size="48"> </text>
-<text x="3162.46875" y="443" fill="#CACACA" font-size="48">&lt;</text>
-<text x="3191.375" y="443" fill="#CACACA" font-size="48">=</text>
-<text x="3220.28125" y="443" fill="#CACACA" font-size="48"> </text>
-<text x="3249.1875" y="443" fill="#CACACA" font-size="48">groups</text>
-<text x="3422.625" y="443" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="509" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="509" fill="#CACACA" font-size="48">i</text>
-<text x="2757.78125" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="2786.6875" y="509" fill="#CACACA" font-size="48">+</text>
-<text x="2815.59375" y="509" fill="#CACACA" font-size="48">=</text>
+<text x="2497.625" y="377" fill="#CACACA" font-size="48">i</text>
+<text x="2526.53125" y="377" fill="#CACACA" font-size="48"> </text>
+<text x="2555.4375" y="377" fill="#CACACA" font-size="48">=</text>
+<text x="2584.34375" y="377" fill="#CACACA" font-size="48"> </text>
+<text x="2613.25" y="377" fill="#B6CDA0" font-size="48">0</text>
+<text x="2382" y="443" fill="#CACACA" font-size="48">    </text>
+<text x="2497.625" y="443" fill="#72A9D6" font-size="48">while</text>
+<text x="2642.15625" y="443" fill="#CACACA" font-size="48"> </text>
+<text x="2671.0625" y="443" fill="#CACACA" font-size="48">i</text>
+<text x="2699.96875" y="443" fill="#CACACA" font-size="48"> </text>
+<text x="2728.875" y="443" fill="#CACACA" font-size="48">&lt;</text>
+<text x="2757.78125" y="443" fill="#CACACA" font-size="48"> </text>
+<text x="2786.6875" y="443" fill="#CACACA" font-size="48">k</text>
+<text x="2815.59375" y="443" fill="#CACACA" font-size="48">:</text>
+<text x="2382" y="509" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="509" fill="#72A9D6" font-size="48">if</text>
+<text x="2671.0625" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="2699.96875" y="509" fill="#CACACA" font-size="48">not</text>
+<text x="2786.6875" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="2815.59375" y="509" fill="#B6CDA0" font-size="48">1</text>
 <text x="2844.5" y="509" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="509" fill="#B6CDA0" font-size="48">1</text>
+<text x="2873.40625" y="509" fill="#CACACA" font-size="48">&lt;</text>
+<text x="2902.3125" y="509" fill="#CACACA" font-size="48">=</text>
+<text x="2931.21875" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="2960.125" y="509" fill="#CACACA" font-size="48">out</text>
+<text x="3046.84375" y="509" fill="#CACACA" font-size="48">[</text>
+<text x="3075.75" y="509" fill="#CACACA" font-size="48">i</text>
+<text x="3104.65625" y="509" fill="#CACACA" font-size="48">]</text>
+<text x="3133.5625" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="3162.46875" y="509" fill="#CACACA" font-size="48">&lt;</text>
+<text x="3191.375" y="509" fill="#CACACA" font-size="48">=</text>
+<text x="3220.28125" y="509" fill="#CACACA" font-size="48"> </text>
+<text x="3249.1875" y="509" fill="#CACACA" font-size="48">groups</text>
+<text x="3422.625" y="509" fill="#CACACA" font-size="48">:</text>
 <text x="2382" y="575" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="575" fill="#72A9D6" font-size="48">continue</text>
-<text x="2382" y="641" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="641" fill="#CACACA" font-size="48">b</text>
-<text x="2642.15625" y="641" fill="#CACACA" font-size="48"> </text>
-<text x="2671.0625" y="641" fill="#CACACA" font-size="48">=</text>
-<text x="2699.96875" y="641" fill="#CACACA" font-size="48"> </text>
-<text x="2728.875" y="641" fill="#CACACA" font-size="48">out</text>
-<text x="2815.59375" y="641" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="641" fill="#CACACA" font-size="48">i</text>
-<text x="2873.40625" y="641" fill="#CACACA" font-size="48">]</text>
-<text x="2902.3125" y="641" fill="#CACACA" font-size="48"> </text>
-<text x="2931.21875" y="641" fill="#CACACA" font-size="48">-</text>
-<text x="2960.125" y="641" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="641" fill="#B6CDA0" font-size="48">1</text>
+<text x="2728.875" y="575" fill="#CACACA" font-size="48">i</text>
+<text x="2757.78125" y="575" fill="#CACACA" font-size="48"> </text>
+<text x="2786.6875" y="575" fill="#CACACA" font-size="48">+</text>
+<text x="2815.59375" y="575" fill="#CACACA" font-size="48">=</text>
+<text x="2844.5" y="575" fill="#CACACA" font-size="48"> </text>
+<text x="2873.40625" y="575" fill="#B6CDA0" font-size="48">1</text>
+<text x="2382" y="641" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="641" fill="#72A9D6" font-size="48">continue</text>
 <text x="2382" y="707" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="707" fill="#72A9D6" font-size="48">if</text>
-<text x="2671.0625" y="707" fill="#CACACA" font-size="48"> </text>
-<text x="2699.96875" y="707" fill="#B6CDA0" font-size="48">1</text>
-<text x="2728.875" y="707" fill="#CACACA" font-size="48"> </text>
-<text x="2757.78125" y="707" fill="#CACACA" font-size="48">&lt;</text>
-<text x="2786.6875" y="707" fill="#CACACA" font-size="48">=</text>
-<text x="2815.59375" y="707" fill="#CACACA" font-size="48"> </text>
-<text x="2844.5" y="707" fill="#CACACA" font-size="48">out</text>
-<text x="2931.21875" y="707" fill="#CACACA" font-size="48">[</text>
-<text x="2960.125" y="707" fill="#CACACA" font-size="48">b</text>
-<text x="2989.03125" y="707" fill="#CACACA" font-size="48">]</text>
-<text x="3017.9375" y="707" fill="#CACACA" font-size="48"> </text>
-<text x="3046.84375" y="707" fill="#CACACA" font-size="48">&lt;</text>
-<text x="3075.75" y="707" fill="#CACACA" font-size="48">=</text>
-<text x="3104.65625" y="707" fill="#CACACA" font-size="48"> </text>
-<text x="3133.5625" y="707" fill="#CACACA" font-size="48">groups</text>
-<text x="3307.0" y="707" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="773" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="773" fill="#CACACA" font-size="48">out</text>
-<text x="2815.59375" y="773" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="773" fill="#CACACA" font-size="48">i</text>
-<text x="2873.40625" y="773" fill="#CACACA" font-size="48">]</text>
-<text x="2902.3125" y="773" fill="#CACACA" font-size="48"> </text>
-<text x="2931.21875" y="773" fill="#CACACA" font-size="48">=</text>
-<text x="2960.125" y="773" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="773" fill="#CACACA" font-size="48">out</text>
-<text x="3075.75" y="773" fill="#CACACA" font-size="48">[</text>
-<text x="3104.65625" y="773" fill="#CACACA" font-size="48">b</text>
-<text x="3133.5625" y="773" fill="#CACACA" font-size="48">]</text>
+<text x="2613.25" y="707" fill="#CACACA" font-size="48">b</text>
+<text x="2642.15625" y="707" fill="#CACACA" font-size="48"> </text>
+<text x="2671.0625" y="707" fill="#CACACA" font-size="48">=</text>
+<text x="2699.96875" y="707" fill="#CACACA" font-size="48"> </text>
+<text x="2728.875" y="707" fill="#CACACA" font-size="48">out</text>
+<text x="2815.59375" y="707" fill="#CACACA" font-size="48">[</text>
+<text x="2844.5" y="707" fill="#CACACA" font-size="48">i</text>
+<text x="2873.40625" y="707" fill="#CACACA" font-size="48">]</text>
+<text x="2902.3125" y="707" fill="#CACACA" font-size="48"> </text>
+<text x="2931.21875" y="707" fill="#CACACA" font-size="48">-</text>
+<text x="2960.125" y="707" fill="#CACACA" font-size="48"> </text>
+<text x="2989.03125" y="707" fill="#B6CDA0" font-size="48">1</text>
+<text x="2382" y="773" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="773" fill="#72A9D6" font-size="48">if</text>
+<text x="2671.0625" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="2699.96875" y="773" fill="#B6CDA0" font-size="48">1</text>
+<text x="2728.875" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="2757.78125" y="773" fill="#CACACA" font-size="48">&lt;</text>
+<text x="2786.6875" y="773" fill="#CACACA" font-size="48">=</text>
+<text x="2815.59375" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="2844.5" y="773" fill="#CACACA" font-size="48">out</text>
+<text x="2931.21875" y="773" fill="#CACACA" font-size="48">[</text>
+<text x="2960.125" y="773" fill="#CACACA" font-size="48">b</text>
+<text x="2989.03125" y="773" fill="#CACACA" font-size="48">]</text>
+<text x="3017.9375" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="3046.84375" y="773" fill="#CACACA" font-size="48">&lt;</text>
+<text x="3075.75" y="773" fill="#CACACA" font-size="48">=</text>
+<text x="3104.65625" y="773" fill="#CACACA" font-size="48"> </text>
+<text x="3133.5625" y="773" fill="#CACACA" font-size="48">groups</text>
+<text x="3307.0" y="773" fill="#CACACA" font-size="48">:</text>
 <text x="2382" y="839" fill="#CACACA" font-size="48">            </text>
 <text x="2728.875" y="839" fill="#CACACA" font-size="48">out</text>
 <text x="2815.59375" y="839" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="839" fill="#CACACA" font-size="48">b</text>
+<text x="2844.5" y="839" fill="#CACACA" font-size="48">i</text>
 <text x="2873.40625" y="839" fill="#CACACA" font-size="48">]</text>
 <text x="2902.3125" y="839" fill="#CACACA" font-size="48"> </text>
 <text x="2931.21875" y="839" fill="#CACACA" font-size="48">=</text>
 <text x="2960.125" y="839" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="839" fill="#CACACA" font-size="48">groups</text>
-<text x="3162.46875" y="839" fill="#CACACA" font-size="48"> </text>
-<text x="3191.375" y="839" fill="#CACACA" font-size="48">+</text>
-<text x="3220.28125" y="839" fill="#CACACA" font-size="48"> </text>
-<text x="3249.1875" y="839" fill="#B6CDA0" font-size="48">1</text>
-<text x="2382" y="905" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="905" fill="#72A9D6" font-size="48">else</text>
-<text x="2728.875" y="905" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="971" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="971" fill="#CACACA" font-size="48">out</text>
-<text x="2815.59375" y="971" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="971" fill="#CACACA" font-size="48">b</text>
-<text x="2873.40625" y="971" fill="#CACACA" font-size="48">]</text>
-<text x="2902.3125" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="2931.21875" y="971" fill="#CACACA" font-size="48">=</text>
-<text x="2960.125" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="971" fill="#CACACA" font-size="48">groups</text>
-<text x="3162.46875" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="3191.375" y="971" fill="#CACACA" font-size="48">+</text>
-<text x="3220.28125" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="3249.1875" y="971" fill="#B6CDA0" font-size="48">1</text>
-<text x="3278.09375" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="3307.0" y="971" fill="#72A9D6" font-size="48">if</text>
-<text x="3364.8125" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="3393.71875" y="971" fill="#CACACA" font-size="48">not</text>
-<text x="3480.4375" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="3509.34375" y="971" fill="#CACACA" font-size="48">out</text>
-<text x="3596.0625" y="971" fill="#CACACA" font-size="48">[</text>
-<text x="3624.96875" y="971" fill="#CACACA" font-size="48">b</text>
-<text x="3653.875" y="971" fill="#CACACA" font-size="48">]</text>
-<text x="3682.78125" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="3711.6875" y="971" fill="#72A9D6" font-size="48">else</text>
-<text x="3827.3125" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="3856.21875" y="971" fill="#CACACA" font-size="48">out</text>
-<text x="3942.9375" y="971" fill="#CACACA" font-size="48">[</text>
-<text x="3971.84375" y="971" fill="#CACACA" font-size="48">b</text>
-<text x="4000.75" y="971" fill="#CACACA" font-size="48">]</text>
-<text x="4029.65625" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="4058.5625" y="971" fill="#CACACA" font-size="48">+</text>
-<text x="4087.46875" y="971" fill="#CACACA" font-size="48"> </text>
-<text x="4116.375" y="971" fill="#B6CDA0" font-size="48">1</text>
+<text x="2989.03125" y="839" fill="#CACACA" font-size="48">out</text>
+<text x="3075.75" y="839" fill="#CACACA" font-size="48">[</text>
+<text x="3104.65625" y="839" fill="#CACACA" font-size="48">b</text>
+<text x="3133.5625" y="839" fill="#CACACA" font-size="48">]</text>
+<text x="2382" y="905" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="905" fill="#CACACA" font-size="48">out</text>
+<text x="2815.59375" y="905" fill="#CACACA" font-size="48">[</text>
+<text x="2844.5" y="905" fill="#CACACA" font-size="48">b</text>
+<text x="2873.40625" y="905" fill="#CACACA" font-size="48">]</text>
+<text x="2902.3125" y="905" fill="#CACACA" font-size="48"> </text>
+<text x="2931.21875" y="905" fill="#CACACA" font-size="48">=</text>
+<text x="2960.125" y="905" fill="#CACACA" font-size="48"> </text>
+<text x="2989.03125" y="905" fill="#CACACA" font-size="48">groups</text>
+<text x="3162.46875" y="905" fill="#CACACA" font-size="48"> </text>
+<text x="3191.375" y="905" fill="#CACACA" font-size="48">+</text>
+<text x="3220.28125" y="905" fill="#CACACA" font-size="48"> </text>
+<text x="3249.1875" y="905" fill="#B6CDA0" font-size="48">1</text>
+<text x="2382" y="971" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="971" fill="#72A9D6" font-size="48">else</text>
+<text x="2728.875" y="971" fill="#CACACA" font-size="48">:</text>
 <text x="2382" y="1037" fill="#CACACA" font-size="48">            </text>
 <text x="2728.875" y="1037" fill="#CACACA" font-size="48">out</text>
 <text x="2815.59375" y="1037" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="1037" fill="#CACACA" font-size="48">i</text>
+<text x="2844.5" y="1037" fill="#CACACA" font-size="48">b</text>
 <text x="2873.40625" y="1037" fill="#CACACA" font-size="48">]</text>
 <text x="2902.3125" y="1037" fill="#CACACA" font-size="48"> </text>
 <text x="2931.21875" y="1037" fill="#CACACA" font-size="48">=</text>
 <text x="2960.125" y="1037" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="1037" fill="#B6CDA0" font-size="48">0</text>
+<text x="2989.03125" y="1037" fill="#CACACA" font-size="48">groups</text>
+<text x="3162.46875" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="3191.375" y="1037" fill="#CACACA" font-size="48">+</text>
+<text x="3220.28125" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="3249.1875" y="1037" fill="#B6CDA0" font-size="48">1</text>
+<text x="3278.09375" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="3307.0" y="1037" fill="#72A9D6" font-size="48">if</text>
+<text x="3364.8125" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="3393.71875" y="1037" fill="#CACACA" font-size="48">not</text>
+<text x="3480.4375" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="3509.34375" y="1037" fill="#CACACA" font-size="48">out</text>
+<text x="3596.0625" y="1037" fill="#CACACA" font-size="48">[</text>
+<text x="3624.96875" y="1037" fill="#CACACA" font-size="48">b</text>
+<text x="3653.875" y="1037" fill="#CACACA" font-size="48">]</text>
+<text x="3682.78125" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="3711.6875" y="1037" fill="#72A9D6" font-size="48">else</text>
+<text x="3827.3125" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="3856.21875" y="1037" fill="#CACACA" font-size="48">out</text>
+<text x="3942.9375" y="1037" fill="#CACACA" font-size="48">[</text>
+<text x="3971.84375" y="1037" fill="#CACACA" font-size="48">b</text>
+<text x="4000.75" y="1037" fill="#CACACA" font-size="48">]</text>
+<text x="4029.65625" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="4058.5625" y="1037" fill="#CACACA" font-size="48">+</text>
+<text x="4087.46875" y="1037" fill="#CACACA" font-size="48"> </text>
+<text x="4116.375" y="1037" fill="#B6CDA0" font-size="48">1</text>
 <text x="2382" y="1103" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="1103" fill="#CACACA" font-size="48">i</text>
-<text x="2757.78125" y="1103" fill="#CACACA" font-size="48"> </text>
-<text x="2786.6875" y="1103" fill="#CACACA" font-size="48">+</text>
-<text x="2815.59375" y="1103" fill="#CACACA" font-size="48">=</text>
-<text x="2844.5" y="1103" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="1103" fill="#B6CDA0" font-size="48">1</text>
-<text x="2382" y="1235" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="1235" fill="#8F969D" font-size="48"># Pack records at the right, then emit at the left.</text>
+<text x="2728.875" y="1103" fill="#CACACA" font-size="48">out</text>
+<text x="2815.59375" y="1103" fill="#CACACA" font-size="48">[</text>
+<text x="2844.5" y="1103" fill="#CACACA" font-size="48">i</text>
+<text x="2873.40625" y="1103" fill="#CACACA" font-size="48">]</text>
+<text x="2902.3125" y="1103" fill="#CACACA" font-size="48"> </text>
+<text x="2931.21875" y="1103" fill="#CACACA" font-size="48">=</text>
+<text x="2960.125" y="1103" fill="#CACACA" font-size="48"> </text>
+<text x="2989.03125" y="1103" fill="#B6CDA0" font-size="48">0</text>
+<text x="2382" y="1169" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="1169" fill="#CACACA" font-size="48">i</text>
+<text x="2757.78125" y="1169" fill="#CACACA" font-size="48"> </text>
+<text x="2786.6875" y="1169" fill="#CACACA" font-size="48">+</text>
+<text x="2815.59375" y="1169" fill="#CACACA" font-size="48">=</text>
+<text x="2844.5" y="1169" fill="#CACACA" font-size="48"> </text>
+<text x="2873.40625" y="1169" fill="#B6CDA0" font-size="48">1</text>
 <text x="2382" y="1301" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="1301" fill="#CACACA" font-size="48">read</text>
-<text x="2613.25" y="1301" fill="#CACACA" font-size="48"> </text>
-<text x="2642.15625" y="1301" fill="#CACACA" font-size="48">=</text>
-<text x="2671.0625" y="1301" fill="#CACACA" font-size="48"> </text>
-<text x="2699.96875" y="1301" fill="#CACACA" font-size="48">k</text>
+<text x="2497.625" y="1301" fill="#8F969D" font-size="48"># Pack right to left: one color, or (tagged count, group).</text>
 <text x="2382" y="1367" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="1367" fill="#72A9D6" font-size="48">for</text>
-<text x="2584.34375" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="2613.25" y="1367" fill="#CACACA" font-size="48">b</text>
-<text x="2642.15625" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="2671.0625" y="1367" fill="#CACACA" font-size="48">in</text>
-<text x="2728.875" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="2757.78125" y="1367" fill="#76C8B4" font-size="48">range</text>
-<text x="2902.3125" y="1367" fill="#CACACA" font-size="48">(</text>
-<text x="2931.21875" y="1367" fill="#CACACA" font-size="48">groups</text>
-<text x="3104.65625" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="3133.5625" y="1367" fill="#CACACA" font-size="48">-</text>
-<text x="3162.46875" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="3191.375" y="1367" fill="#B6CDA0" font-size="48">1</text>
-<text x="3220.28125" y="1367" fill="#CACACA" font-size="48">,</text>
-<text x="3249.1875" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="3278.09375" y="1367" fill="#CACACA" font-size="48">-</text>
-<text x="3307.0" y="1367" fill="#B6CDA0" font-size="48">1</text>
-<text x="3335.90625" y="1367" fill="#CACACA" font-size="48">,</text>
-<text x="3364.8125" y="1367" fill="#CACACA" font-size="48"> </text>
-<text x="3393.71875" y="1367" fill="#CACACA" font-size="48">-</text>
-<text x="3422.625" y="1367" fill="#B6CDA0" font-size="48">1</text>
-<text x="3451.53125" y="1367" fill="#CACACA" font-size="48">)</text>
-<text x="3480.4375" y="1367" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="1433" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="1433" fill="#CACACA" font-size="48">count</text>
-<text x="2757.78125" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="2786.6875" y="1433" fill="#CACACA" font-size="48">=</text>
-<text x="2815.59375" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="2844.5" y="1433" fill="#CACACA" font-size="48">out</text>
-<text x="2931.21875" y="1433" fill="#CACACA" font-size="48">[</text>
-<text x="2960.125" y="1433" fill="#CACACA" font-size="48">b</text>
-<text x="2989.03125" y="1433" fill="#CACACA" font-size="48">]</text>
-<text x="3017.9375" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="3046.84375" y="1433" fill="#CACACA" font-size="48">-</text>
-<text x="3075.75" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="3104.65625" y="1433" fill="#CACACA" font-size="48">groups</text>
-<text x="3278.09375" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="3307.0" y="1433" fill="#72A9D6" font-size="48">if</text>
-<text x="3364.8125" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="3393.71875" y="1433" fill="#CACACA" font-size="48">out</text>
-<text x="3480.4375" y="1433" fill="#CACACA" font-size="48">[</text>
-<text x="3509.34375" y="1433" fill="#CACACA" font-size="48">b</text>
-<text x="3538.25" y="1433" fill="#CACACA" font-size="48">]</text>
-<text x="3567.15625" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="3596.0625" y="1433" fill="#72A9D6" font-size="48">else</text>
-<text x="3711.6875" y="1433" fill="#CACACA" font-size="48"> </text>
-<text x="3740.59375" y="1433" fill="#B6CDA0" font-size="48">0</text>
-<text x="2382" y="1499" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="1499" fill="#72A9D6" font-size="48">if</text>
-<text x="2671.0625" y="1499" fill="#CACACA" font-size="48"> </text>
-<text x="2699.96875" y="1499" fill="#CACACA" font-size="48">count</text>
-<text x="2844.5" y="1499" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="1499" fill="#CACACA" font-size="48">==</text>
-<text x="2931.21875" y="1499" fill="#CACACA" font-size="48"> </text>
-<text x="2960.125" y="1499" fill="#B6CDA0" font-size="48">1</text>
-<text x="2989.03125" y="1499" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="1565" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="1565" fill="#CACACA" font-size="48">read</text>
-<text x="2844.5" y="1565" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="1565" fill="#CACACA" font-size="48">-</text>
-<text x="2902.3125" y="1565" fill="#CACACA" font-size="48">=</text>
-<text x="2931.21875" y="1565" fill="#CACACA" font-size="48"> </text>
-<text x="2960.125" y="1565" fill="#B6CDA0" font-size="48">1</text>
-<text x="2382" y="1631" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="1631" fill="#CACACA" font-size="48">out</text>
-<text x="2815.59375" y="1631" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="1631" fill="#CACACA" font-size="48">read</text>
-<text x="2960.125" y="1631" fill="#CACACA" font-size="48">]</text>
-<text x="2989.03125" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="3017.9375" y="1631" fill="#CACACA" font-size="48">=</text>
-<text x="3046.84375" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="3075.75" y="1631" fill="#CACACA" font-size="48">(</text>
-<text x="3104.65625" y="1631" fill="#CACACA" font-size="48">b</text>
-<text x="3133.5625" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="3162.46875" y="1631" fill="#CACACA" font-size="48">*</text>
-<text x="3191.375" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="3220.28125" y="1631" fill="#CACACA" font-size="48">width</text>
-<text x="3364.8125" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="3393.71875" y="1631" fill="#CACACA" font-size="48">+</text>
-<text x="3422.625" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="3451.53125" y="1631" fill="#76C8B4" font-size="48">min</text>
-<text x="3538.25" y="1631" fill="#CACACA" font-size="48">(</text>
-<text x="3567.15625" y="1631" fill="#CACACA" font-size="48">b</text>
-<text x="3596.0625" y="1631" fill="#CACACA" font-size="48">,</text>
-<text x="3624.96875" y="1631" fill="#CACACA" font-size="48"> </text>
-<text x="3653.875" y="1631" fill="#CACACA" font-size="48">extra</text>
-<text x="3798.40625" y="1631" fill="#CACACA" font-size="48">)</text>
-<text x="2382" y="1697" fill="#CACACA" font-size="48">                         </text>
-<text x="3104.65625" y="1697" fill="#CACACA" font-size="48">+</text>
-<text x="3133.5625" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="3162.46875" y="1697" fill="#CACACA" font-size="48">randrange</text>
-<text x="3422.625" y="1697" fill="#CACACA" font-size="48">(</text>
-<text x="3451.53125" y="1697" fill="#CACACA" font-size="48">width</text>
-<text x="3596.0625" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="3624.96875" y="1697" fill="#CACACA" font-size="48">+</text>
-<text x="3653.875" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="3682.78125" y="1697" fill="#CACACA" font-size="48">(</text>
-<text x="3711.6875" y="1697" fill="#CACACA" font-size="48">b</text>
-<text x="3740.59375" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="3769.5" y="1697" fill="#CACACA" font-size="48">&lt;</text>
-<text x="3798.40625" y="1697" fill="#CACACA" font-size="48"> </text>
-<text x="3827.3125" y="1697" fill="#CACACA" font-size="48">extra</text>
-<text x="3971.84375" y="1697" fill="#CACACA" font-size="48">)</text>
-<text x="4000.75" y="1697" fill="#CACACA" font-size="48">)</text>
-<text x="4029.65625" y="1697" fill="#CACACA" font-size="48">)</text>
-<text x="2382" y="1763" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="1763" fill="#72A9D6" font-size="48">elif</text>
-<text x="2728.875" y="1763" fill="#CACACA" font-size="48"> </text>
-<text x="2757.78125" y="1763" fill="#CACACA" font-size="48">count</text>
-<text x="2902.3125" y="1763" fill="#CACACA" font-size="48"> </text>
-<text x="2931.21875" y="1763" fill="#CACACA" font-size="48">&gt;</text>
-<text x="2960.125" y="1763" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="1763" fill="#B6CDA0" font-size="48">1</text>
-<text x="3017.9375" y="1763" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="1829" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="1829" fill="#CACACA" font-size="48">read</text>
-<text x="2844.5" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="1829" fill="#CACACA" font-size="48">-</text>
-<text x="2902.3125" y="1829" fill="#CACACA" font-size="48">=</text>
-<text x="2931.21875" y="1829" fill="#CACACA" font-size="48"> </text>
-<text x="2960.125" y="1829" fill="#B6CDA0" font-size="48">2</text>
-<text x="2382" y="1895" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="1895" fill="#CACACA" font-size="48">out</text>
-<text x="2815.59375" y="1895" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="1895" fill="#CACACA" font-size="48">read</text>
-<text x="2960.125" y="1895" fill="#CACACA" font-size="48">]</text>
-<text x="2989.03125" y="1895" fill="#CACACA" font-size="48">,</text>
-<text x="3017.9375" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3046.84375" y="1895" fill="#CACACA" font-size="48">out</text>
-<text x="3133.5625" y="1895" fill="#CACACA" font-size="48">[</text>
-<text x="3162.46875" y="1895" fill="#CACACA" font-size="48">read</text>
-<text x="3278.09375" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3307.0" y="1895" fill="#CACACA" font-size="48">+</text>
-<text x="3335.90625" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3364.8125" y="1895" fill="#B6CDA0" font-size="48">1</text>
-<text x="3393.71875" y="1895" fill="#CACACA" font-size="48">]</text>
-<text x="3422.625" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3451.53125" y="1895" fill="#CACACA" font-size="48">=</text>
-<text x="3480.4375" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3509.34375" y="1895" fill="#CACACA" font-size="48">t</text>
-<text x="3538.25" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3567.15625" y="1895" fill="#CACACA" font-size="48">+</text>
-<text x="3596.0625" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3624.96875" y="1895" fill="#CACACA" font-size="48">count</text>
-<text x="3769.5" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3798.40625" y="1895" fill="#CACACA" font-size="48">-</text>
-<text x="3827.3125" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3856.21875" y="1895" fill="#B6CDA0" font-size="48">2</text>
-<text x="3885.125" y="1895" fill="#CACACA" font-size="48">,</text>
-<text x="3914.03125" y="1895" fill="#CACACA" font-size="48"> </text>
-<text x="3942.9375" y="1895" fill="#CACACA" font-size="48">b</text>
-<text x="2382" y="1961" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="1961" fill="#CACACA" font-size="48">start</text>
-<text x="2642.15625" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="2671.0625" y="1961" fill="#CACACA" font-size="48">=</text>
-<text x="2699.96875" y="1961" fill="#CACACA" font-size="48"> </text>
-<text x="2728.875" y="1961" fill="#B6CDA0" font-size="48">0</text>
-<text x="2382" y="2027" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="2027" fill="#72A9D6" font-size="48">while</text>
-<text x="2642.15625" y="2027" fill="#CACACA" font-size="48"> </text>
-<text x="2671.0625" y="2027" fill="#CACACA" font-size="48">read</text>
-<text x="2786.6875" y="2027" fill="#CACACA" font-size="48"> </text>
-<text x="2815.59375" y="2027" fill="#CACACA" font-size="48">&lt;</text>
-<text x="2844.5" y="2027" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="2027" fill="#CACACA" font-size="48">k</text>
-<text x="2902.3125" y="2027" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="2093" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="2093" fill="#CACACA" font-size="48">tag</text>
-<text x="2699.96875" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="2728.875" y="2093" fill="#CACACA" font-size="48">=</text>
-<text x="2757.78125" y="2093" fill="#CACACA" font-size="48"> </text>
-<text x="2786.6875" y="2093" fill="#CACACA" font-size="48">out</text>
-<text x="2873.40625" y="2093" fill="#CACACA" font-size="48">[</text>
-<text x="2902.3125" y="2093" fill="#CACACA" font-size="48">read</text>
-<text x="3017.9375" y="2093" fill="#CACACA" font-size="48">]</text>
-<text x="2382" y="2159" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="2159" fill="#CACACA" font-size="48">read</text>
-<text x="2728.875" y="2159" fill="#CACACA" font-size="48"> </text>
-<text x="2757.78125" y="2159" fill="#CACACA" font-size="48">+</text>
-<text x="2786.6875" y="2159" fill="#CACACA" font-size="48">=</text>
-<text x="2815.59375" y="2159" fill="#CACACA" font-size="48"> </text>
-<text x="2844.5" y="2159" fill="#B6CDA0" font-size="48">1</text>
-<text x="2382" y="2225" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="2225" fill="#72A9D6" font-size="48">if</text>
-<text x="2671.0625" y="2225" fill="#CACACA" font-size="48"> </text>
-<text x="2699.96875" y="2225" fill="#CACACA" font-size="48">tag</text>
+<text x="2497.625" y="1367" fill="#8F969D" font-size="48"># Each record uses no more space than the output it describes.</text>
+<text x="2382" y="1433" fill="#CACACA" font-size="48">    </text>
+<text x="2497.625" y="1433" fill="#CACACA" font-size="48">read</text>
+<text x="2613.25" y="1433" fill="#CACACA" font-size="48"> </text>
+<text x="2642.15625" y="1433" fill="#CACACA" font-size="48">=</text>
+<text x="2671.0625" y="1433" fill="#CACACA" font-size="48"> </text>
+<text x="2699.96875" y="1433" fill="#CACACA" font-size="48">k</text>
+<text x="2382" y="1499" fill="#CACACA" font-size="48">    </text>
+<text x="2497.625" y="1499" fill="#72A9D6" font-size="48">for</text>
+<text x="2584.34375" y="1499" fill="#CACACA" font-size="48"> </text>
+<text x="2613.25" y="1499" fill="#CACACA" font-size="48">b</text>
+<text x="2642.15625" y="1499" fill="#CACACA" font-size="48"> </text>
+<text x="2671.0625" y="1499" fill="#CACACA" font-size="48">in</text>
+<text x="2728.875" y="1499" fill="#CACACA" font-size="48"> </text>
+<text x="2757.78125" y="1499" fill="#76C8B4" font-size="48">range</text>
+<text x="2902.3125" y="1499" fill="#CACACA" font-size="48">(</text>
+<text x="2931.21875" y="1499" fill="#CACACA" font-size="48">groups</text>
+<text x="3104.65625" y="1499" fill="#CACACA" font-size="48"> </text>
+<text x="3133.5625" y="1499" fill="#CACACA" font-size="48">-</text>
+<text x="3162.46875" y="1499" fill="#CACACA" font-size="48"> </text>
+<text x="3191.375" y="1499" fill="#B6CDA0" font-size="48">1</text>
+<text x="3220.28125" y="1499" fill="#CACACA" font-size="48">,</text>
+<text x="3249.1875" y="1499" fill="#CACACA" font-size="48"> </text>
+<text x="3278.09375" y="1499" fill="#CACACA" font-size="48">-</text>
+<text x="3307.0" y="1499" fill="#B6CDA0" font-size="48">1</text>
+<text x="3335.90625" y="1499" fill="#CACACA" font-size="48">,</text>
+<text x="3364.8125" y="1499" fill="#CACACA" font-size="48"> </text>
+<text x="3393.71875" y="1499" fill="#CACACA" font-size="48">-</text>
+<text x="3422.625" y="1499" fill="#B6CDA0" font-size="48">1</text>
+<text x="3451.53125" y="1499" fill="#CACACA" font-size="48">)</text>
+<text x="3480.4375" y="1499" fill="#CACACA" font-size="48">:</text>
+<text x="2382" y="1565" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="1565" fill="#CACACA" font-size="48">count</text>
+<text x="2757.78125" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="2786.6875" y="1565" fill="#CACACA" font-size="48">=</text>
+<text x="2815.59375" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="2844.5" y="1565" fill="#CACACA" font-size="48">out</text>
+<text x="2931.21875" y="1565" fill="#CACACA" font-size="48">[</text>
+<text x="2960.125" y="1565" fill="#CACACA" font-size="48">b</text>
+<text x="2989.03125" y="1565" fill="#CACACA" font-size="48">]</text>
+<text x="3017.9375" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="3046.84375" y="1565" fill="#CACACA" font-size="48">-</text>
+<text x="3075.75" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="3104.65625" y="1565" fill="#CACACA" font-size="48">groups</text>
+<text x="3278.09375" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="3307.0" y="1565" fill="#72A9D6" font-size="48">if</text>
+<text x="3364.8125" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="3393.71875" y="1565" fill="#CACACA" font-size="48">out</text>
+<text x="3480.4375" y="1565" fill="#CACACA" font-size="48">[</text>
+<text x="3509.34375" y="1565" fill="#CACACA" font-size="48">b</text>
+<text x="3538.25" y="1565" fill="#CACACA" font-size="48">]</text>
+<text x="3567.15625" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="3596.0625" y="1565" fill="#72A9D6" font-size="48">else</text>
+<text x="3711.6875" y="1565" fill="#CACACA" font-size="48"> </text>
+<text x="3740.59375" y="1565" fill="#B6CDA0" font-size="48">0</text>
+<text x="2382" y="1631" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="1631" fill="#72A9D6" font-size="48">if</text>
+<text x="2671.0625" y="1631" fill="#CACACA" font-size="48"> </text>
+<text x="2699.96875" y="1631" fill="#CACACA" font-size="48">count</text>
+<text x="2844.5" y="1631" fill="#CACACA" font-size="48"> </text>
+<text x="2873.40625" y="1631" fill="#CACACA" font-size="48">==</text>
+<text x="2931.21875" y="1631" fill="#CACACA" font-size="48"> </text>
+<text x="2960.125" y="1631" fill="#B6CDA0" font-size="48">1</text>
+<text x="2989.03125" y="1631" fill="#CACACA" font-size="48">:</text>
+<text x="2382" y="1697" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="1697" fill="#CACACA" font-size="48">read</text>
+<text x="2844.5" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="2873.40625" y="1697" fill="#CACACA" font-size="48">-</text>
+<text x="2902.3125" y="1697" fill="#CACACA" font-size="48">=</text>
+<text x="2931.21875" y="1697" fill="#CACACA" font-size="48"> </text>
+<text x="2960.125" y="1697" fill="#B6CDA0" font-size="48">1</text>
+<text x="2382" y="1763" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="1763" fill="#CACACA" font-size="48">out</text>
+<text x="2815.59375" y="1763" fill="#CACACA" font-size="48">[</text>
+<text x="2844.5" y="1763" fill="#CACACA" font-size="48">read</text>
+<text x="2960.125" y="1763" fill="#CACACA" font-size="48">]</text>
+<text x="2989.03125" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="3017.9375" y="1763" fill="#CACACA" font-size="48">=</text>
+<text x="3046.84375" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="3075.75" y="1763" fill="#CACACA" font-size="48">(</text>
+<text x="3104.65625" y="1763" fill="#CACACA" font-size="48">b</text>
+<text x="3133.5625" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="3162.46875" y="1763" fill="#CACACA" font-size="48">*</text>
+<text x="3191.375" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="3220.28125" y="1763" fill="#CACACA" font-size="48">width</text>
+<text x="3364.8125" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="3393.71875" y="1763" fill="#CACACA" font-size="48">+</text>
+<text x="3422.625" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="3451.53125" y="1763" fill="#76C8B4" font-size="48">min</text>
+<text x="3538.25" y="1763" fill="#CACACA" font-size="48">(</text>
+<text x="3567.15625" y="1763" fill="#CACACA" font-size="48">b</text>
+<text x="3596.0625" y="1763" fill="#CACACA" font-size="48">,</text>
+<text x="3624.96875" y="1763" fill="#CACACA" font-size="48"> </text>
+<text x="3653.875" y="1763" fill="#CACACA" font-size="48">extra</text>
+<text x="3798.40625" y="1763" fill="#CACACA" font-size="48">)</text>
+<text x="2382" y="1829" fill="#CACACA" font-size="48">                         </text>
+<text x="3104.65625" y="1829" fill="#CACACA" font-size="48">+</text>
+<text x="3133.5625" y="1829" fill="#CACACA" font-size="48"> </text>
+<text x="3162.46875" y="1829" fill="#CACACA" font-size="48">randrange</text>
+<text x="3422.625" y="1829" fill="#CACACA" font-size="48">(</text>
+<text x="3451.53125" y="1829" fill="#CACACA" font-size="48">width</text>
+<text x="3596.0625" y="1829" fill="#CACACA" font-size="48"> </text>
+<text x="3624.96875" y="1829" fill="#CACACA" font-size="48">+</text>
+<text x="3653.875" y="1829" fill="#CACACA" font-size="48"> </text>
+<text x="3682.78125" y="1829" fill="#CACACA" font-size="48">(</text>
+<text x="3711.6875" y="1829" fill="#CACACA" font-size="48">b</text>
+<text x="3740.59375" y="1829" fill="#CACACA" font-size="48"> </text>
+<text x="3769.5" y="1829" fill="#CACACA" font-size="48">&lt;</text>
+<text x="3798.40625" y="1829" fill="#CACACA" font-size="48"> </text>
+<text x="3827.3125" y="1829" fill="#CACACA" font-size="48">extra</text>
+<text x="3971.84375" y="1829" fill="#CACACA" font-size="48">)</text>
+<text x="4000.75" y="1829" fill="#CACACA" font-size="48">)</text>
+<text x="4029.65625" y="1829" fill="#CACACA" font-size="48">)</text>
+<text x="2382" y="1895" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="1895" fill="#72A9D6" font-size="48">elif</text>
+<text x="2728.875" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="2757.78125" y="1895" fill="#CACACA" font-size="48">count</text>
+<text x="2902.3125" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="2931.21875" y="1895" fill="#CACACA" font-size="48">&gt;</text>
+<text x="2960.125" y="1895" fill="#CACACA" font-size="48"> </text>
+<text x="2989.03125" y="1895" fill="#B6CDA0" font-size="48">1</text>
+<text x="3017.9375" y="1895" fill="#CACACA" font-size="48">:</text>
+<text x="2382" y="1961" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="1961" fill="#CACACA" font-size="48">read</text>
+<text x="2844.5" y="1961" fill="#CACACA" font-size="48"> </text>
+<text x="2873.40625" y="1961" fill="#CACACA" font-size="48">-</text>
+<text x="2902.3125" y="1961" fill="#CACACA" font-size="48">=</text>
+<text x="2931.21875" y="1961" fill="#CACACA" font-size="48"> </text>
+<text x="2960.125" y="1961" fill="#B6CDA0" font-size="48">2</text>
+<text x="2382" y="2027" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="2027" fill="#CACACA" font-size="48">out</text>
+<text x="2815.59375" y="2027" fill="#CACACA" font-size="48">[</text>
+<text x="2844.5" y="2027" fill="#CACACA" font-size="48">read</text>
+<text x="2960.125" y="2027" fill="#CACACA" font-size="48">]</text>
+<text x="2989.03125" y="2027" fill="#CACACA" font-size="48">,</text>
+<text x="3017.9375" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3046.84375" y="2027" fill="#CACACA" font-size="48">out</text>
+<text x="3133.5625" y="2027" fill="#CACACA" font-size="48">[</text>
+<text x="3162.46875" y="2027" fill="#CACACA" font-size="48">read</text>
+<text x="3278.09375" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3307.0" y="2027" fill="#CACACA" font-size="48">+</text>
+<text x="3335.90625" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3364.8125" y="2027" fill="#B6CDA0" font-size="48">1</text>
+<text x="3393.71875" y="2027" fill="#CACACA" font-size="48">]</text>
+<text x="3422.625" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3451.53125" y="2027" fill="#CACACA" font-size="48">=</text>
+<text x="3480.4375" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3509.34375" y="2027" fill="#CACACA" font-size="48">t</text>
+<text x="3538.25" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3567.15625" y="2027" fill="#CACACA" font-size="48">+</text>
+<text x="3596.0625" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3624.96875" y="2027" fill="#CACACA" font-size="48">count</text>
+<text x="3769.5" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3798.40625" y="2027" fill="#CACACA" font-size="48">-</text>
+<text x="3827.3125" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3856.21875" y="2027" fill="#B6CDA0" font-size="48">2</text>
+<text x="3885.125" y="2027" fill="#CACACA" font-size="48">,</text>
+<text x="3914.03125" y="2027" fill="#CACACA" font-size="48"> </text>
+<text x="3942.9375" y="2027" fill="#CACACA" font-size="48">b</text>
+<text x="2382" y="2093" fill="#CACACA" font-size="48">    </text>
+<text x="2497.625" y="2093" fill="#8F969D" font-size="48"># Decode left to right without overwriting unread records.</text>
+<text x="2382" y="2159" fill="#CACACA" font-size="48">    </text>
+<text x="2497.625" y="2159" fill="#CACACA" font-size="48">start</text>
+<text x="2642.15625" y="2159" fill="#CACACA" font-size="48"> </text>
+<text x="2671.0625" y="2159" fill="#CACACA" font-size="48">=</text>
+<text x="2699.96875" y="2159" fill="#CACACA" font-size="48"> </text>
+<text x="2728.875" y="2159" fill="#B6CDA0" font-size="48">0</text>
+<text x="2382" y="2225" fill="#CACACA" font-size="48">    </text>
+<text x="2497.625" y="2225" fill="#72A9D6" font-size="48">while</text>
+<text x="2642.15625" y="2225" fill="#CACACA" font-size="48"> </text>
+<text x="2671.0625" y="2225" fill="#CACACA" font-size="48">read</text>
 <text x="2786.6875" y="2225" fill="#CACACA" font-size="48"> </text>
 <text x="2815.59375" y="2225" fill="#CACACA" font-size="48">&lt;</text>
 <text x="2844.5" y="2225" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="2225" fill="#CACACA" font-size="48">t</text>
+<text x="2873.40625" y="2225" fill="#CACACA" font-size="48">k</text>
 <text x="2902.3125" y="2225" fill="#CACACA" font-size="48">:</text>
-<text x="2382" y="2291" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="2291" fill="#CACACA" font-size="48">out</text>
-<text x="2815.59375" y="2291" fill="#CACACA" font-size="48">[</text>
-<text x="2844.5" y="2291" fill="#CACACA" font-size="48">start</text>
-<text x="2989.03125" y="2291" fill="#CACACA" font-size="48">]</text>
-<text x="3017.9375" y="2291" fill="#CACACA" font-size="48"> </text>
-<text x="3046.84375" y="2291" fill="#CACACA" font-size="48">=</text>
-<text x="3075.75" y="2291" fill="#CACACA" font-size="48"> </text>
-<text x="3104.65625" y="2291" fill="#CACACA" font-size="48">tag</text>
-<text x="3191.375" y="2291" fill="#CACACA" font-size="48"> </text>
-<text x="3220.28125" y="2291" fill="#CACACA" font-size="48">+</text>
-<text x="3249.1875" y="2291" fill="#CACACA" font-size="48"> </text>
-<text x="3278.09375" y="2291" fill="#CACACA" font-size="48">start</text>
-<text x="2382" y="2357" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="2357" fill="#CACACA" font-size="48">start</text>
-<text x="2873.40625" y="2357" fill="#CACACA" font-size="48"> </text>
-<text x="2902.3125" y="2357" fill="#CACACA" font-size="48">+</text>
-<text x="2931.21875" y="2357" fill="#CACACA" font-size="48">=</text>
-<text x="2960.125" y="2357" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="2357" fill="#B6CDA0" font-size="48">1</text>
+<text x="2382" y="2291" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="2291" fill="#CACACA" font-size="48">tag</text>
+<text x="2699.96875" y="2291" fill="#CACACA" font-size="48"> </text>
+<text x="2728.875" y="2291" fill="#CACACA" font-size="48">=</text>
+<text x="2757.78125" y="2291" fill="#CACACA" font-size="48"> </text>
+<text x="2786.6875" y="2291" fill="#CACACA" font-size="48">out</text>
+<text x="2873.40625" y="2291" fill="#CACACA" font-size="48">[</text>
+<text x="2902.3125" y="2291" fill="#CACACA" font-size="48">read</text>
+<text x="3017.9375" y="2291" fill="#CACACA" font-size="48">]</text>
+<text x="2382" y="2357" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="2357" fill="#CACACA" font-size="48">read</text>
+<text x="2728.875" y="2357" fill="#CACACA" font-size="48"> </text>
+<text x="2757.78125" y="2357" fill="#CACACA" font-size="48">+</text>
+<text x="2786.6875" y="2357" fill="#CACACA" font-size="48">=</text>
+<text x="2815.59375" y="2357" fill="#CACACA" font-size="48"> </text>
+<text x="2844.5" y="2357" fill="#B6CDA0" font-size="48">1</text>
 <text x="2382" y="2423" fill="#CACACA" font-size="48">        </text>
-<text x="2613.25" y="2423" fill="#72A9D6" font-size="48">else</text>
-<text x="2728.875" y="2423" fill="#CACACA" font-size="48">:</text>
+<text x="2613.25" y="2423" fill="#72A9D6" font-size="48">if</text>
+<text x="2671.0625" y="2423" fill="#CACACA" font-size="48"> </text>
+<text x="2699.96875" y="2423" fill="#CACACA" font-size="48">tag</text>
+<text x="2786.6875" y="2423" fill="#CACACA" font-size="48"> </text>
+<text x="2815.59375" y="2423" fill="#CACACA" font-size="48">&lt;</text>
+<text x="2844.5" y="2423" fill="#CACACA" font-size="48"> </text>
+<text x="2873.40625" y="2423" fill="#CACACA" font-size="48">t</text>
+<text x="2902.3125" y="2423" fill="#CACACA" font-size="48">:</text>
 <text x="2382" y="2489" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="2489" fill="#CACACA" font-size="48">count</text>
-<text x="2873.40625" y="2489" fill="#CACACA" font-size="48">,</text>
-<text x="2902.3125" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="2931.21875" y="2489" fill="#CACACA" font-size="48">b</text>
-<text x="2960.125" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="2489" fill="#CACACA" font-size="48">=</text>
+<text x="2728.875" y="2489" fill="#CACACA" font-size="48">out</text>
+<text x="2815.59375" y="2489" fill="#CACACA" font-size="48">[</text>
+<text x="2844.5" y="2489" fill="#CACACA" font-size="48">start</text>
+<text x="2989.03125" y="2489" fill="#CACACA" font-size="48">]</text>
 <text x="3017.9375" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="3046.84375" y="2489" fill="#CACACA" font-size="48">tag</text>
-<text x="3133.5625" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="3162.46875" y="2489" fill="#CACACA" font-size="48">-</text>
+<text x="3046.84375" y="2489" fill="#CACACA" font-size="48">=</text>
+<text x="3075.75" y="2489" fill="#CACACA" font-size="48"> </text>
+<text x="3104.65625" y="2489" fill="#CACACA" font-size="48">tag</text>
 <text x="3191.375" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="3220.28125" y="2489" fill="#CACACA" font-size="48">t</text>
+<text x="3220.28125" y="2489" fill="#CACACA" font-size="48">+</text>
 <text x="3249.1875" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="3278.09375" y="2489" fill="#CACACA" font-size="48">+</text>
-<text x="3307.0" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="3335.90625" y="2489" fill="#B6CDA0" font-size="48">2</text>
-<text x="3364.8125" y="2489" fill="#CACACA" font-size="48">,</text>
-<text x="3393.71875" y="2489" fill="#CACACA" font-size="48"> </text>
-<text x="3422.625" y="2489" fill="#CACACA" font-size="48">out</text>
-<text x="3509.34375" y="2489" fill="#CACACA" font-size="48">[</text>
-<text x="3538.25" y="2489" fill="#CACACA" font-size="48">read</text>
-<text x="3653.875" y="2489" fill="#CACACA" font-size="48">]</text>
+<text x="3278.09375" y="2489" fill="#CACACA" font-size="48">start</text>
 <text x="2382" y="2555" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="2555" fill="#CACACA" font-size="48">read</text>
-<text x="2844.5" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="2873.40625" y="2555" fill="#CACACA" font-size="48">+</text>
-<text x="2902.3125" y="2555" fill="#CACACA" font-size="48">=</text>
-<text x="2931.21875" y="2555" fill="#CACACA" font-size="48"> </text>
-<text x="2960.125" y="2555" fill="#B6CDA0" font-size="48">1</text>
-<text x="2382" y="2621" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="2621" fill="#CACACA" font-size="48">emit</text>
-<text x="2844.5" y="2621" fill="#CACACA" font-size="48">(</text>
-<text x="2873.40625" y="2621" fill="#CACACA" font-size="48">start</text>
-<text x="3017.9375" y="2621" fill="#CACACA" font-size="48">,</text>
-<text x="3046.84375" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="3075.75" y="2621" fill="#CACACA" font-size="48">count</text>
-<text x="3220.28125" y="2621" fill="#CACACA" font-size="48">,</text>
-<text x="3249.1875" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="3278.09375" y="2621" fill="#CACACA" font-size="48">b</text>
-<text x="3307.0" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="3335.90625" y="2621" fill="#CACACA" font-size="48">*</text>
-<text x="3364.8125" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="3393.71875" y="2621" fill="#CACACA" font-size="48">width</text>
-<text x="3538.25" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="3567.15625" y="2621" fill="#CACACA" font-size="48">+</text>
-<text x="3596.0625" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="3624.96875" y="2621" fill="#76C8B4" font-size="48">min</text>
-<text x="3711.6875" y="2621" fill="#CACACA" font-size="48">(</text>
-<text x="3740.59375" y="2621" fill="#CACACA" font-size="48">b</text>
-<text x="3769.5" y="2621" fill="#CACACA" font-size="48">,</text>
-<text x="3798.40625" y="2621" fill="#CACACA" font-size="48"> </text>
-<text x="3827.3125" y="2621" fill="#CACACA" font-size="48">extra</text>
-<text x="3971.84375" y="2621" fill="#CACACA" font-size="48">)</text>
-<text x="4000.75" y="2621" fill="#CACACA" font-size="48">,</text>
-<text x="2382" y="2687" fill="#CACACA" font-size="48">                 </text>
-<text x="2873.40625" y="2687" fill="#CACACA" font-size="48">width</text>
+<text x="2728.875" y="2555" fill="#CACACA" font-size="48">start</text>
+<text x="2873.40625" y="2555" fill="#CACACA" font-size="48"> </text>
+<text x="2902.3125" y="2555" fill="#CACACA" font-size="48">+</text>
+<text x="2931.21875" y="2555" fill="#CACACA" font-size="48">=</text>
+<text x="2960.125" y="2555" fill="#CACACA" font-size="48"> </text>
+<text x="2989.03125" y="2555" fill="#B6CDA0" font-size="48">1</text>
+<text x="2382" y="2621" fill="#CACACA" font-size="48">        </text>
+<text x="2613.25" y="2621" fill="#72A9D6" font-size="48">else</text>
+<text x="2728.875" y="2621" fill="#CACACA" font-size="48">:</text>
+<text x="2382" y="2687" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="2687" fill="#CACACA" font-size="48">count</text>
+<text x="2873.40625" y="2687" fill="#CACACA" font-size="48">,</text>
+<text x="2902.3125" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="2931.21875" y="2687" fill="#CACACA" font-size="48">b</text>
+<text x="2960.125" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="2989.03125" y="2687" fill="#CACACA" font-size="48">=</text>
 <text x="3017.9375" y="2687" fill="#CACACA" font-size="48"> </text>
-<text x="3046.84375" y="2687" fill="#CACACA" font-size="48">+</text>
-<text x="3075.75" y="2687" fill="#CACACA" font-size="48"> </text>
-<text x="3104.65625" y="2687" fill="#CACACA" font-size="48">(</text>
-<text x="3133.5625" y="2687" fill="#CACACA" font-size="48">b</text>
-<text x="3162.46875" y="2687" fill="#CACACA" font-size="48"> </text>
-<text x="3191.375" y="2687" fill="#CACACA" font-size="48">&lt;</text>
-<text x="3220.28125" y="2687" fill="#CACACA" font-size="48"> </text>
-<text x="3249.1875" y="2687" fill="#CACACA" font-size="48">extra</text>
-<text x="3393.71875" y="2687" fill="#CACACA" font-size="48">)</text>
-<text x="3422.625" y="2687" fill="#CACACA" font-size="48">)</text>
+<text x="3046.84375" y="2687" fill="#CACACA" font-size="48">tag</text>
+<text x="3133.5625" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="3162.46875" y="2687" fill="#CACACA" font-size="48">-</text>
+<text x="3191.375" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="3220.28125" y="2687" fill="#CACACA" font-size="48">t</text>
+<text x="3249.1875" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="3278.09375" y="2687" fill="#CACACA" font-size="48">+</text>
+<text x="3307.0" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="3335.90625" y="2687" fill="#B6CDA0" font-size="48">2</text>
+<text x="3364.8125" y="2687" fill="#CACACA" font-size="48">,</text>
+<text x="3393.71875" y="2687" fill="#CACACA" font-size="48"> </text>
+<text x="3422.625" y="2687" fill="#CACACA" font-size="48">out</text>
+<text x="3509.34375" y="2687" fill="#CACACA" font-size="48">[</text>
+<text x="3538.25" y="2687" fill="#CACACA" font-size="48">read</text>
+<text x="3653.875" y="2687" fill="#CACACA" font-size="48">]</text>
 <text x="2382" y="2753" fill="#CACACA" font-size="48">            </text>
-<text x="2728.875" y="2753" fill="#CACACA" font-size="48">start</text>
-<text x="2873.40625" y="2753" fill="#CACACA" font-size="48"> </text>
-<text x="2902.3125" y="2753" fill="#CACACA" font-size="48">+</text>
-<text x="2931.21875" y="2753" fill="#CACACA" font-size="48">=</text>
-<text x="2960.125" y="2753" fill="#CACACA" font-size="48"> </text>
-<text x="2989.03125" y="2753" fill="#CACACA" font-size="48">count</text>
-<text x="2382" y="2819" fill="#CACACA" font-size="48">    </text>
-<text x="2497.625" y="2819" fill="#72A9D6" font-size="48">return</text>
-<text x="2671.0625" y="2819" fill="#CACACA" font-size="48"> </text>
-<text x="2699.96875" y="2819" fill="#CACACA" font-size="48">out</text>
+<text x="2728.875" y="2753" fill="#CACACA" font-size="48">read</text>
+<text x="2844.5" y="2753" fill="#CACACA" font-size="48"> </text>
+<text x="2873.40625" y="2753" fill="#CACACA" font-size="48">+</text>
+<text x="2902.3125" y="2753" fill="#CACACA" font-size="48">=</text>
+<text x="2931.21875" y="2753" fill="#CACACA" font-size="48"> </text>
+<text x="2960.125" y="2753" fill="#B6CDA0" font-size="48">1</text>
+<text x="2382" y="2819" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="2819" fill="#CACACA" font-size="48">emit</text>
+<text x="2844.5" y="2819" fill="#CACACA" font-size="48">(</text>
+<text x="2873.40625" y="2819" fill="#CACACA" font-size="48">start</text>
+<text x="3017.9375" y="2819" fill="#CACACA" font-size="48">,</text>
+<text x="3046.84375" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="3075.75" y="2819" fill="#CACACA" font-size="48">count</text>
+<text x="3220.28125" y="2819" fill="#CACACA" font-size="48">,</text>
+<text x="3249.1875" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="3278.09375" y="2819" fill="#CACACA" font-size="48">b</text>
+<text x="3307.0" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="3335.90625" y="2819" fill="#CACACA" font-size="48">*</text>
+<text x="3364.8125" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="3393.71875" y="2819" fill="#CACACA" font-size="48">width</text>
+<text x="3538.25" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="3567.15625" y="2819" fill="#CACACA" font-size="48">+</text>
+<text x="3596.0625" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="3624.96875" y="2819" fill="#76C8B4" font-size="48">min</text>
+<text x="3711.6875" y="2819" fill="#CACACA" font-size="48">(</text>
+<text x="3740.59375" y="2819" fill="#CACACA" font-size="48">b</text>
+<text x="3769.5" y="2819" fill="#CACACA" font-size="48">,</text>
+<text x="3798.40625" y="2819" fill="#CACACA" font-size="48"> </text>
+<text x="3827.3125" y="2819" fill="#CACACA" font-size="48">extra</text>
+<text x="3971.84375" y="2819" fill="#CACACA" font-size="48">)</text>
+<text x="4000.75" y="2819" fill="#CACACA" font-size="48">,</text>
+<text x="2382" y="2885" fill="#CACACA" font-size="48">                 </text>
+<text x="2873.40625" y="2885" fill="#CACACA" font-size="48">width</text>
+<text x="3017.9375" y="2885" fill="#CACACA" font-size="48"> </text>
+<text x="3046.84375" y="2885" fill="#CACACA" font-size="48">+</text>
+<text x="3075.75" y="2885" fill="#CACACA" font-size="48"> </text>
+<text x="3104.65625" y="2885" fill="#CACACA" font-size="48">(</text>
+<text x="3133.5625" y="2885" fill="#CACACA" font-size="48">b</text>
+<text x="3162.46875" y="2885" fill="#CACACA" font-size="48"> </text>
+<text x="3191.375" y="2885" fill="#CACACA" font-size="48">&lt;</text>
+<text x="3220.28125" y="2885" fill="#CACACA" font-size="48"> </text>
+<text x="3249.1875" y="2885" fill="#CACACA" font-size="48">extra</text>
+<text x="3393.71875" y="2885" fill="#CACACA" font-size="48">)</text>
+<text x="3422.625" y="2885" fill="#CACACA" font-size="48">)</text>
+<text x="2382" y="2951" fill="#CACACA" font-size="48">            </text>
+<text x="2728.875" y="2951" fill="#CACACA" font-size="48">start</text>
+<text x="2873.40625" y="2951" fill="#CACACA" font-size="48"> </text>
+<text x="2902.3125" y="2951" fill="#CACACA" font-size="48">+</text>
+<text x="2931.21875" y="2951" fill="#CACACA" font-size="48">=</text>
+<text x="2960.125" y="2951" fill="#CACACA" font-size="48"> </text>
+<text x="2989.03125" y="2951" fill="#CACACA" font-size="48">count</text>
+<text x="2382" y="3017" fill="#CACACA" font-size="48">    </text>
+<text x="2497.625" y="3017" fill="#72A9D6" font-size="48">return</text>
+<text x="2671.0625" y="3017" fill="#CACACA" font-size="48"> </text>
+<text x="2699.96875" y="3017" fill="#CACACA" font-size="48">out</text>
 </g>
 </svg>

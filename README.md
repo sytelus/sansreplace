@@ -14,7 +14,9 @@ reference below retains the original O(_k_ log _k_) comparison sort.
 
 The new [Grouped Cardchoose](groupedchoose.md) removes the fixed-width sorting requirement:
 it takes **expected O(_k_) integer operations** and uses just the output array plus O(1)
-auxiliary integers. Python supports arbitrarily large _n_; C++ and Rust provide 32- and 64-bit
+auxiliary integers. Native fast paths use a fixed 64-byte local bitmap and bounded small-sort
+workspace; the Python construction uses scalar workspace. Python supports arbitrarily large
+_n_; C++ and Rust provide 32- and 64-bit
 APIs. It uses exact grouped Pólya urns, small contiguous local sorts, and dense/complement
 paths, without hash tables or a second array. The [proof](groupedchoose.md#expected-linear-work)
 states the arithmetic model and explains why arbitrary-precision bit costs cannot be O(_k_).

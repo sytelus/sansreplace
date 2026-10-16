@@ -216,7 +216,9 @@ The grouped variant aggregates the original urn into balanced consecutive ranges
 generates and insertion-sorts each local conditional multiset. A second-moment bound on the
 correlated urn occupancies makes the total work linear in expectation. Labels, counts, and
 packed records all reuse the output array. Dense selection, reservoir sampling, and a packed
-complement path cover dense samples without extra arrays. The arithmetic-operation bound
+complement path cover dense samples. Native fast paths use power-of-two group widths,
+a fixed 64-byte local bitmap, and bounded standard-library sorts; auxiliary storage remains
+O(1). The arithmetic-operation bound
 does not depend on a fixed integer width: Python supports arbitrary-size populations, and
 the C++ and Rust implementations expose both 32- and 64-bit APIs. See the
 [proof and storage invariants](groupedchoose.md), including the unavoidable bit costs and
